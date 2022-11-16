@@ -14,6 +14,13 @@ module.exports = class Farm extends Sequelize.Model{
                 allowNull: false,
                 defaultValue: "신규등록"
             },
+
+            IP:  {
+                type: Sequelize.STRING(32),
+                allowNull: false,
+                defaultValue: "0.0.0.0"
+            },
+
         },{
             sequelize,
             timestamps : false,

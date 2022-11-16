@@ -1,8 +1,8 @@
 const express       = require('express');
 const router        = express.Router();
 
-const mqtt          = require('./mqtt');
+const device          = require('./device');
 
-router.use('/',mqtt);
+router.use('/',device);
 
 module.exports  = router;
