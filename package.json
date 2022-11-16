@@ -1,0 +1,37 @@
+{
+  "name": "smarthive",
+  "version": "0.0.1",
+  "description": "벌통용 서버",
+  "main": "smarthive.js",
+  "scripts": {
+    "start": "nodemon smarthive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkg4446/smarthive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pkg4446/smarthive/issues"
+  },
+  "homepage": "https://github.com/pkg4446/smarthive#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "morgan": "^1.10.0",
+    "mqtt": "^4.3.7",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.8.0",
+    "request-ip": "^3.3.0",
+    "sequelize": "^6.25.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
