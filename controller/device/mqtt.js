@@ -8,7 +8,9 @@ const options   = {
     password:   process.env.mqttpass,
 };
 const client = mqtt.connect(options);
+
 client.subscribe("SHS");
+
 client.on("error", (error) => {console.log("Can't connect" + error);});
 client.on("connect", () => {console.log("connected: "+ client.connected);});
 
