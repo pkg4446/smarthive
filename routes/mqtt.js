@@ -3,7 +3,7 @@ const mqtt    = require('../controller/device/mqtt');
 const router  = express.Router();
 
 router.post('/',async function(req,res) {
-        //MQTT
+        //Device
         console.log(req.body);
         if(req.body.FARM){
 

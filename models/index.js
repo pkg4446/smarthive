@@ -6,13 +6,19 @@ const db        = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 db.sequelize    = sequelize;
 
-/*
-const md_list   = require('./device/md_list');
+const farm   = require('./farm');
+db.farm      = farm;
+farm.init(sequelize);
+farm.associate(db);
 
-db.md_list      = md_list;
+const device   = require('./device');
+db.device      = device;
+device.init(sequelize);
+device.associate(db);
 
-md_list.init(sequelize);
+const log_sensor   = require('./log_sensor');
+db.log_sensor      = log_sensor;
+log_sensor.init(sequelize);
+log_sensor.associate(db);
 
-md_list.associate(db);
-*/
 module.exports = db;

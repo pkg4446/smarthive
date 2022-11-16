@@ -1,41 +1,52 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Farm extends Sequelize.Model{
+module.exports = class Device extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             MODULE: {
                 type: Sequelize.STRING(32),
                 primaryKey: true,
-                allowNull: false,
+                allowNull: false
             },
 
             NAME:  {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 0,
+                defaultValue: "신규등록"
             },
 
-            TEMP:  {
-                type: Sequelize.SMALLINT.UNSIGNED,
-                allowNull: false,
-                defaultValue: 0,
+            FARM: {
+                type: Sequelize.STRING(32),
+                allowNull: false
             },
 
-            HUMI:  {
+            TYPE:  {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
+            },
+
+            SET_TEMP:  {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 0,
+                defaultValue: 0
+            },
+
+            SET_HUMI:  {
+                type: Sequelize.SMALLINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
             },
 
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Farm',
-            tableName  : 'farm',
+            modelName  : 'Device',
+            tableName  : 'device',
             paranoid   : true,
             charset    : 'utf8',
-            collate    : 'utf8_general_ci',
+            collate    : 'utf8_general_ci'
         });
     }
     static associate(db) {

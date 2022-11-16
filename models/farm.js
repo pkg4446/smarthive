@@ -6,13 +6,13 @@ module.exports = class Farm extends Sequelize.Model{
             FARM: {
                 type: Sequelize.STRING(32),
                 primaryKey: true,
-                allowNull: false,
+                allowNull: false
             },
 
             NAME:  {
                 type: Sequelize.STRING(32),
                 allowNull: false,
-                defaultValue: "신규등록",
+                defaultValue: "신규등록"
             },
         },{
             sequelize,
@@ -22,7 +22,7 @@ module.exports = class Farm extends Sequelize.Model{
             tableName  : 'farm',
             paranoid   : true,
             charset    : 'utf8',
-            collate    : 'utf8_general_ci',
+            collate    : 'utf8_general_ci'
         });
     }
     static associate(db) {
