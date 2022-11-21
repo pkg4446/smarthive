@@ -18,8 +18,8 @@ PubSubClient mqttClient(mqtt_client);
 struct dataSet {
   String TYPE;
   String MODULE;
-  String TEMP;
-  String HUMI;
+  String VALUE1;
+  String VALUE2;
 };
 
 //// ------------ MQTT Callback ------------
@@ -39,11 +39,13 @@ int16_t command_Num;
 
 void command_Service() {
   struct dataSet dataSend;
-  dataSend.TYPE   = strtok(command_Buf, "=");
-  dataSend.MODULE = strtok(NULL, "=");
-  dataSend.TEMP   = strtok(NULL, "=");
-  dataSend.HUMI   = strtok(NULL, ";");
-  httpPOSTRequest(&dataSend);
+  dataSend.MODULE = strtok(command_Buf, "=");
+  dataSend.TYPE   = strtok(NULL, "=");
+  dataSend.VALUE1 = strtok(NULL, "=");
+  dataSend.VALUE2 = strtok(NULL, ";");
+  if (dataSend.TYPE != "P") {
+    httpPOSTRequest(&dataSend);
+  }
 }//Command_service() END
 
 void command_Process() {
@@ -64,7 +66,7 @@ void command_Process() {
 
 void setup() {
   Serial.begin(115200);
-  rootDvice.begin(115200, SERIAL_8N1, 19, 21);
+  rootDvice.begin(115200, SERIAL_8N1, 21, 22);
 
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   WiFiManager wm;
@@ -106,7 +108,7 @@ void setup() {
   char* sub_ID    = sendID;
 
   mqttClient.subscribe(topic_sub);
-  mqttClient.publish(topic_pub, topic_sub);
+  mqttClient.publish(topic_pub, sub_ID);
 
   Serial.print("subscribe: ");
   Serial.print(topic_sub);
@@ -126,11 +128,11 @@ void httpPOSTRequest(struct dataSet *ptr) {
 
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
   String httpRequestData = (String)"FARM="  + deviceID    +
-                           "&TYPE="         + ptr->TYPE   +
                            "&MODULE="       + ptr->MODULE +
-                           "&TEMP="         + ptr->TEMP   +
-                           "&HUMI="         + ptr->HUMI;
-  
+                           "&TYPE="         + ptr->TYPE   +
+                           "&VALUE1="       + ptr->VALUE1 +
+                           "&VALUE2="       + ptr->VALUE2;
+
   int httpResponseCode = http.POST(httpRequestData);
   Serial.print(httpRequestData);
   Serial.print("HTTP Response code: ");

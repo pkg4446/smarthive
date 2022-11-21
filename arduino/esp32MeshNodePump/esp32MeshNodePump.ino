@@ -29,22 +29,21 @@ void command_Service(String command, String value) {
   if (command == "AT+PUMP") {
     uint8_t number = value.toInt();
     pump_Water(number);
-    mesh.sendBroadcast("AT+SET=PUMP;");
   } else if (command == "AT+TIME") {
     MAX_TIME = value.toInt();
     EEPROM.write(MAX_PUMP, MAX_TIME);
     EEPROM.commit();
     Serial.print("MAX_TIME : ");
     Serial.println(MAX_TIME);
-    mesh.sendBroadcast("AT+SET=MAX;");
-  }  
+    mesh.sendBroadcast("PUMP=SET=TIME;");
+  }
 }//Command_service() END
 
 //taskSendMessage funtion
 void sendMessage() ; // Prototype so PlatformIO doesn't complain
 Task pumpLog( TASK_SECOND * 60, TASK_FOREVER, &sensorValue );
 void sensorValue() {
-  return;
+  mesh.sendBroadcast("PUMP=NET=" + String(MAX_TIME) + ";");
 }
 //taskSendMessage funtion end
 
@@ -86,7 +85,7 @@ void setup() {
 
   taskScheduler.addTask( pumpLog );
   pumpLog.enable();
-  
+
   Serial.print("MAX_TIME : ");
   Serial.println(MAX_TIME);
   Serial.println("System online.");
@@ -97,17 +96,17 @@ void loop() {
 }
 
 void pump_Water(uint8_t pumpNumber) {
-  if(pumpNumber == 0){
+  if (pumpNumber == 0) {
     digitalWrite(RELAY_PUMP[0], false);
     digitalWrite(RELAY_PUMP[1], false);
     digitalWrite(RELAY_PUMP[2], false);
-    Serial.println("Pump cut off");      
-  }else if(pumpNumber < 4){
-    digitalWrite(RELAY_PUMP[pumpNumber-1], true);
+    Serial.println("Pump cut off");
+  } else if (pumpNumber < 4) {
+    digitalWrite(RELAY_PUMP[pumpNumber - 1], true);
     TIME_CHECK = MAX_TIME;
-    Serial.print(pumpNumber);  
+    Serial.print(pumpNumber);
     Serial.println(" Pump run");
-  }else{
+  } else {
     Serial.println("error");
   }
 }//pump_Water() END
@@ -115,13 +114,13 @@ void pump_Water(uint8_t pumpNumber) {
 void max_times() {
   if ((millis() - time_Water) > 1000 * 60) {
     time_Water = millis();
-    if(TIME_CHECK > 1){
+    if (TIME_CHECK > 1) {
       TIME_CHECK--;
-    }else if(TIME_CHECK == 1){
+    } else if (TIME_CHECK == 1) {
       digitalWrite(RELAY_PUMP[0], false);
       digitalWrite(RELAY_PUMP[1], false);
       digitalWrite(RELAY_PUMP[2], false);
       TIME_CHECK--;
-    }    
+    }
   }//millis()
 }//stable() END
