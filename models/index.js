@@ -11,10 +11,10 @@ db.farm      = farm;
 farm.init(sequelize);
 farm.associate(db);
 
-const device   = require('./device');
-db.device      = device;
-device.init(sequelize);
-device.associate(db);
+const sensor   = require('./sensor');
+db.sensor      = sensor;
+sensor.init(sequelize);
+sensor.associate(db);
 
 const log_sensor   = require('./log_sensor');
 db.log_sensor      = log_sensor;

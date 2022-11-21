@@ -26,6 +26,12 @@ module.exports = class Log_sensor extends Sequelize.Model{
                 defaultValue: 0
             },
 
+            TMST:  {
+                type: Sequelize.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.NOW
+            },
+
         },{
             sequelize,
             timestamps : false,

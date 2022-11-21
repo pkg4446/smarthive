@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Device extends Sequelize.Model{
+module.exports = class Sensor extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             MODULE: {
@@ -21,16 +21,35 @@ module.exports = class Device extends Sequelize.Model{
             },
 
             TYPE:  {
-                type: Sequelize.BOOLEAN,
+                type: Sequelize.STRING(8),
                 allowNull: false,
-                defaultValue: true
+                defaultValue: "sensor"
             },
+
+            STATE:  {
+                type: Sequelize.STRING(8),
+                allowNull: false,
+                defaultValue: "정상"
+            },
+
+            SET_TEMP:  {
+                type: Sequelize.SMALLINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
+            },
+
+            SET_HUMI:  {
+                type: Sequelize.SMALLINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
+            },
+
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Device',
-            tableName  : 'device',
+            modelName  : 'Sensor',
+            tableName  : 'sensor',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

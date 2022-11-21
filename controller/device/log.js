@@ -5,9 +5,9 @@ module.exports  = {
     log_sensor :    async function(data){
         try {
             await log_sensor.create({
-                MODULE: data.DEVICE_ID,
-                TEMP:   data.TEMP,
-                HUMI:   data.HUMI
+                MODULE: data.MODULE,
+                TEMP:   data.VALUE1*100,
+                HUMI:   data.VALUE2*100
             });
         } catch (error) {
             console.log(error);

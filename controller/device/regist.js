@@ -1,5 +1,5 @@
 const Farm      = require('../../models/farm');
-const Device    = require('../../models/device');
+const Sensor    = require('../../models/sensor');
 const Sequelize = require('../module');
 
 module.exports  = {
@@ -16,13 +16,26 @@ module.exports  = {
         }        
     },
 
-    regist_device : async function(data){
+    farm_ip :       async function(FARM_ID,IP){
         try {
-            const device = await Device.findByPk(data.DEVICE_ID,{raw : true});
-            if(device){
-                await Device.create({
-                    MODULE: data.DEVICE_ID,
-                    FARM:   data.FARM_ID,
+            await Farm.findByPk(FARM_ID)
+            .then(function(response) {
+                if(response.IP != IP) response.update({IP: IP})
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    regist_sensor : async function(data){
+        try {
+            const device = await Sensor.findByPk(data.MODULE,{raw : true});
+            if(!device){
+                await Sensor.create({
+                    MODULE: data.MODULE,
+                    FARM:   data.FARM,
                   });
             }
         } catch (error) {
