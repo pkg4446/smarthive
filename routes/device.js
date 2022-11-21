@@ -13,7 +13,7 @@ router.route('/')
         //Device
         console.log(req.body);
         if(req.body.FARM){
-            let IP  = requestIp.getClientIp(req);
+            const IP  = requestIp.getClientIp(req);
             await regist.farm_ip(req.body.FARM,IP);
             switch (req.body.TYPE) {
                 case "SENSOR":                    
