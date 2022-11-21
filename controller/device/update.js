@@ -1,5 +1,4 @@
 const Sensor    = require('../../models/sensor');
-const Sequelize = require('../module');
 
 module.exports  = {
     sensor_error :  async function(MODULE,ERR){

@@ -1,6 +1,5 @@
 const log_error     = require('../../models/log_error');
 const log_sensor    = require('../../models/log_sensor');
-const Sequelize     = require('../module');
 
 module.exports  = {
     log_error :    async function(data){

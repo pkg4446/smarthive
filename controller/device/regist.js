@@ -1,7 +1,6 @@
 const Farm      = require('../../models/farm');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
-const Sequelize = require('../module');
 
 module.exports  = {
     regist_farm :   async function(FARM_ID){

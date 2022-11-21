@@ -9,6 +9,12 @@ module.exports = class Farm extends Sequelize.Model{
                 allowNull: false
             },
 
+            USER: {
+                type: Sequelize.STRING(32),
+                allowNull: false,
+                defaultValue: "테스터"
+            },
+
             NAME:  {
                 type: Sequelize.STRING(32),
                 allowNull: false,

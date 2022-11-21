@@ -1,46 +1,62 @@
 const Farm      = require('../../models/farm');
+const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
+const Log_error     = require('../../models/log_error');
+const Log_sensor    = require('../../models/log_sensor');
+
 const Sequelize = require('../module');
+const { Op }    = require("sequelize");
 
 module.exports  = {
-    regist_farm :   async function(FARM_ID){
+    farm :   async function(USER_ID){
         try {
-            const farm = await Farm.findByPk(FARM_ID,{raw : true});
+            const farm = await Farm.findAll({
+                where: {USER: USER_ID},
+                raw : true
+            });
             return farm;
         } catch (error) {
             console.log(error);
         }        
     },
 
-    farm_ip :       async function(FARM_ID,IP){
+    hive :   async function(FARM_ID){
         try {
-            await Farm.findByPk(FARM_ID)
-            .then(function(response) {
-                if(response.IP != IP) response.update({IP: IP})
-            });
-            return true;
+            const response = {
+                pump:   await Pump.findAll({where: {FARM: FARM_ID},raw : true}),
+                sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true})
+            }
+            return response;
         } catch (error) {
             console.log(error);
-            return false;
         }        
     },
 
-    regist_sensor : async function(data){
+    log_sensor:   async function(FARM_ID){
         try {
-            const device = await Sensor.findByPk(data.MODULE,{raw : true});
-            if(!device){
-                await Sensor.create({
-                    MODULE: data.MODULE,
-                    FARM:   data.FARM,
-                });
-            }else if(device.FARM != data.FARM){
-                await Sensor.findByPk(data.MODULE)
-                .then(function(response) {
-                    response.update({FARM: data.FARM})
-                });
-            }
+            const response = await Log_error.findAll({
+                where: {FARM: FARM_ID},
+                order :[['MESURE_DT', 'DESC']],
+                limit: 200,
+                raw : true,
+            });
+            return response;
         } catch (error) {
             console.log(error);
-        }
+        }        
+    },
+
+    log_sensor:   async function(SENSOR_ID){
+        try {
+            const response = await Log_sensor.findAll(
+                {where: {MODULE: SENSOR_ID},
+                order :[['MESURE_DT', 'DESC']],
+                limit: 1440,
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
     },
 }
