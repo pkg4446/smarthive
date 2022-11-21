@@ -20,12 +20,6 @@ module.exports = class Sensor extends Sequelize.Model{
                 allowNull: false
             },
 
-            TYPE:  {
-                type: Sequelize.STRING(8),
-                allowNull: false,
-                defaultValue: "sensor"
-            },
-
             STATE:  {
                 type: Sequelize.STRING(8),
                 allowNull: false,

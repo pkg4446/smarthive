@@ -20,8 +20,14 @@ router.post('/',async function(req,res) {
                         await log.log_error(req.body);
                         await update.sensor_error(req.body.MODULE,req.body.VALUE2);
                     }else if(req.body.VALUE1 == "SET"){
-                        console.log(req.body.VALUE1);
+                        console.log("route/device.js:",req.body.VALUE1);
                     }else{await log.log_sensor(req.body);}
+                    break;
+                case "PUMP":  
+                    await regist.regist_pump(req.body);
+                    if(true){
+                        console.log("route/device.js: PUMP");
+                    }
                     break;
                 default:
                     break;

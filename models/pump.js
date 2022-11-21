@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Device extends Sequelize.Model{
+module.exports = class Pump extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             MODULE: {
@@ -20,17 +20,23 @@ module.exports = class Device extends Sequelize.Model{
                 allowNull: false
             },
 
-            TYPE:  {
-                type: Sequelize.STRING(8),
-                allowNull: false,
-                defaultValue: true
+            RUN: {
+                type: Sequelize.TINYINT.UNSIGNED,
+                allowNull: false
             },
+
+            TMST:  {
+                type: Sequelize.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.NOW
+            }
+            
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Device',
-            tableName  : 'device',
+            modelName  : 'Pump',
+            tableName  : 'pump',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

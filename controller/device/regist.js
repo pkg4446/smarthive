@@ -1,4 +1,5 @@
 const Farm      = require('../../models/farm');
+const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
 const Sequelize = require('../module');
 
@@ -29,6 +30,28 @@ module.exports  = {
             console.log(error);
             return false;
         }        
+    },
+
+    regist_pump : async function(data){
+        try {
+            const device = await Pump.findByPk(data.MODULE,{raw : true});
+            if(!device){
+                await Pump.create({
+                    MODULE: data.MODULE,
+                    FARM:   data.FARM,
+                    RUN:    data.VALUE2
+                });
+            }else if(device.FARM != data.FARM){
+                await Pump.findByPk(data.MODULE)
+                .then(function(response) {
+                    response.update({FARM: data.FARM})
+                });
+            }
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     },
 
     regist_sensor : async function(data){
