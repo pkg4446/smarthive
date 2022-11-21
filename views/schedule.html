@@ -1,0 +1,674 @@
+<script type="text/javascript">
+    window.onload=function(){
+        calendarInit();
+    }
+
+    const hollyDay_Sun = {
+        1:{1:"신정"},
+        3:{1:"3.1절"},
+        5:{1:"근로자의 날",5:"어린이날"},
+        6:{6:"현충일"},
+        8:{15:"광복절"},
+        10:{3:"개천절",9:"한글날"},
+        12:{25:"크리스마스"}
+    };
+    const hollyDay_luna = {
+        1:{1:"설날",2:"설날"},
+        4:{8:"부처님 오신날"},
+        8:{14:"추석",15:"추석",16:"추석"},
+    };
+    let totalDay;
+
+    function calendarInit() {
+        // 날짜 정보 가져오기
+        let date    = new Date(); // 현재 날짜(로컬 기준) 가져오기
+        let utc     = date.getTime() + (date.getTimezoneOffset() * 60 * 1000); // uct 표준시 도출
+        let kstGap  = 9 * 60 * 60 * 1000; // 한국 kst 기준시간 더하기
+        let today   = new Date(utc + kstGap); // 한국 시간으로 date 객체 만들기(오늘)
+    
+        let thisMonth   = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        // 달력에서 표기하는 날짜 객체   
+
+        document.getElementById("year").value   = thisMonth.getFullYear();
+        document.getElementById("month").value  = thisMonth.getMonth();
+
+        // 캘린더 렌더링
+        renderCalender(thisMonth,today);
+    }
+
+    function move(month) {
+        let currentYear     = document.getElementById("year").value*1;
+        let currentMonth    = document.getElementById("month").value*1;
+        let thisMonth   = new Date(currentYear, currentMonth + month, 1);
+        document.getElementById("year").value   = thisMonth.getFullYear();
+        document.getElementById("month").value  = thisMonth.getMonth();
+        renderCalender(thisMonth,new Date());
+    }
+
+    function renderCalender(thisMonth,today) {
+        // 렌더링을 위한 데이터 정리
+        currentYear     = thisMonth.getFullYear();
+        currentMonth    = thisMonth.getMonth();
+        currentDate     = thisMonth.getDate();
+
+        // 이전 달의 마지막 날 날짜와 요일 구하기
+        let startDay    = new Date(currentYear, currentMonth, 0);
+        let prevDate    = startDay.getDate();
+        let prevDay     = startDay.getDay();
+
+        // 이번 달의 마지막날 날짜와 요일 구하기
+        let endDay      = new Date(currentYear, currentMonth + 1, 0);
+        let nextDate    = endDay.getDate();
+        let nextDay     = endDay.getDay();
+
+        // console.log(prevDate, prevDay, nextDate, nextDay);
+
+        // 현재 월 표기
+        document.getElementById("year-month").innerText = currentYear + '.' + (currentMonth + 1);
+
+        // 렌더링 html 요소 생성
+        calendar = document.querySelector('.dates')
+        calendar.innerHTML = '';        
+        let sat = 0;
+        let sun = 0;
+        let holly = 0//법정 공휴일 따로 데이터셋을 넣기
+        // 지난달
+        let days = 0;
+        totalDay = 0;
+        for (let i = prevDate - prevDay ; i <= prevDate; i++) {
+            calendar.innerHTML += '<div class="day prev disable">' + i + '</div>'
+            days++;
+        }
+        // 이번달
+        for (let i = 1; i <= nextDate; i++) {
+            const luna = solarToLunar(currentYear,currentMonth+1,i);
+            let fontColor = "black"
+            let TODAY     = ""; 
+            let hollyDay  = false;
+            let DOTW      = days % 7;
+            if(DOTW == 0){hollyDay=true;sun++;fontColor = "red";}
+            else if(DOTW == 6){hollyDay=true;sat++;fontColor = "blue";}
+            if(hollyDay_luna[luna.month]&&hollyDay_luna[luna.month][luna.day]){hollyDay=true;holly++;fontColor = "red";TODAY=hollyDay_luna[luna.month][luna.day];}
+            else if((luna.month == 12) && (luna.day == luna.lunMonthDay)){hollyDay=true;holly++;fontColor = "red";TODAY="설날";}
+            days++;
+            totalDay++;
+            calendar.innerHTML  += `<div class="day current">
+                                <input type="hidden" id="day${i}" value="${hollyDay}">
+                                <input type="hidden" id="day${i}dotw" value="${DOTW}">
+                                <input type="hidden" id="day${i}type" value="NULL">
+                                <table><tbody><tr><th align="center" ><font color=${fontColor}>${i} ${TODAY}</font></th></tr>
+                                    <tr><td align="center" ><font color=${fontColor}>${luna.month}.${luna.day}</font></td></tr><tr><td>
+                                        <select onchange="selectButton(${i},this)">
+                                            <option value="NULL">OFF</option>
+                                            <option value="HOLLY">공휴일</option>
+                                            <option value="NAME_A">A</option>
+                                            <option value="NAME_B">B</option>
+                                            <option value="NAME_C">C</option>
+                                        </select>
+                                </td></tr></tbody></table>`+ '</div>';            
+        }
+        // 다음달
+        for (let i = 1; i < (7 - nextDay == 7 ? 0 : 7 - nextDay); i++) {
+            calendar.innerHTML += '<div class="day next disable">' + i + '</div>'
+            days++;
+        }
+        
+        // 오늘 날짜 표기
+        if (today.getMonth() == currentMonth) {
+            todayDate = today.getDate();
+            let currentMonthDate = document.querySelectorAll('.dates .current');
+            currentMonthDate[todayDate -1].classList.add('today');
+        }
+    }
+
+    function selectButton(index,target) {
+        document.getElementById(`day${index}type`).value = target.value;
+        //console.log(target.options[target.selectedIndex].text);
+    }
+    
+    function test() {
+        const calendar = {};
+        for (let index = 1; index <= totalDay; index++) {
+            let hollyday = false;
+
+            let input_holly = document.getElementById("day"+index).value;       //휴무
+            let input_dotw  = document.getElementById(`day${index}dotw`).value*1; //요일
+            let input_type  = document.getElementById(`day${index}type`).value; //연차
+
+            if(input_holly == "true"){hollyday = true;}
+            if(input_type  == "HOLLY"){hollyday = true;}
+            
+            calendar[index]={
+                holly:  hollyday,
+                dotw:   input_dotw,
+                off:    input_type
+            }
+        }
+        const schedule = {};
+        let count_A = 0;
+        let count_B = 0;
+        let count_C = 0;
+        for (const key in calendar) {
+            schedule[key] = {
+                NAME_A: "OFF",
+                NAME_B: "OFF",
+                NAME_C: "OFF",
+            }
+
+            let pool = [];
+            if((count_A<3)&&(calendar[key].off != "NAME_A")){pool.push("NAME_A");}
+            if((count_B<3)&&(calendar[key].off != "NAME_B")){pool.push("NAME_B");}                
+            if((count_C<3)&&(calendar[key].off != "NAME_C")){pool.push("NAME_C");}
+            let choice_A = true;
+            let choice_B = true;
+            let choice_C = true;
+
+            console.log(pool);
+            if(pool.length<2){
+                console.log(pool);
+            }else if(calendar[key].holly){                
+                const TS   = pool[random(pool.length)];
+                schedule[key][TS]  = "TS";
+
+                if(TS == "NAME_A"){     count_A+=1;choice_A=false;}
+                else if(TS == "NAME_B"){count_B+=1;choice_B=false;}
+                else if(TS == "NAME_C"){count_C+=1;choice_C=false;}
+                if(choice_A){count_A=0};
+                if(choice_B){count_B=0};
+                if(choice_C){count_C=0};
+
+            }else if((calendar[key].off != "NAME_A")||(calendar[key].off != "NAME_B")||(calendar[key].off != "NAME_C")){
+                let   number    = random(pool.length);
+                const DAY   = pool[random(pool.length)];
+                schedule[key][DAY]  = "DAY";
+
+                pool.splice(number, 1);
+                number      = random(pool.length);
+                const EVE   = pool[random(pool.length)];                
+                schedule[key][EVE]  = "EVE";
+
+                if(DAY == "NAME_A"){     count_A+=1;choice_A=false;}
+                else if(DAY == "NAME_B"){count_B+=1;choice_B=false;}
+                else if(DAY == "NAME_C"){count_C+=1;choice_C=false;}
+                if(EVE == "NAME_A"){     count_A+=1;choice_A=false;}
+                else if(EVE == "NAME_B"){count_B+=1;choice_B=false;}
+                else if(EVE == "NAME_C"){count_C+=1;choice_C=false;} 
+                if(choice_A){count_A=0};
+                if(choice_B){count_B=0};
+                if(choice_C){count_C=0};
+
+            }else if(calendar[key].dotw == 1){
+                let   number    = random(pool.length);
+                const DAY   = pool[random(pool.length)];
+                schedule[key][DAY]  = "DAY";
+
+                pool.splice(number, 1);
+                number      = random(pool.length);
+                let EVE   = pool[random(pool.length)];                
+                schedule[key][EVE]  = "EVE";
+
+                pool.splice(number, 1);
+                number      = random(pool.length);
+                EVE   = pool[random(pool.length)];                
+                schedule[key][EVE]  = "EVE";
+
+                count_A+=1;
+                count_B+=1;
+                count_C+=1;
+
+            }else{
+                let   number    = random(pool.length);
+                const DAY   = pool[random(pool.length)];
+                pool.splice(number, 1);
+                number      = random(pool.length);
+                const EVE   = pool[random(pool.length)];
+
+                schedule[key][DAY]  = "DAY";
+                schedule[key][EVE]  = "EVE";
+
+                if(DAY == "NAME_A"){     count_A+=1;choice_A=false;}
+                else if(DAY == "NAME_B"){count_B+=1;choice_B=false;}
+                else if(DAY == "NAME_C"){count_C+=1;choice_C=false;}
+                if(EVE == "NAME_A"){     count_A+=1;choice_A=false;}
+                else if(EVE == "NAME_B"){count_B+=1;choice_B=false;}
+                else if(EVE == "NAME_C"){count_C+=1;choice_C=false;} 
+                if(choice_A){count_A=0};
+                if(choice_B){count_B=0};
+                if(choice_C){count_C=0};      
+
+            }   
+        }
+        
+        console.log(schedule);
+    }
+
+    function random(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function renderCalenderSet() {
+        // 렌더링을 위한 데이터 정리
+        let thisMonth   = new Date();
+        currentYear     = thisMonth.getFullYear();
+        currentMonth    = thisMonth.getMonth();
+        currentDate     = thisMonth.getDate();
+
+        // 이전 달의 마지막 날 날짜와 요일 구하기
+        let startDay    = new Date(currentYear, currentMonth, 0);
+        let prevDate    = startDay.getDate();
+        let prevDay     = startDay.getDay();
+
+        // 이번 달의 마지막날 날짜와 요일 구하기
+        let endDay      = new Date(currentYear, currentMonth + 1, 0);
+        let nextDate    = endDay.getDate();
+        let nextDay     = endDay.getDay();
+
+        // console.log(prevDate, prevDay, nextDate, nextDay);
+
+        // 현재 월 표기
+        document.getElementById("year-month").innerText = currentYear + '.' + (currentMonth + 1);
+
+        // 렌더링 html 요소 생성
+        calendar = document.querySelector('.dateC')
+        calendar.innerHTML = '';
+
+        let sat = 0;
+        let sun = 0;
+        let holly = 0//법정 공휴일 따로 데이터셋을 넣기
+        // 지난달
+        let days = 0;
+        for (let i = prevDate - prevDay ; i <= prevDate; i++) {
+            calendar.innerHTML = calendar.innerHTML + '<div class="day prev disable">' + i + '</div>'
+            days++;
+        }
+        // 이번달
+        for (let i = 1; i <= nextDate; i++) {
+            if((days%7) == 0){sun++;}
+            else if((days%7) == 6){sat++;}
+            calendar.innerHTML = calendar.innerHTML + `<div class="day current" id="day${i}">` + i + 'test</div>'
+            days++;
+        }
+        // 다음달
+        for (let i = 1; i < (7 - nextDay == 7 ? 0 : 7 - nextDay); i++) {
+            calendar.innerHTML = calendar.innerHTML + '<div class="day next disable">' + i + '</div>'
+            days++;
+        }
+    }
+
+
+    
+</script>
+
+<style type="text/css"> 
+    /* section calendar */
+
+.sec_cal {
+    width: 100%;
+    margin: 0 auto;
+    font-family: "NotoSansR";
+}
+
+.sec_cal .info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 100;
+    font-size: 28px;
+    line-height: 30px;
+}
+
+.sec_cal .info .mation {
+    width: 300px;
+    text-align: center;
+    line-height: 1;
+}
+
+.sec_cal .cal_nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 78px;
+}
+
+.sec_cal .cal_nav .year-month {
+    width: 300px;
+    text-align: center;
+    line-height: 1;
+}
+
+.sec_cal .cal_nav .nav {
+    display: flex;
+    border: 1px solid #333333;
+    border-radius: 5px;
+}
+
+.sec_cal .cal_nav .go-prev,
+.sec_cal .cal_nav .go-next {
+    display: block;
+    width: 50px;
+    height: 78px;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sec_cal .cal_nav .go-prev::before,
+.sec_cal .cal_nav .go-next::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #000;
+    border-width: 3px 3px 0 0;
+    transition: border 0.1s;
+}
+
+.sec_cal .cal_nav .go-prev:hover::before,
+.sec_cal .cal_nav .go-next:hover::before {
+    border-color: #ed2a61;
+}
+
+.sec_cal .cal_nav .go-prev::before {
+    transform: rotate(-135deg);
+}
+
+.sec_cal .cal_nav .go-next::before {
+    transform: rotate(45deg);
+}
+
+.sec_cal .cal_wrap {
+    padding-top: 40px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.sec_cal .cal_wrap .days {
+    display: flex;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sec_cal .cal_wrap::after {
+    top: 368px;
+}
+
+.sec_cal .cal_wrap .day {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% / 7);
+    text-align: left;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    border-radius:5px
+}
+
+.sec_cal .cal_wrap .day .table {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% / 7);
+    text-align: left;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    border-radius:5px
+}
+
+.current.today {background: rgb(242 242 242);}
+
+.sec_cal .cal_wrap .dates {
+    display: flex;
+    flex-flow: wrap;
+    height: 500px;
+}
+.sec_cal .cal_wrap .dateC {
+    display: flex;
+    flex-flow: wrap;
+    height: 500px;
+}
+
+.sec_cal .cal_wrap .day:nth-child(7n) {
+    color: #3c6ffa;
+}
+
+.sec_cal .cal_wrap .day:nth-child(7n+1) {
+    color: #ed2a61;
+}
+
+.sec_cal .cal_wrap .day.disable {
+    color: #ddd;
+}
+</style>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Scheduler</title>
+</head>
+<body>
+    <input type="hidden" id="year">
+    <input type="hidden" id="month">
+    <div class="sec_cal">
+        <div class="cal_nav">
+          <span class="nav-btn go-prev" onclick="move(-1)">prev</span>
+          <div class="year-month" id="year-month"></div>
+          <span class="nav-btn go-next" onclick="move(1)">next</span>
+        </div>
+        <div class="info">
+            <div class="mation" onclick="test()">test</div>
+        </div>
+        <div class="cal_wrap">
+          <div class="days">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+          </div>
+          <div class="dates"></div>
+          <hr>
+          <div class="dateC"></div>
+        </div>
+      </div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    function myDate(year, month, day, leapMonth, lunMonthDay) {
+            this.year   = year;
+            this.month  = month;
+            this.day    = day;
+            this.leapMonth      = leapMonth;
+            this.lunMonthDay    = lunMonthDay;
+    }
+
+    // 양력을 음력으로 계산
+    function lunarCalc(year, month, day) {
+            let solYear, solMonth, solDay;
+            let lunYear, lunMonth, lunDay;
+            let lunLeapMonth, lunMonthDay;
+            let i, lunIndex;
+
+            let solMonthDay = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+            const LUNAR_LAST_YEAR = 2020;
+            let lunarMonthTable = [            
+                [2, 1, 2, 5, 2, 1, 1, 2, 1, 2, 1, 2],
+                [1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],   /* 2021 */
+                [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+                [1, 5, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+                [1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+                [2, 1, 2, 1, 1, 5, 2, 1, 2, 2, 2, 1],
+                [2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+                [1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 2],
+                [1, 2, 2, 1, 5, 1, 2, 1, 1, 2, 2, 1],
+                [2, 2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2],
+                [1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+                [2, 1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1],   /* 2031 */
+                [2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
+                [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 5, 2],
+                [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+                [2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+                [2, 2, 1, 2, 1, 4, 1, 1, 2, 2, 1, 2],
+                [2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+                [2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
+                [2, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 1],
+                [2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+                [2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],   /* 2041 */
+                [1, 5, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
+                [1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2]];
+
+            /* range check */
+            if (year < 1940 || year > 2040) {
+                alert('2021년부터 2043년까지만 지원합니다');
+                return;
+            }
+
+            /* 속도 개선을 위해 기준 일자를 여러개로 한다 */
+            if (year >= 2020) {
+                /* 기준일자 양력 2021년 1월 1일 (음력 2020년 11월 18일) */
+                solYear = 2021;
+                solMonth = 1;
+                solDay = 1;
+                lunYear = 2020;
+                lunMonth = 11;
+                lunDay = 18;
+                lunLeapMonth = 0;
+
+                solMonthDay[1] = 29;    /* 2000 년 2월 28일 */
+                lunMonthDay = 30;   /* 1999년 11월 */
+            }
+
+            lunIndex = lunYear - LUNAR_LAST_YEAR;
+            // 반복문이 돌면서 양력 값들과 음력 값들을 1일 씩 증가시키고
+            // 입력받은 날짜값과 양력 값이 일치할 때 음력값을 반환함
+            while (true) {
+                if (year == solYear &&
+                    month == solMonth &&
+                    day == solDay) {
+                    return new myDate(lunYear, lunMonth, lunDay, lunLeapMonth, lunMonthDay);
+                }
+
+                // 양력의 마지막 날일 경우 년도를 증가시키고 나머지 초기화
+                if (solMonth == 12 && solDay == 31) {
+                    solYear++;
+                    solMonth = 1;
+                    solDay = 1;
+
+                    // 윤년일 시 2월달의 총 일수를 1일 증가
+                    if (solYear % 400 == 0)
+                        solMonthDay[1] = 29;
+                    else if (solYear % 100 == 0)
+                        solMonthDay[1] = 28;
+                    else if (solYear % 4 == 0)
+                        solMonthDay[1] = 29;
+                    else
+                        solMonthDay[1] = 28;
+
+                }
+                // 현재 날짜가 달의 마지막 날짜를 가리키고 있을 시 달을 증가시키고 날짜 1로 초기화
+                else if (solMonthDay[solMonth - 1] == solDay) {
+                    solMonth++;
+                    solDay = 1;
+                }
+                else
+                    solDay++;
+
+                // 음력의 마지막 날인 경우 년도를 증가시키고 달과 일수를 초기화
+                if (lunMonth == 12 &&
+                    ((lunarMonthTable[lunIndex][lunMonth - 1] == 1 && lunDay == 29) ||
+                        (lunarMonthTable[lunIndex][lunMonth - 1] == 2 && lunDay == 30))) {
+                    lunYear++;
+                    lunMonth = 1;
+                    lunDay = 1;
+
+                    if (lunYear > 2043) {
+                        alert("입력하신 달은 없습니다.");
+                        break;
+                    }
+
+                    // 년도가 바꼈으니 index값 수정
+                    lunIndex = lunYear - LUNAR_LAST_YEAR;
+
+                    // 음력의 1월에는 1 or 2만 있으므로 1과 2만 비교하면됨
+                    if (lunarMonthTable[lunIndex][lunMonth - 1] == 1)
+                        lunMonthDay = 29;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 2)
+                        lunMonthDay = 30;
+                }
+                // 현재날짜가 이번달의 마지막날짜와 일치할 경우
+                else if (lunDay == lunMonthDay) {
+
+                    // 윤달인데 윤달계산을 안했을 경우 달의 숫자는 증가시키면 안됨
+                    if (lunarMonthTable[lunIndex][lunMonth - 1] >= 3 && lunLeapMonth == 0) {
+                        lunDay = 1;
+                        lunLeapMonth = 1;
+                    }
+                    // 음달이거나 윤달을 계산 했을 겨우 달을 증가시키고 lunLeapMonth값 초기화
+                    else {
+                        lunMonth++;
+                        lunDay = 1;
+                        lunLeapMonth = 0;
+                    }
+
+                    // 음력의 달에 맞는 마지막날짜 초기화
+                    if (lunarMonthTable[lunIndex][lunMonth - 1] == 1)
+                        lunMonthDay = 29;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 2)
+                        lunMonthDay = 30;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 3)
+                        lunMonthDay = 29;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 4 &&
+                        lunLeapMonth == 0)
+                        lunMonthDay = 29;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 4 &&
+                        lunLeapMonth == 1)
+                        lunMonthDay = 30;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 5 &&
+                        lunLeapMonth == 0)
+                        lunMonthDay = 30;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 5 &&
+                        lunLeapMonth == 1)
+                        lunMonthDay = 29;
+                    else if (lunarMonthTable[lunIndex][lunMonth - 1] == 6)
+                        lunMonthDay = 30;
+                }
+                else
+                    lunDay++;
+            }
+        }
+
+        // 양력을 음력날짜로 변환
+        function solarToLunar(solYear, solMonth, solDay) {
+            // 날짜 형식이 안맞을 경우 공백 반환
+            if (!solYear || solYear == 0 ||
+                !solMonth || solMonth == 0 ||
+                !solDay || solDay == 0) {
+                return "";
+            }
+            // 양력의 달마다의 일수
+            let solMonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            // 윤년일 시 2월에 1일 추가
+            if (solYear % 400 == 0 || (solYear % 4 == 0 && solYear % 100 != 0)) solMonthDays[1] += 1;
+
+            if (solMonth < 1 || solMonth > 12 ||
+                solDay < 1 || solDay > solMonthDays[solMonth - 1]) {
+                return "";
+            }
+
+            /* 양력/음력 변환 */
+            let lunaDay = lunarCalc(solYear, solMonth, solDay);
+            //console.log(`${solYear}년 ${solMonth}월 ${solDay}일`,"음력 " + date.year + "년 " + (date.leapMonth ? "(윤)" : "") + date.month + "월 " + date.day);
+            return lunaDay;
+        }    
+</script>

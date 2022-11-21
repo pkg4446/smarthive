@@ -5,9 +5,11 @@ const regist    = require('../controller/device/regist');
 const update    = require('../controller/device/update');
 const log       = require('../controller/device/log');
 
-
-
-router.post('/',async function(req,res) {
+router.route('/')
+    .get(async (req, res, next)     => {
+        res.render('page/main',{TITLE:"Test Page"});
+    })
+    .post(async (req, res, next)    => {
         //Device
         console.log(req.body);
         if(req.body.FARM){

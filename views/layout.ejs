@@ -1,0 +1,43 @@
+<style>
+    body {height: 100%;}
+</style>
+
+<!-- jquery -->    
+<script src="/public/js/jquery.min.js"></script>
+<script src="/public/js/jquery.scrolly.min.js"></script>
+<script src="/public/js/jquery.scrollex.min.js"></script>
+
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>    
+    <title>web page test The EG</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+    <noscript><link rel="stylesheet" href="/public/assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Header -->
+        <%- include('head') %>
+        <%- include('menu') %>    
+        <!-- Content Wrapper -->
+        <%- body %> 
+        <!-- Footer -->
+        <%- include('footer') %>       
+    </div>
+
+    <!-- Scripts -->    
+    <script src="/public/js/browser.min.js"></script>
+    <script src="/public/js/breakpoints.min.js"></script>
+    <script src="/public/js/util.js"></script>
+    <script src="/public/js/main.js"></script>  
+    <%- script %>    
+
+</body>
+      
+</html>
+
+
