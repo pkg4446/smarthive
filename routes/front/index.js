@@ -1,7 +1,7 @@
 const express   = require('express');
 const router    = express.Router();
-/*
-const exam = require('./exam');
-router.use('/exam', exam);
-*/
+
+const page = require('./page');
+router.use('/', page);
+
 module.exports = router;

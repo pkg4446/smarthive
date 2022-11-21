@@ -1,7 +1,7 @@
 const express   = require('express');
 const router    = express.Router();
 
-const device = require('./device');
-router.use('/device', device);
+const read = require('./read');
+router.use('/read', read);
 
 module.exports = router;
