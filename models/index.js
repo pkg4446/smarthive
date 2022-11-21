@@ -16,6 +16,11 @@ db.sensor      = sensor;
 sensor.init(sequelize);
 sensor.associate(db);
 
+const log_error   = require('./log_error');
+db.log_error      = log_error;
+log_error.init(sequelize);
+log_error.associate(db);
+
 const log_sensor   = require('./log_sensor');
 db.log_sensor      = log_sensor;
 log_sensor.init(sequelize);

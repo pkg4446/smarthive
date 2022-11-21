@@ -32,16 +32,22 @@ module.exports = class Sensor extends Sequelize.Model{
                 defaultValue: "정상"
             },
 
+            USE:  {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
+
             SET_TEMP:  {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 0
+                defaultValue: 5
             },
 
             SET_HUMI:  {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 0
+                defaultValue: 50
             },
 
         },{

@@ -36,7 +36,6 @@ module.exports = {
             data: null
         }
         try {
-            console.log(data)
             sendMQTT(data.TARGET, data.COMMEND);
         } catch (error) {
             res.pass = false;

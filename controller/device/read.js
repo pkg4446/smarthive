@@ -6,15 +6,9 @@ module.exports  = {
     regist_farm :   async function(FARM_ID){
         try {
             const farm = await Farm.findByPk(FARM_ID,{raw : true});
-            if(!farm){
-                await Farm.create({
-                    FARM:   FARM_ID
-                });
-            }
-            return true;
+            return farm;
         } catch (error) {
             console.log(error);
-            return false;
         }        
     },
 
@@ -45,10 +39,8 @@ module.exports  = {
                     response.update({FARM: data.FARM})
                 });
             }
-            return true;
         } catch (error) {
             console.log(error);
-            return false;
         }
     },
 }
