@@ -1,4 +1,5 @@
 const mqtt      = require("mqtt");
+const regist    = require('../../controller/device/regist');
 
 const options   = {
     host:       process.env.host,
@@ -19,7 +20,9 @@ client.on("message", async(topic, message) => {
     const device = message.toString().split('=');
     
     try {
-        console.log(device);
+        if(device[0] == "ID"){
+            await regist.regist_farm(device[1]);
+        }        
     } catch (error) {
         console.error(error);
     }    

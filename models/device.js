@@ -10,7 +10,7 @@ module.exports = class Device extends Sequelize.Model{
             },
 
             NAME:  {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.STRING(32),
                 allowNull: false,
                 defaultValue: "신규등록"
             },

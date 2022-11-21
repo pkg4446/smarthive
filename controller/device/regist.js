@@ -7,8 +7,8 @@ module.exports  = {
         try {
             const farm = await Farm.findByPk(FARM_ID,{raw : true});
             if(!farm){
-                await farm.create({
-                    FARM:   data.FARM_ID
+                await Farm.create({
+                    FARM:   FARM_ID
                   });
             }
         } catch (error) {
