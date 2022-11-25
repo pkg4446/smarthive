@@ -60,6 +60,40 @@ void command_Service(String command, String value) {
   EEPROM.commit();
 }//Command_service() END
 
+//// ----------- TEST  -----------
+void AT_commandHelp() {
+  Serial.println("------------ AT command help ------------");
+  Serial.println(";AT+TEMP = int;      Temperature Change.");
+  Serial.println(";AT+HUMI = int;      Humidity Change.");
+  Serial.println(";AT+USE  = int;      Useable Change.");
+  Serial.println(";AT+WATER= int;      Water Alarm Reset.");
+}
+char Serial_buf[SERIAL_MAX];
+int8_t Serial_num;
+void Serial_service() {
+  String str1 = strtok(Serial_buf, "=");
+  String str2 = strtok(NULL, " ");
+  command_Service(str1,str2);
+}
+void Serial_process() {
+  char ch;
+  ch = Serial.read();
+  switch ( ch ) {
+    case ';':
+      Serial_buf[Serial_num] = NULL;
+      Serial.print("ehco : ");
+      Serial.println(Serial_buf);
+      Serial_service();
+      Serial_num = 0;
+      break;
+    default :
+      Serial_buf[ Serial_num ++ ] = ch;
+      Serial_num %= SERIAL_MAX;
+      break;
+  }
+}
+//// ----------- TEST  -----------
+
 //taskSendMessage funtion
 void sendMessage() ; // Prototype so PlatformIO doesn't complain
 Task sensorLog( TASK_SECOND * 60, TASK_FOREVER, &sensorValue );
@@ -128,12 +162,16 @@ void setup() {
   }
   Serial.print(", Set Operation : ");
   Serial.println(stableUse);
+  AT_commandHelp();
 }
 
 void loop() {
   mesh.update();
   sensor_Water();
   stable();
+  if (Serial.available()) {
+    Serial_process();
+  }
 }
 
 void water_flage(boolean passfail) {

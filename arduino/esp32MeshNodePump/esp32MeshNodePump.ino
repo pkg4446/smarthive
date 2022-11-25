@@ -12,7 +12,7 @@ Scheduler taskScheduler; // to control upload task
 painlessMesh  mesh;
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
-String nodeID = "";
+String  nodeID = "";
 //// ----------- Variable -----------
 uint8_t TIME_CHECK = 0;
 ////for millis() func//
@@ -38,6 +38,38 @@ void command_Service(String command, String value) {
     mesh.sendBroadcast("PUMP=SET=TIME;");
   }
 }//Command_service() END
+
+//// ----------- TEST  -----------
+void AT_commandHelp() {
+  Serial.println("---------------- AT command help ----------------");
+  Serial.println(";AT+PUMP = int;      Pump Run.[int=0:OFF,1~3:PUMP]");
+  Serial.println(";AT+TIME = int;      Pump Runtime Change.[PUMP OFF]");
+}
+char Serial_buf[SERIAL_MAX];
+int8_t Serial_num;
+void Serial_service() {
+  String str1 = strtok(Serial_buf, "=");
+  String str2 = strtok(NULL, " ");
+  command_Service(str1,str2);
+}
+void Serial_process() {
+  char ch;
+  ch = Serial.read();
+  switch ( ch ) {
+    case ';':
+      Serial_buf[Serial_num] = NULL;
+      Serial.print("ehco : ");
+      Serial.println(Serial_buf);
+      Serial_service();
+      Serial_num = 0;
+      break;
+    default :
+      Serial_buf[ Serial_num ++ ] = ch;
+      Serial_num %= SERIAL_MAX;
+      break;
+  }
+}
+//// ----------- TEST  -----------
 
 //taskSendMessage funtion
 void sendMessage() ; // Prototype so PlatformIO doesn't complain
@@ -89,10 +121,14 @@ void setup() {
   Serial.print("MAX_TIME : ");
   Serial.println(MAX_TIME);
   Serial.println("System online.");
+  AT_commandHelp();
 }
 
 void loop() {
   mesh.update();
+  if (Serial.available()) {
+    Serial_process();
+  }
 }
 
 void pump_Water(uint8_t pumpNumber) {
