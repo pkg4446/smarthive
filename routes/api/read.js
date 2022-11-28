@@ -19,6 +19,20 @@ router.post('/init', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/mac', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.regist_mac(req.body.MAC_ADDR);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/user', async function(req, res) {
     const response = {
         result: true,

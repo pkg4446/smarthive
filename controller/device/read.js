@@ -20,6 +20,15 @@ module.exports  = {
         }        
     },
 
+    regist_mac :   async function(MAC_ADDR){
+        try {
+            const farm = await Farm.findOne(MAC_ADDR,{raw : true});
+            return farm;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
     user :   async function(USER_ID){
         try {
             const farm = await Farm.findAll({
@@ -60,7 +69,6 @@ module.exports  = {
         try {
             const response = {
                 sensor: await Sensor.findByPk(MODULE,{raw : true}),
-                door:   "test"
             }
             return response;
         } catch (error) {
