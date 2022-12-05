@@ -35,7 +35,7 @@ router.route('/hive')
         res.send("Post Request ACK");
     });
 
-    router.get('/save', async function(req, res) {    
+    router.post('/save', async function(req, res) {    
         const IP  = requestIp.getClientIp(req);
         console.log(req.body,IP);
     });
