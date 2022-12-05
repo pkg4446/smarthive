@@ -9,7 +9,7 @@ module.exports = class Log_wh_O3 extends Sequelize.Model{
                 autoIncrement: true
             },
 
-            FARM:   {
+            MODULE: {
                 type: Sequelize.STRING(32),
                 allowNull: false
             },
