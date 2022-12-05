@@ -9,14 +9,14 @@ module.exports = class Sensor extends Sequelize.Model{
                 allowNull: false
             },
 
-            NAME:  {
-                type: Sequelize.STRING(32),
+            NAME:   {
+                type: Sequelize.STRING(16),
                 allowNull: false,
                 defaultValue: "신규등록"
             },
 
-            FARM: {
-                type: Sequelize.STRING(32),
+            FARM:   {
+                type: Sequelize.STRING(16),
                 allowNull: false
             },
 
@@ -26,19 +26,19 @@ module.exports = class Sensor extends Sequelize.Model{
                 defaultValue: "정상"
             },
 
-            USE:  {
+            USE:    {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
             },
 
-            SET_TEMP:  {
+            SET_TEMP:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
                 defaultValue: 5
             },
 
-            SET_HUMI:  {
+            SET_HUMI:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
                 defaultValue: 50

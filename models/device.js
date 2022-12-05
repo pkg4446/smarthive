@@ -9,18 +9,18 @@ module.exports = class Device extends Sequelize.Model{
                 allowNull: false
             },
 
-            NAME:  {
-                type: Sequelize.STRING(32),
+            NAME:   {
+                type: Sequelize.STRING(16),
                 allowNull: false,
                 defaultValue: "신규등록"
             },
 
-            FARM: {
+            FARM:   {
                 type: Sequelize.STRING(32),
                 allowNull: false
             },
 
-            TYPE:  {
+            TYPE:   {
                 type: Sequelize.STRING(8),
                 allowNull: false,
                 defaultValue: true

@@ -3,25 +3,25 @@ const Sequelize = require('sequelize');
 module.exports = class Farm extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            FARM: {
+            FARM:   {
                 type: Sequelize.STRING(32),
                 primaryKey: true,
                 allowNull: false
             },
 
             APIARY: {
-                type: Sequelize.STRING(32),
+                type: Sequelize.INTEGER.UNSIGNED,
                 allowNull: false,
-                defaultValue: "테스터"
+                defaultValue: 0
             },
 
-            NAME:  {
-                type: Sequelize.STRING(32),
+            NAME:   {
+                type: Sequelize.STRING(16),
                 allowNull: false,
                 defaultValue: "신규등록"
             },
 
-            IP:  {
+            IP:     {
                 type: Sequelize.STRING(32),
                 allowNull: false,
                 defaultValue: "0.0.0.0"

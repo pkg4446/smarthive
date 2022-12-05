@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Log_error extends Sequelize.Model{
+module.exports = class Log_wh_door extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             IDX:    {
@@ -9,24 +9,15 @@ module.exports = class Log_error extends Sequelize.Model{
                 autoIncrement: true
             },
 
-            MODULE: {
+            FARM:   {
                 type: Sequelize.STRING(32),
                 allowNull: false
             },
 
-            FARM:   {
-                type: Sequelize.STRING(16),
-                allowNull: false
-            },
-
-            TYPE:   {
-                type: Sequelize.STRING(8),
+            DOOR:   {
+                type: Sequelize.BOOLEAN,
                 allowNull: false,
-            },
-
-            ERR:    {
-                type: Sequelize.STRING(16),
-                allowNull: false,
+                defaultValue: false
             },
 
             TMST:   {
@@ -39,8 +30,8 @@ module.exports = class Log_error extends Sequelize.Model{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Log_error',
-            tableName  : 'log_error',
+            modelName  : 'Log_wh_door',
+            tableName  : 'log_wh_door',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

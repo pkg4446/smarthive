@@ -6,10 +6,15 @@ const db        = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 db.sequelize    = sequelize;
 
-const apiary  = require('./apiary');
-db.apiary     = apiary;
+const apiary    = require('./apiary');
+db.apiary       = apiary;
 apiary.init(sequelize);
 apiary.associate(db);
+
+const device    = require('./device');
+db.device       = device;
+device.init(sequelize);
+device.associate(db);
 
 const farm  = require('./farm');
 db.farm     = farm;
@@ -26,8 +31,13 @@ db.sensor       = sensor;
 sensor.init(sequelize);
 sensor.associate(db);
 
-const log_error = require('./log_error');
-db.log_error    = log_error;
+const warehouse = require('./warehouse');
+db.warehouse    = warehouse;
+warehouse.init(sequelize);
+warehouse.associate(db);
+
+const log_error     = require('./log_error');
+db.log_error        = log_error;
 log_error.init(sequelize);
 log_error.associate(db);
 
@@ -35,5 +45,15 @@ const log_sensor    = require('./log_sensor');
 db.log_sensor       = log_sensor;
 log_sensor.init(sequelize);
 log_sensor.associate(db);
+
+const log_wh_O3     = require('./log_wh_O3');
+db.log_wh_O3        = log_wh_O3;
+log_wh_O3.init(sequelize);
+log_wh_O3.associate(db);
+
+const log_wh_door   = require('./log_wh_door');
+db.log_wh_door  = log_wh_door;
+log_wh_door.init(sequelize);
+log_wh_door.associate(db);
 
 module.exports = db;

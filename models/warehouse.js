@@ -1,12 +1,18 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Pump extends Sequelize.Model{
+module.exports = class Warehouse extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            MODULE: {
+            Warehouse:  {
                 type: Sequelize.STRING(32),
                 primaryKey: true,
                 allowNull: false
+            },
+
+            APIARY: {
+                type: Sequelize.INTEGER.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
             },
 
             NAME:   {
@@ -15,28 +21,12 @@ module.exports = class Pump extends Sequelize.Model{
                 defaultValue: "신규등록"
             },
 
-            FARM:   {
-                type: Sequelize.STRING(16),
-                allowNull: false
-            },
-
-            RUN:    {
-                type: Sequelize.TINYINT.UNSIGNED,
-                allowNull: false
-            },
-
-            TMST:   {
-                type: Sequelize.DATE,
-                allowNull: false,
-                defaultValue: Sequelize.NOW
-            }
-            
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Pump',
-            tableName  : 'pump',
+            modelName  : 'Warehouse',
+            tableName  : 'warehouse',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

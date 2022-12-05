@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class Log_sensor extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            IDX: {
+            IDX:    {
                 type: Sequelize.INTEGER.UNSIGNED,
                 primaryKey: true,
                 autoIncrement: true
@@ -14,19 +14,19 @@ module.exports = class Log_sensor extends Sequelize.Model{
                 allowNull: false
             },
 
-            TEMP:  {
+            TEMP:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
                 defaultValue: 0
             },
 
-            HUMI:  {
+            HUMI:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
                 defaultValue: 0
             },
 
-            TMST:  {
+            TMST:   {
                 type: Sequelize.DATE,
                 allowNull: false,
                 defaultValue: Sequelize.NOW

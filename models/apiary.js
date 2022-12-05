@@ -3,22 +3,28 @@ const Sequelize = require('sequelize');
 module.exports = class Apiary extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            IDX: {
+            APIARY: {
                 type: Sequelize.INTEGER.UNSIGNED,
                 primaryKey: true,
                 autoIncrement: true
             },
 
-            APIARY: {
-                type: Sequelize.STRING(32),                
-                defaultValue: "신규등록"
+            NAME:   {
+                type: Sequelize.STRING(16),
+                allowNull: false,
             },
 
-            USER: {
-                type: Sequelize.STRING(32),
+            USER:   {
+                type: Sequelize.STRING(16),
                 allowNull: false,
                 defaultValue: "테스터"
             },
+
+            ADDR:   {
+                type: Sequelize.STRING(32),
+                allowNull: false,
+                defaultValue: ""
+            }
         },{
             sequelize,
             timestamps : false,
