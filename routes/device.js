@@ -5,10 +5,7 @@ const regist    = require('../controller/device/regist');
 const update    = require('../controller/device/update');
 const log       = require('../controller/device/log');
 
-router.route('/')
-    .get(async (req, res, next)     => {
-        res.render('page/main',{TITLE:"Test Page"});
-    })
+router.route('/hive')
     .post(async (req, res, next)    => {
         //Device
         console.log(req.body);
@@ -38,4 +35,10 @@ router.route('/')
         res.send("Post Request ACK");
     });
 
+    router.get('/save', async function(req, res) {    
+        const IP  = requestIp.getClientIp(req);
+        console.log(req.body,IP);
+    });
+
+    
 module.exports = router;

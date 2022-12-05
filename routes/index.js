@@ -8,8 +8,8 @@ const device    = require('./device');
 const api       = require('./api');
 const web       = require('./front');
 
-router.use('/',device);
+router.use('/',web);
+router.use('/reg',device);
 router.use('/api',api);
-router.use('/web',web);
 
 module.exports  = router;
