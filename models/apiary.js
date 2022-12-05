@@ -1,38 +1,30 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Farm extends Sequelize.Model{
+module.exports = class Apiary extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            FARM: {
-                type: Sequelize.STRING(32),
+            IDX: {
+                type: Sequelize.INTEGER.UNSIGNED,
                 primaryKey: true,
-                allowNull: false
+                autoIncrement: true
             },
 
             APIARY: {
+                type: Sequelize.STRING(32),                
+                defaultValue: "신규등록"
+            },
+
+            USER: {
                 type: Sequelize.STRING(32),
                 allowNull: false,
                 defaultValue: "테스터"
             },
-
-            NAME:  {
-                type: Sequelize.STRING(32),
-                allowNull: false,
-                defaultValue: "신규등록"
-            },
-
-            IP:  {
-                type: Sequelize.STRING(32),
-                allowNull: false,
-                defaultValue: "0.0.0.0"
-            },
-
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Farm',
-            tableName  : 'farm',
+            modelName  : 'Apiary',
+            tableName  : 'apiary',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

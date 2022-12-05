@@ -6,6 +6,11 @@ const db        = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 db.sequelize    = sequelize;
 
+const apiary  = require('./apiary');
+db.apiary     = apiary;
+apiary.init(sequelize);
+apiary.associate(db);
+
 const farm  = require('./farm');
 db.farm     = farm;
 farm.init(sequelize);
