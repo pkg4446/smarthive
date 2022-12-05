@@ -1,3 +1,4 @@
+const Apiary    = require('../../models/apiary');
 const Farm      = require('../../models/farm');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
@@ -29,10 +30,22 @@ module.exports  = {
         }        
     },
 
-    user :   async function(USER_ID){
+    user :   async function(APIARY){
+        try {
+            const farm = await Apiary.findAll({
+                where: {APIARY: APIARY},
+                raw : true
+            });
+            return farm;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    apiary :   async function(APIARY){
         try {
             const farm = await Farm.findAll({
-                where: {USER: USER_ID},
+                where: {APIARY: APIARY},
                 raw : true
             });
             return farm;

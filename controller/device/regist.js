@@ -1,8 +1,24 @@
+const Apiary    = require('../../models/apiary');
 const Farm      = require('../../models/farm');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
 
 module.exports  = {
+    regist_Apiary : async function(APIARY_ID){
+        try {
+            const apiary = await Apiary.findByPk(APIARY_ID,{raw : true});
+            if(!apiary){
+                await Apiary.create({
+                    APIARY:   APIARY_ID
+                });
+            }
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
     regist_farm :   async function(FARM_ID){
         try {
             const farm = await Farm.findByPk(FARM_ID,{raw : true});

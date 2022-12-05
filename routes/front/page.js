@@ -4,10 +4,14 @@ const requestIp = require('request-ip');
 
 const read      = require("../../controller/device/read");
 
-const USER      = "테스터";
+const APIARY    = 0;
 const FARM      = "94:B9:7E:42:2E:80";
 const NAME      = "신규등록";
 const MODULE    = "3951267849";
+
+router.get('/', async function(req, res) {    
+    res.render('page/main');
+});
 
 router.get('/init', async function(req, res) {    
     const IP  = requestIp.getClientIp(req);
@@ -17,6 +21,13 @@ router.get('/init', async function(req, res) {
 
 router.get('/user', async function(req, res) {
     const response = await read.user(USER);
+    console.log(response);
+    res.render('page/test',{data:response});
+});
+
+router.get('/apiary', async function(req, res) {
+    const response = await read.user(APIARY);
+    console.log(response);
     res.render('page/test',{data:response});
 });
 
