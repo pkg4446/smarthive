@@ -16,9 +16,12 @@ router.get('/init', async function(req, res) {
 });
 
 router.get('/apiary', async function(req, res) {
-    const response = await read.user(APIARY);
-    console.log(response);
-    res.render('page/test',{data:response});
+    res.render('regist/apiary');
+});
+
+router.get('/apiaryList', async function(req, res) {
+    const response = await read.apiary(req.user.EMAIL);
+    res.render('read/apiary',{data:response});
 });
 
 router.get('/farm', async function(req, res) {

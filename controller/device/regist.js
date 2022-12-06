@@ -4,14 +4,13 @@ const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
 
 module.exports  = {
-    regist_Apiary : async function(APIARY_ID){
-        try {
-            const apiary = await Apiary.findByPk(APIARY_ID,{raw : true});
-            if(!apiary){
-                await Apiary.create({
-                    APIARY:   APIARY_ID
-                });
-            }
+    regist_Apiary : async function(data){
+        try {            
+            await Apiary.create({
+                NAME:     data.NAME,
+                USER:     data.USER,
+                ADDR:     data.ADDR,
+            });
             return true;
         } catch (error) {
             console.log(error);

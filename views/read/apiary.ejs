@@ -1,0 +1,23 @@
+<script>
+    for (const iterator of data) {
+        
+    }
+</script>
+<!-- Main -->
+<div id="main" class="alt">
+    <div class="inner">
+ 
+        <!-- Lists -->
+        <section>            
+                <% for (const object of data) { %>
+                <a href="#<%=object.APIARY%>">
+                    <ul>
+                        <li>양봉장: <%= object.NAME %></li>
+                        <li>주 소 : <%= object.ADDR %></li>
+                    </ul>
+                </a>
+                <% } %>
+        </section>
+        
+    </div>
+</div>

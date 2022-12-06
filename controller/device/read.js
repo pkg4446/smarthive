@@ -29,23 +29,14 @@ module.exports  = {
             console.log(error);
         }        
     },
-
-    user :   async function(APIARY){
+    
+    apiary :   async function(USER_ID){
         try {
             const farm = await Apiary.findAll({
-                where: {APIARY: APIARY},
-                raw : true
-            });
-            return farm;
-        } catch (error) {
-            console.log(error);
-        }        
-    },
-
-    apiary :   async function(APIARY){
-        try {
-            const farm = await Farm.findAll({
-                where: {APIARY: APIARY},
+                where: {USER: USER_ID},
+                attributes: {
+                    exclude: ['USER'], // exclude: 제외한 나머지 정보 가져오기
+                  },
                 raw : true
             });
             return farm;
