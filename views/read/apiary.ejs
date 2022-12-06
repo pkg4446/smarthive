@@ -1,6 +1,32 @@
-<script>
-    for (const iterator of data) {
-        
+<script type="text/javascript">
+
+    function submitfn(DATA){
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            url : "/api/read/apiary",
+            type : 'POST', 
+            dataType:'json',
+            data : {}, 
+            success : function(response) {                    
+                if(response.result){
+                    Swal.fire({              
+                        position: 'top',
+                        icon: 'success',
+                        title: "양봉장 등록",
+                        text: "새로운 양봉장을 등록하였습니다.",
+                        showConfirmButton: false,                                    
+                        timer: 1500
+                    })
+                    .then((result) => {                       
+                        window.location.href = "/";
+                    })     
+                }
+            }, // success 
+            error : function(xhr, status) {
+                alert(xhr + " : " + status);
+                console.log(xhr);
+            }            
+        }); // $.ajax 
     }
 </script>
 <!-- Main -->
@@ -8,14 +34,12 @@
     <div class="inner">
  
         <!-- Lists -->
-        <section>            
+        <section id = "contents">
                 <% for (const object of data) { %>
-                <a href="#<%=object.APIARY%>">
-                    <ul>
+                    <ul onclick="submitfn('<%= object.APIARY %>')">
                         <li>양봉장: <%= object.NAME %></li>
                         <li>주 소 : <%= object.ADDR %></li>
                     </ul>
-                </a>
                 <% } %>
         </section>
         

@@ -2,6 +2,7 @@ const Apiary    = require('../../models/apiary');
 const Farm      = require('../../models/farm');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
+const warehouse = require('../../models/warehouse');
 
 module.exports  = {
     regist_Apiary : async function(data){
@@ -10,6 +11,20 @@ module.exports  = {
                 NAME:     data.NAME,
                 USER:     data.USER,
                 ADDR:     data.ADDR,
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    regist_warehouse : async function(data){
+        try {            
+            await Apiary.create({
+                NAME:   data.NAME,
+                APIARY: data.APIARY,
+                NAME:   data.NAME,
             });
             return true;
         } catch (error) {

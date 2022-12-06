@@ -9,7 +9,7 @@ module.exports = class Log_wh_door extends Sequelize.Model{
                 autoIncrement: true
             },
 
-            MODULE: {
+            WAREHOUSE: {
                 type: Sequelize.STRING(32),
                 allowNull: false
             },

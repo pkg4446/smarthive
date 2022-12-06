@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class Warehouse extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            Warehouse:  {
+            WAREHOUSE:  {
                 type: Sequelize.STRING(32),
                 primaryKey: true,
                 allowNull: false
