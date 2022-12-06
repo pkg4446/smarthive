@@ -1,16 +1,16 @@
 <!-- script -->
 
 <script type="text/javascript">   
-/*
+
     $(document).ready(function() {
         if(sessionStorage.name){
             window.location.href = "/"
         }
     });
-*/
+
     function submitfn(){
-        var formData = $("#login").serialize();        
-        var url = document.location.href;
+        let formData = $("#login").serialize();        
+        let url = document.location.href;
 
         $.ajax({    
             cache : false,
@@ -18,18 +18,15 @@
             type : 'POST', 
             data : formData, 
             success : function(data) {
-                console.log(data);
                 if(!data)
                 {
                     alert("아이디가 없거나, 비밀번호가 다릅니다.");
                 }else{
-                    /*
                     if(window.sessionStorage) {
                         sessionStorage.clear();
                     }                    
                     sessionStorage.setItem("name", data);
                     window.location.href = "/" ;
-                    */
                 }
             }, // success 
     
@@ -39,10 +36,6 @@
         }); // $.ajax */
     }
 </script>
-
-
-
-
 
 
 <div id="main" class="alt">
@@ -72,7 +65,7 @@
                     <a href="#" class="button primary fit">Forgot Password?</a>
                 </div>
                 <div class="col-6 col-12-xsmall" >
-                    <a href="/register" class="button fit">Create an Account!</a>
+                    <a href="/user/register" class="button fit">Create an Account!</a>
                 </div>
             </div>
         </form>

@@ -84,7 +84,6 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-
 router.post('/passChange', async (req, res, next) => {
   for(const key of Object.keys(req.body)){
     if(req.body[key]==""){
@@ -113,7 +112,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
     if (!user) {
       return res.send(false);
     }
-    return req.login(user, (loginError) => {
+    return req.login(user, (loginError) => {      
       if (loginError) {
         console.error(loginError);
         return next(loginError);

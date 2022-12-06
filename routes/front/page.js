@@ -9,22 +9,10 @@ const FARM      = "94:B9:7E:42:2E:80";
 const NAME      = "신규등록";
 const MODULE    = "3951267849";
 
-router.get('/', async function(req, res) {    
-    res.render('page/main');
-});
-
 router.get('/init', async function(req, res) {    
     const IP  = requestIp.getClientIp(req);
     const response = await read.regist(IP);
     res.render('page/test',{data:response});
-});
-
-router.get('/login', async function(req, res) {
-    res.render('user/login');
-});
-
-router.get('/register', async function(req, res) {
-    res.render('user/register');
 });
 
 router.get('/apiary', async function(req, res) {
