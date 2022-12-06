@@ -2,8 +2,11 @@ const Apiary    = require('../../models/apiary');
 const Farm      = require('../../models/farm');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
+const Warehouse = require('../../models/warehouse');
 const Log_error     = require('../../models/log_error');
 const Log_sensor    = require('../../models/log_sensor');
+const Log_wh_O3     = require('../../models/log_wh_O3');
+const Log_wh_door   = require('../../models/log_wh_door');
 
 const Sequelize = require('../module');
 const { Op }    = require("sequelize");
@@ -32,14 +35,26 @@ module.exports  = {
     
     apiary :   async function(USER_ID){
         try {
-            const farm = await Apiary.findAll({
+            const apiary = await Apiary.findAll({
                 where: {USER: USER_ID},
                 attributes: {
                     exclude: ['USER'], // exclude: 제외한 나머지 정보 가져오기
                   },
                 raw : true
             });
-            return farm;
+            return apiary;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    apiaryGroup :   async function(APIARY){
+        try {
+            const response = {
+                farm:       await Farm.findAll({where:{APIARY: APIARY}, attributes: ["FARM","NAME"], raw : true}),
+                warehouse:  await Warehouse.findAll({where:{APIARY: APIARY}, attributes: {exclude: ['APIARY']}, raw : true}),
+            }            
+            return response;
         } catch (error) {
             console.log(error);
         }        

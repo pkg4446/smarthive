@@ -3,11 +3,14 @@
     function submitfn(DATA){
         $.ajax({
             contentType: "application/json; charset=utf-8",
-            url : "/api/read/apiary",
+            url : "/api/read/apiaryGroup",
             type : 'POST', 
             dataType:'json',
-            data : {}, 
-            success : function(response) {                    
+            data : JSON.stringify({APIARY:DATA}), 
+            success : function(response) {    
+                
+                console.log(response);
+                /*
                 if(response.result){
                     Swal.fire({              
                         position: 'top',
@@ -21,6 +24,7 @@
                         window.location.href = "/";
                     })     
                 }
+                */
             }, // success 
             error : function(xhr, status) {
                 alert(xhr + " : " + status);

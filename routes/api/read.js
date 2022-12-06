@@ -19,6 +19,21 @@ router.post('/apiary', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/apiaryGroup', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }    
+    try {
+        response.data = await read.apiaryGroup(req.body.APIARY);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+
 
 router.post('/init', async function(req, res) {
     const response = {
