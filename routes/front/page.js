@@ -19,10 +19,12 @@ router.get('/init', async function(req, res) {
     res.render('page/test',{data:response});
 });
 
-router.get('/user', async function(req, res) {
-    const response = await read.user(USER);
-    console.log(response);
-    res.render('page/test',{data:response});
+router.get('/login', async function(req, res) {
+    res.render('user/login');
+});
+
+router.get('/register', async function(req, res) {
+    res.render('user/register');
 });
 
 router.get('/apiary', async function(req, res) {
