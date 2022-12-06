@@ -21,10 +21,10 @@ module.exports  = {
 
     regist_warehouse : async function(data){
         try {            
-            await Apiary.create({
-                NAME:   data.NAME,
-                APIARY: data.APIARY,
-                NAME:   data.NAME,
+            await warehouse.create({
+                WAREHOUSE:  data.WAREHOUSE,
+                APIARY:     data.APIARY,
+                NAME:       data.NAME,
             });
             return true;
         } catch (error) {

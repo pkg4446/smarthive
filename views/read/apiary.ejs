@@ -1,30 +1,16 @@
 <script type="text/javascript">
 
-    function submitfn(DATA){
+    function submitfn(TYPE,API,DATA){
         $.ajax({
             contentType: "application/json; charset=utf-8",
-            url : "/api/read/apiaryGroup",
+            url : `/api/${TYPE}/${API}`,
             type : 'POST', 
             dataType:'json',
-            data : JSON.stringify({APIARY:DATA}), 
-            success : function(response) {    
-                
-                console.log(response);
-                /*
-                if(response.result){
-                    Swal.fire({              
-                        position: 'top',
-                        icon: 'success',
-                        title: "양봉장 등록",
-                        text: "새로운 양봉장을 등록하였습니다.",
-                        showConfirmButton: false,                                    
-                        timer: 1500
-                    })
-                    .then((result) => {                       
-                        window.location.href = "/";
-                    })     
-                }
-                */
+            data : JSON.stringify(DATA), 
+            success : function(response) {                    
+                console.log(API,response);
+                if(response.result) HTML(API,response.data)
+                else alert("오류발생! 관리자에게 문의하세요.");
             }, // success 
             error : function(xhr, status) {
                 alert(xhr + " : " + status);
@@ -32,15 +18,56 @@
             }            
         }); // $.ajax 
     }
+    function HTML(API,DATA){
+        let HTML_Text = "";
+        if(API == "stack"){
+            HTML_Text = `<br><h3>소 비 저 장 고 - 등 록</h3><br>
+                    <form method="post" action="#">
+                        <div class="row gtr-uniform">
+                            <div class="col-12">
+                                <input type="text" name="WAREHOUSE" id="WAREHOUSE" value="" maxlength='32' placeholder="소비저장고 아이디" />
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="NAME" id="NAME" value="" maxlength='16' placeholder="소비저장고 이름" />
+                            </div>
+                            <!-- Break -->
+                            <br><br><br><br>
+                            <div class="col-12">
+                                <input type="button" value="소 비 저 장 고 등 록" style="width: 100%; height: 100px; " onclick="submitfn('write','warehouse',); return false;">
+                            </div>
+                        </div>
+                    </form>`;
+        }else if(API == "farm"){
+            
+        }else{
+            HTML_Text = `<section class="tiles">
+                <article class="style2" onclick="HTML('stack',null)">
+                    <span class="image"><img src="/public/images/pic02.jpg" alt="" /></span>
+                    <a><h2>소비저장고<br>등록</h2></a>
+                </article>
+                <article class="style6" onclick="HTML('farm',null)">
+                    <span class="image"><img src="/public/images/pic06.jpg" alt="" /></span>
+                    <a><h2>양봉구역<br>등록</h2></a>	
+                </article>`;
+            for (const iterator of DATA.warehouse) {
+                HTML_Text += ` <article class="style3">
+                    <span class="image"><img src="/public/images/pic03.jpg" alt="" /></span>
+                    <a><h2>소비저장고<br>${iterator.NAME}</h2></a>
+                </article>`;
+            }
+            HTML_Text += "</section>";
+        }
+        document.getElementById("contents").innerHTML = HTML_Text;
+    }
 </script>
 <!-- Main -->
 <div id="main" class="alt">
-    <div class="inner">
+    <div class="inner" id="contents">
  
         <!-- Lists -->
-        <section id = "contents">
+        <section>
                 <% for (const object of data) { %>
-                    <ul onclick="submitfn('<%= object.APIARY %>')">
+                    <ul onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})">
                         <li>양봉장: <%= object.NAME %></li>
                         <li>주 소 : <%= object.ADDR %></li>
                     </ul>

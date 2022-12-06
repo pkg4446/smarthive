@@ -4,7 +4,7 @@ const requestIp = require('request-ip');
 
 const read      = require("../../controller/device/read");
 
-router.post('/apiary', async function(req, res) {
+router.post('/apiary', async function(req, res) {    
     if(req.body.USER == undefined)  req.body.USER = req.user.EMAIL;
     const response = {
         result: true,
