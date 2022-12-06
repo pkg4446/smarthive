@@ -1,19 +1,24 @@
 const express         = require('express');
 const expressLayouts  = require('express-ejs-layouts');
+const favicon         = require('serve-favicon');
 const cookieParser    = require('cookie-parser');
 const morgan          = require('morgan');
 const path            = require('path');
 const session         = require('express-session');
 const dotenv          = require('dotenv');
+const passport        = require('passport');
 
 dotenv.config();
 const indexRouter     = require('./routes');
 const {sequelize}     = require('./models');
+const passportConfig  = require('./passport');
 const { application } = require('express');
 
 var http  = require('http');
 const HTTP_PORT  = process.env.PORT || 3004;
 const app = express();
+app.use(favicon(path.join(__dirname, '/public', 'favicon.ico')));
+passportConfig();
 
 // view engine setup
 app.set('views', __dirname + '/views');
@@ -51,6 +56,8 @@ app.use(session({
     },
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 //
 app.use('/', indexRouter);
 
