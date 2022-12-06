@@ -4,9 +4,9 @@ module.exports = {
   info: async function(data){
     try {
       const userInfo = await User.findOne({
-        where: { USER_EMAIL },
+        where: { EMAIL },
         attributes: {
-          exclude: ['USER_PASS','USER_NAME','USER_GENDER','USER_B_DAY'], // exclude: 제외한 나머지 정보 가져오기
+          exclude: ['PASS'], // exclude: 제외한 나머지 정보 가져오기
         },
         raw : true
       });
@@ -22,20 +22,17 @@ module.exports = {
     try {
       /*
       data = {
-        USER_EMAIL:,
-        USER_NICK:,
-        USER_GENDER :,
-        USER_B_DAY:,
-        USER_PASS:,
+        EMAIL:,
+        NAME:,
+        PASS :,
       }
       */
-      const hash = await bcrypt.hash(data.USER_PASS, 12);
+      const hash = await bcrypt.hash(data.PASS, 12);
       await User.create({
-        USER_EMAIL:   USER_EMAIL,
-        USER_NICK:    USER_NICK,
-        USER_GENDER:  USER_GENDER,
-        USER_B_DAY:   USER_B_DAY,
-        USER_PASS:    hash
+        EMAIL:  data.EMAIL,
+        NAME:   data.NICK,
+        CALL:   data.CALL,
+        PASS:   hash
       });
       return true;
     } catch (error) {
@@ -48,16 +45,16 @@ module.exports = {
     try {
       /*
       data = {
-        USER_EMAIL,
-        USER_PASS:,
+        EMAIL,
+        PASS:,
       }
       */
-      const hash = await bcrypt.hash(data.USER_PASS, 12);
+      const hash = await bcrypt.hash(data.PASS, 12);
       await User.update(
         { 
-          USER_PASS:  data.USER_NEW_PASS
+          PASS:  data.NEW_PASS
         },
-        { where: { USER_EMAIL : data.USER_EMAIL }}
+        { where: { EMAIL : data.EMAIL }}
       );
       return true;
     } catch (error) {
@@ -70,21 +67,21 @@ module.exports = {
     try {
       /*
       data = {
-        USER_EMAIL,
-        USER_PASS:,
+        EMAIL,
+        PASS:,
       }
       */
       let passFail = false;
-      await User.findOne({ where: { USER_EMAIL } })
+      await User.findOne({ where: { EMAIL } })
       .then(async function(responce){
-        passFail = await bcrypt.compare(data.USER_PASS,responce.USER_PASS);
+        passFail = await bcrypt.compare(data.PASS,responce.PASS);
       });
       
       await User.update(
         { 
-          USER_PASS:  data.USER_PASS
+          PASS:  data.PASS
         },
-        { where: { USER_EMAIL : data.USER_EMAIL }}
+        { where: { EMAIL : data.EMAIL }}
       );
       return true;
     } catch (error) {
