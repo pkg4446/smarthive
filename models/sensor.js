@@ -16,7 +16,7 @@ module.exports = class Sensor extends Sequelize.Model{
             },
 
             FARM:   {
-                type: Sequelize.STRING(16),
+                type: Sequelize.STRING(32),
                 allowNull: false
             },
 

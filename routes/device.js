@@ -8,7 +8,6 @@ const log       = require('../controller/device/log');
 router.route('/hive')
     .post(async (req, res, next)    => {
         //Device
-        console.log(req.body);
         if(req.body.FARM){
             const IP  = requestIp.getClientIp(req);
             await regist.farm_ip(req.body.FARM,IP);
