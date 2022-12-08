@@ -1,13 +1,51 @@
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
+    let APIARY_ID = null;
+    let RESPONSE  = null;
 
     function submitfn(TYPE,API,DATA){
+        let sendData; 
+        if(TYPE == "read" && API == "apiaryGroup"){sendData = DATA; APIARY_ID=DATA.APIARY;}
+        else if(TYPE == "write" && API == "warehouse"){
+            sendData = {
+                WAREHOUSE:  document.getElementById("WAREHOUSE").value,
+                APIARY:     APIARY_ID,
+                NAME:       document.getElementById("NAME").value
+            }
+        }else if(TYPE == "read" && API == "farmIP"){
+            sendData = {data:true};
+        }
+        console.log(sendData);
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url : `/api/${TYPE}/${API}`,
             type : 'POST', 
             dataType:'json',
-            data : JSON.stringify(DATA), 
-            success : function(response) {                    
+            data : JSON.stringify(sendData), 
+            success : function(response) {       
+                if(TYPE == "read" && API=="apiaryGroup"){RESPONSE = response.data;}
+                else if(TYPE == "write" && API=="warehouse"){
+                    if(response.data){
+                        RESPONSE.warehouse.push({WAREHOUSE: sendData.WAREHOUSE, NAME: sendData.NAME});
+                        Swal.fire({              
+                            position: 'top',
+                            icon: 'success',
+                            title: "소비저장고 등록",
+                            text: "소비저장고가 등록되었습니다.",
+                            showConfirmButton: false,                                    
+                            timer: 1000
+                        })
+                    }else{
+                        Swal.fire({              
+                            position: 'top',
+                            icon: 'error',
+                            title: "소비저장고 중복",
+                            text: "이미 등록된 소비저장고입니다.",
+                            showConfirmButton: false,                                    
+                            timer: 1000
+                        })
+                    }
+                }
                 console.log(API,response);
                 if(response.result) HTML(API,response.data)
                 else alert("오류발생! 관리자에게 문의하세요.");
@@ -33,26 +71,30 @@
                             <!-- Break -->
                             <br><br><br><br>
                             <div class="col-12">
-                                <input type="button" value="소 비 저 장 고 등 록" style="width: 100%; height: 100px; " onclick="submitfn('write','warehouse',); return false;">
+                                <input type="button" value="소 비 저 장 고 등 록" style="width: 100%; height: 100px; " onclick="submitfn('write','warehouse','null'); return false;">
                             </div>
                         </div>
                     </form>`;
-        }else if(API == "farm"){
-            
         }else{
             HTML_Text = `<section class="tiles">
                 <article class="style2" onclick="HTML('stack',null)">
                     <span class="image"><img src="/public/images/pic02.jpg" alt="" /></span>
                     <a><h2>소비저장고<br>등록</h2></a>
                 </article>
-                <article class="style6" onclick="HTML('farm',null)">
+                <article class="style6" onclick="submitfn('read','farmIP','null')">
                     <span class="image"><img src="/public/images/pic06.jpg" alt="" /></span>
                     <a><h2>양봉구역<br>등록</h2></a>	
                 </article>`;
-            for (const iterator of DATA.warehouse) {
+            for (const iterator of RESPONSE.warehouse) {
                 HTML_Text += ` <article class="style3">
                     <span class="image"><img src="/public/images/pic03.jpg" alt="" /></span>
                     <a><h2>소비저장고<br>${iterator.NAME}</h2></a>
+                </article>`;
+            }
+            for (const iterator of RESPONSE.farm) {
+                HTML_Text += ` <article class="style3">
+                    <span class="image"><img src="/public/images/pic03.jpg" alt="" /></span>
+                    <a><h2>양봉구역<br>${iterator.NAME}</h2></a>
                 </article>`;
             }
             HTML_Text += "</section>";

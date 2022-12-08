@@ -35,7 +35,7 @@ router.post('/apiaryGroup', async function(req, res) {
 
 
 
-router.post('/init', async function(req, res) {
+router.post('/farmIP', async function(req, res) {
     const response = {
         result: true,
         data:   null

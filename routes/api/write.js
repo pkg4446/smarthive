@@ -26,7 +26,7 @@ router.post('/warehouse', async function(req, res) {
         data:   null
     }    
     try {
-        response.data = await regist.regist_farm(req.body);
+        response.data = await regist.regist_warehouse(req.body);
     } catch (error) {
         console.error(err);
         response.result = false;
