@@ -16,10 +16,10 @@ db.apiary       = apiary;
 apiary.init(sequelize);
 apiary.associate(db);
 
-const device    = require('./device');
-db.device       = device;
-device.init(sequelize);
-device.associate(db);
+const door  = require('./door');
+db.door     = door;
+door.init(sequelize);
+door.associate(db);
 
 const farm  = require('./farm');
 db.farm     = farm;

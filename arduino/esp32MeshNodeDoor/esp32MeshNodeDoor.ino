@@ -163,13 +163,13 @@ void loop() {
 
 int8_t doorLocation(int8_t DOOR) {
   int8_t nowDoorLocation = 0;
-  if (digitalRead(location[OPEN][DOOR])) {
+  if (digitalRead(location[OPEN][DOOR])&&digitalRead(location[HALF][DOOR])) {
     nowDoorLocation = OPEN;
   }
-  else if (digitalRead(location[HALF][DOOR])) {
+  else if (digitalRead(location[OPEN][DOOR])) {
     nowDoorLocation = HALF;
   }
-  else if (digitalRead(location[CLOSE][DOOR])) {
+  else{
     nowDoorLocation = CLOSE;
   }
   return nowDoorLocation;
@@ -206,7 +206,7 @@ void moterRun() {
     for (int index = 0; index < 4; index++) {
       if (door_moter[index]) {        
         if (door_runtime[index] < 100 * 5) { //5초
-          if (digitalRead(location[door_location[index]][index])) {
+          if (door_location[index] == doorLocation(index)) {
             digitalWrite(moter_F[index], false);
             digitalWrite(moter_B[index], false);
             door_moter[index] = false;

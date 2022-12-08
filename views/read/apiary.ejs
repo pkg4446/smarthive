@@ -13,9 +13,8 @@
                 NAME:       document.getElementById("NAME").value
             }
         }else if(TYPE == "read" && API == "farmIP"){
-            sendData = {data:true};
+            sendData = {APIARY:APIARY_ID};
         }
-        console.log(sendData);
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url : `/api/${TYPE}/${API}`,
@@ -44,6 +43,34 @@
                             showConfirmButton: false,                                    
                             timer: 1000
                         })
+                    }
+                }else if(TYPE == "read" && API=="farmIP"){
+                    let farmFlage = true;
+                    for (const iterator of response.data) {
+                        farmFlage = true;
+                        for (const arrays of RESPONSE.farm) {
+                            if(arrays.FARM == iterator.FARM) farmFlage = false;
+                        }
+                        if(farmFlage) RESPONSE.farm.push({FARM: iterator.FARM, NAME: iterator.NAME});
+                    }
+                    if(farmFlage){
+                        Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "양봉구역 등록",
+                                text: "양봉구역이 등록되었습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1000
+                            })
+                    }else{
+                        Swal.fire({              
+                                position: 'top',
+                                icon: 'warning',
+                                title: "양봉구역 등록",
+                                text: "신규 양봉구역이 없습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1000
+                            })
                     }
                 }
                 console.log(API,response);
@@ -92,9 +119,13 @@
                 </article>`;
             }
             for (const iterator of RESPONSE.farm) {
-                HTML_Text += ` <article class="style3">
-                    <span class="image"><img src="/public/images/pic03.jpg" alt="" /></span>
-                    <a><h2>양봉구역<br>${iterator.NAME}</h2></a>
+                HTML_Text += ` <article class="style5">                    
+                    <span class="image"><img src="/public/images/pic05.jpg" alt="" /></span>     
+                    <a onclick="document.getElementById('hive_${iterator.FARM}').submit();">                        
+                        <h2>양봉구역<br>${iterator.NAME}</h2>
+                        <form action='/page/hive' method="post" id="hive_${iterator.FARM}">                        
+                        <input type="hidden" name="MAC" value="${iterator.FARM}"></form>
+                    </a>
                 </article>`;
             }
             HTML_Text += "</section>";
@@ -102,10 +133,10 @@
         document.getElementById("contents").innerHTML = HTML_Text;
     }
 </script>
+
 <!-- Main -->
 <div id="main" class="alt">
     <div class="inner" id="contents">
- 
         <!-- Lists -->
         <section>
                 <% for (const object of data) { %>

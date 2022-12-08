@@ -17,6 +17,12 @@ router.get('/apiaryList', async function(req, res) {
     res.render('read/apiary',{data:response});
 });
 
+router.post('/hive', async function(req, res) {
+    const response = await read.farm(req.body.MAC);
+    res.render('read/farm',{data:response});
+});
+
+
 
 router.get('/init', async function(req, res) {    
     const IP  = requestIp.getClientIp(req);

@@ -1,5 +1,6 @@
 const Apiary    = require('../../models/apiary');
 const Farm      = require('../../models/farm');
+const Door      = require('../../models/door');
 const Pump      = require('../../models/pump');
 const Sensor    = require('../../models/sensor');
 const Warehouse = require('../../models/warehouse');
@@ -22,11 +23,23 @@ module.exports  = {
         } catch (error) {
             console.log(error);
         }        
-    },
+    },    
 
     regist_mac :   async function(MAC_ADDR){
         try {
             const farm = await Farm.findOne(MAC_ADDR,{raw : true});
+            return farm;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    regist_change :   async function(MAC_ADDR,APIARY_ID){
+        try {
+            const farm = await Farm.findByPk(MAC_ADDR)
+            .then(function(response) {
+                response.update({APIARY: APIARY_ID})
+            });
             return farm;
         } catch (error) {
             console.log(error);
@@ -41,7 +54,7 @@ module.exports  = {
                     exclude: ['USER'], // exclude: 제외한 나머지 정보 가져오기
                   },
                 raw : true
-            });
+            });            
             return apiary;
         } catch (error) {
             console.log(error);
@@ -64,7 +77,8 @@ module.exports  = {
         try {
             const response = {
                 pump:   await Pump.findAll({where: {FARM: FARM_ID},raw : true}),
-                sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true})
+                sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true}),
+                door:   await Door.findAll({where: {FARM: FARM_ID},raw : true})
             }
             return response;
         } catch (error) {
@@ -72,11 +86,11 @@ module.exports  = {
         }        
     },
 
-    hive :   async function(HIVE_NAME){
+    hive :   async function(FARM_ID,HIVE_NAME){
         try {
             const response = {
-                sensor: await Sensor.findOne({where: {NAME: HIVE_NAME},raw : true}),
-                door:   "test"
+                sensor: await Sensor.findOne({where: {FARM: FARM_ID,NAME: HIVE_NAME},raw : true}),
+                door:   await Door.findOne({where: {FARM: FARM_ID,  NAME: HIVE_NAME},raw : true})
             }
             return response;
         } catch (error) {

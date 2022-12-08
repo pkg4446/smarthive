@@ -13,6 +13,7 @@ painlessMesh  mesh;
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 String nodeID = "";
+const uint8_t tempGap = 1;
 //// ----------- Flage --------------
 boolean SHT31     = false;
 boolean stableUse = false;
@@ -48,11 +49,11 @@ void command_Service(String command, String value) {
     control_Humidity = value.toInt();
     EEPROM.write(EEP_Humidity, control_Humidity);
     mesh.sendBroadcast("SENSOR=SET=HUMI;");
-  } else if (command == "AT+USE") {    
-    stableUse = value.toInt(); 
+  } else if (command == "AT+USE") {
+    stableUse = value.toInt();
     EEPROM.write(EEP_Stable, stableUse);
     mesh.sendBroadcast("SENSOR=SET=USE;");
-  } else if (command == "AT+WATER") {    
+  } else if (command == "AT+WATER") {
     flage_Water       = true;
     flage_Relay_Water = false;
     mesh.sendBroadcast("SENSOR=SET=WATER;");
@@ -73,7 +74,7 @@ int8_t Serial_num;
 void Serial_service() {
   String str1 = strtok(Serial_buf, "=");
   String str2 = strtok(NULL, " ");
-  command_Service(str1,str2);
+  command_Service(str1, str2);
 }
 void Serial_process() {
   char ch;
@@ -151,17 +152,21 @@ void setup() {
   if (!sht31.begin(0x44))delay(1000);
   SHT31 = sht31.begin(0x44);
 
+  Serial.print("System online, Set temperature is ");
+  Serial.print(control_Temperature);
+  Serial.print(", Set humidity is ");
+  Serial.print(control_Humidity);
+
   if (!SHT31) {
     Serial.print("Sensor error");
     mesh.sendBroadcast("SENSOR=ERR=SHT31;");
-  } else {
-    Serial.print("System online, Set temperature is ");
-    Serial.print(control_Temperature);
-    Serial.print(", Set humidity is ");
-    Serial.print(control_Humidity);
   }
+  
   Serial.print(", Set Operation : ");
   Serial.println(stableUse);
+
+  Serial.print("Device nodeID = ");
+  Serial.println(nodeID);
   AT_commandHelp();
 }
 
@@ -249,7 +254,7 @@ void stable() {
       Serial.print("temperature:"); Serial.print(Temperature); Serial.print(" , Humidity:"); Serial.println(Humidity);
       ////온도 유지
       if (stableUse) {
-        if (Temperature > control_Temperature + 3) {
+        if (Temperature > control_Temperature + tempGap) {
           ERR_Message = "SENSOR=ERR=TEMP;";
           if (temp_flage(false, true)) { //히터, 팬
             digitalWrite(RELAY_HEATER, flage_Heater);
@@ -262,7 +267,7 @@ void stable() {
             digitalWrite(RELAY_HEATER, flage_Heater);
             digitalWrite(RELAY_FAN, flage_Fan);
           }
-        } else if (Temperature < control_Temperature - 3) {
+        } else if (Temperature < control_Temperature - tempGap) {
           if (temp_flage(true, false)) { //히터, 팬
             digitalWrite(RELAY_HEATER, flage_Heater);
             digitalWrite(RELAY_FAN, flage_Fan);

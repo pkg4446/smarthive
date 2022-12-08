@@ -121,7 +121,7 @@ void loop() {
 }
 
 void httpPOSTRequest(struct dataSet *ptr) {
-  String serverUrl = "http://smarthive.kro.kr/";   //API adress
+  String serverUrl = "http://smarthive.kro.kr/reg/hive/";   //API adress
   HTTPClient http;
   WiFiClient http_client;
   http.begin(http_client, serverUrl);

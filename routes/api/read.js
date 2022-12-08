@@ -43,6 +43,10 @@ router.post('/farmIP', async function(req, res) {
     try {
         const IP  = requestIp.getClientIp(req);
         response.data = await read.regist(IP);
+        console.log(IP, req.body);
+        for (const iterator of response.data) {
+            await read.regist_change(iterator.FARM,req.body.APIARY)
+        }        
     } catch (error) {
         console.error(err);
         response.result = false;
