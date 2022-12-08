@@ -26,11 +26,22 @@
                     <div class="table-wrapper">
                         <table>
                             <thead>
-                                <tr><th>벌통 이름</th><th>상태</th><th>설정온도</th></tr>
+                                <tr>
+                                    <th>벌통 이름</th>
+                                    <th>상태</th>
+                                    <th>설정온도</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <% for (const object of data.sensor) { %>
-                                <tr><td>벌통 : <%= object.NAME %></td></tr>
+                            <% for (const object of data.sensor) { 
+                                let USED = "-끔";
+                                if(object.USE) USED = "-켬";
+                                %>
+                                <tr>
+                                    <td><%= object.NAME %></td>
+                                    <td><%= object.STATE %><%= USED %></td>
+                                    <td><%= object.SET_TEMP %></td>
+                                </tr>
                             <% } %>
                             </tbody>
                         </table>

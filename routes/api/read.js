@@ -68,20 +68,6 @@ router.post('/mac', async function(req, res) {
     return res.json(response);
 });
 
-router.post('/user', async function(req, res) {
-    const response = {
-        result: true,
-        data:   null
-    }
-    try {
-        response.data = await read.user(req.body.USER);
-    } catch (error) {
-        console.error(err);
-        response.result = false;
-    }
-    return res.json(response);
-});
-
 router.post('/farm', async function(req, res) {
     const response = {
         result: true,
@@ -117,6 +103,29 @@ router.post('/sensor_log', async function(req, res) {
     }
     try {
         response.data = await read.log_sensor(req.body.MODULE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+router.post('/error_log_all', async function(req, res) {    
+    if(req.body.USER == undefined)  req.body.USER = req.user.EMAIL;
+    const response = {
+        result: true,
+        data:   null
+    }    
+    try {
+        const area  = await read.apiary(req.body.USER);
+        response.data = [];
+        const group = await read.apiaryGroup(area.APIARY);
+        for (const iterator1 of group.farm) {
+            const errLog = await read.log_error(iterator1.FARM);
+            for (const iterator2 of errLog) {
+                response.data.push(iterator2);
+            }
+        }
     } catch (error) {
         console.error(err);
         response.result = false;
