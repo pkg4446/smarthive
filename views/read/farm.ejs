@@ -37,10 +37,12 @@
                                 let USED = "-끔";
                                 if(object.USE) USED = "-켬";
                                 %>
-                                <tr>
+                                <tr onclick="document.getElementById('MODULE_<%= object.MODULE %>').submit();">
                                     <td><%= object.NAME %></td>
                                     <td><%= object.STATE %><%= USED %></td>
                                     <td><%= object.SET_TEMP %></td>
+                                    <form action='/page/hiveSensor' method="post" id="MODULE_<%= object.MODULE %>">                        
+                                    <input type="hidden" name="MODULE" value="<%= object.MODULE %>"></form>
                                 </tr>
                             <% } %>
                             </tbody>

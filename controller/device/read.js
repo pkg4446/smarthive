@@ -31,7 +31,7 @@ module.exports  = {
             return farm;
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     regist_change :   async function(MAC_ADDR,APIARY_ID){
@@ -106,9 +106,8 @@ module.exports  = {
             return response;
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
-
     
     log_sensor:   async function(SENSOR_ID){
         try {
@@ -118,6 +117,7 @@ module.exports  = {
                 limit: 1440,
                 raw : true
             });
+            console.log(response);
             return response;
         } catch (error) {
             console.log(error);

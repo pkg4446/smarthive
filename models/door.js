@@ -9,6 +9,11 @@ module.exports = class Door extends Sequelize.Model{
                 allowNull: false
             },
 
+            SENSOR: {
+                type: Sequelize.STRING(32),
+                allowNull: false
+            },
+
             NAME:   {
                 type: Sequelize.STRING(16),
                 allowNull: false,

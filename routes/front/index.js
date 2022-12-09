@@ -4,7 +4,7 @@ const router    = express.Router();
 
 const user = require('./user');
 
-const page = require('./page_test');
+const page = require('./page');
 const exam = require('./page_exam');
 
 router.get('/', async function(req, res) {    
