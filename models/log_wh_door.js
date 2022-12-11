@@ -6,6 +6,7 @@ module.exports = class Log_wh_door extends Sequelize.Model{
             IDX:    {
                 type: Sequelize.INTEGER.UNSIGNED,
                 primaryKey: true,
+                allowNull: false,
                 autoIncrement: true
             },
 
