@@ -115,7 +115,6 @@ module.exports  = {
                 limit: 1440,
                 raw : true
             });
-            console.log(response);
             return response;
         } catch (error) {
             console.log(error);

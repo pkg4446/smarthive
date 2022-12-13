@@ -18,7 +18,7 @@ router.route('/hive')
                         await log.log_error(req.body);
                         await update.sensor_error(req.body.MODULE,req.body.VALUE2);
                     }else if(req.body.VALUE1 == "SET"){
-                        console.log("route/device.js:",req.body.VALUE1);
+                        await update.sensor_confirm(req.body.MODULE);
                     }else{await log.log_sensor(req.body);}
                     break;
                 case "PUMP":  

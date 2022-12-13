@@ -21,6 +21,24 @@ module.exports = class Warehouse extends Sequelize.Model{
                 defaultValue: "신규등록"
             },
 
+            USE:    {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
+
+            ON:    {
+                type: Sequelize.TINYINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 50
+            },
+
+            OFF:    {
+                type: Sequelize.TINYINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 20
+            },
+
         },{
             sequelize,
             timestamps : false,

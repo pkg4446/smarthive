@@ -44,6 +44,24 @@ module.exports = class Sensor extends Sequelize.Model{
                 defaultValue: 50
             },
 
+            PRE_USE:    {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
+
+            PRE_TEMP:   {
+                type: Sequelize.SMALLINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 5
+            },
+
+            PRE_HUMI:   {
+                type: Sequelize.SMALLINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 50
+            },
+
         },{
             sequelize,
             timestamps : false,

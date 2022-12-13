@@ -1,20 +1,73 @@
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     let tableform_flage  = true;
     let HTML_Text_origin = null;
-    const FARM   =   "<%= data.DEV.FARM %>";
-    const MODULE =  "<%= data.DEV.MODULE %>";
-    const STATE  =  "<%= data.DEV.STATE %>";    
+    const USE    =  "<%= data.DEV.USE %>";    
+    const MODULE = "<%= data.DEV.MODULE %>";
     let sendData = {
-        STATE:  STATE,
-        TEMP:   "<%= data.DEV.SET_TEMP %>",
-        HUMI:   "<%= data.DEV.SET_HUMI %>",
+        FARM:   "<%= data.DEV.FARM %>",
+        MODULE: MODULE,
+        USE:    USE,
+        TEMP:   "<%= data.DEV.PRE_TEMP %>",
+        HUMI:   "<%= data.DEV.PRE_HUMI %>",
     }
-    console.log();
+
+    function submitfn(API,DATA){
+        let POST = false;
+        if(API == "hiveSensor") {
+            POST = true;
+            DATA = sendData;            
+        }else if(API == "hiveSensorName"){
+            POST = true;
+            DATA = {MODULE:MODULE, NAME: document.getElementById("hiveName").value}
+        }
+
+        if(POST){
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url : `/api/update/${API}`,
+                type : 'POST', 
+                dataType:'json',
+                data : JSON.stringify(DATA), 
+                success : function(response) {  
+                    console.log(response);
+                    if(response.result){    
+                        if(API == "hiveSensorName" && DATA.NAME){
+                            document.getElementById("hive").innerText = DATA.NAME;
+                            Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "이름 변경",
+                                text: "벌통 이름이 변경되었습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1500
+                            })
+                        }else if(API == "hiveSensor"){
+                            Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "설정 중",
+                                text: "컨트롤러에 명령을 전달했습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1500
+                            })
+                        }
+                    }
+                }, // success 
+                error : function(xhr, status) {
+                    alert(xhr + " : " + status);
+                    console.log(xhr);
+                }            
+            }); // $.ajax 
+        }
+    }
+
     function tableform(FARM,MODULE) {
         if(tableform_flage){
             HTML_Text_origin = document.getElementById("TABLE").innerHTML;
             let HTML_Text = `<tr>
-                                <td colspan="2"></td>
+                                <td><input id="hiveName" placeholder="벌통 이름"></td>
+                                <td onclick="submitfn('hiveSensorName',null)"><span class="button primary fit">변경</span></td></td>
                                 <td>
                                     <select onchange="selectButton(this)">
                                         <option value= null  >선택</option>
@@ -22,11 +75,12 @@
                                         <option value= false >OFF</option>
                                     </select>
                                 </td>
-                                <td><input id="temp" type="number" min="0" max="46" onchange="chageTemp()" value="${sendData.TEMP}"></td>
-                                <td><input id="humi" type="number" min="10" max="90" onchange="chageHumi()" value="${sendData.HUMI}"></td>
-                                <td>확인</td>
-                            </tr>`;
-            document.getElementById("TABLE").innerHTML = HTML_Text_origin + HTML_Text;
+                                <td><input type="number" min="0" max="46" onchange="chageTemp(this)" value="${sendData.TEMP}"></td>
+                                <td><input type="number" min="10" max="90" onchange="chageHumi(this)" value="${sendData.HUMI}"></td>
+                                <td onclick="submitfn('hiveSensor',null)"><span class="button primary fit">변경</span></td>
+                            </tr>`;                            
+            document.getElementById("TABLE").innerHTML = HTML_Text_origin + HTML_Text;            
+            document.getElementById("button1").innerText = "취 소";
             tableform_flage = false;
         }else{
             document.getElementById("TABLE").innerHTML = HTML_Text_origin;
@@ -34,17 +88,17 @@
         }
     }
     function selectButton(target) {
-        if(target.value == true){       sendData.STATE = 1;}
-        else if(target.value == false){ sendData.STATE = 0;}
+        if(target.value == true){       sendData.USE = 1;}
+        else if(target.value == false){ sendData.USE = 0;}
     }
-    function chageTemp() {
-        let temp_TEMP = document.getElementById("temp").value;
+    function chageTemp(data) {
+        let temp_TEMP = data.value;
         if(temp_TEMP > 46) {    temp_TEMP = 46;}
         else if(temp_TEMP < 0){ temp_TEMP = 0;}
         sendData.TEMP = temp_TEMP;
     }
-    function chageHumi() {
-        let temp_HUMI = document.getElementById("humi").value;
+    function chageHumi(data) {
+        let temp_HUMI = data.value;
         if(temp_HUMI > 90) {    temp_HUMI = 90;}
         else if(temp_HUMI < 10){ temp_HUMI = 10;}
         sendData.HUMI = temp_HUMI;
@@ -52,13 +106,24 @@
 </script>
 <!-- Main -->
 
-<%= JSON.stringify(data.DEV) %>
+
 
 <div id="main" class="alt">
     <div class="inner">
-        <input type="number" min="10" max="99" onchange="">
         <section>
             <div class="table-wrapper">
+
+
+                <div class="box alt">
+					<div class="row gtr-uniform">
+						<div class="col-6">응답 대기 중 : 온도 - <%= JSON.stringify(data.DEV.SET_TEMP) %> ℃
+                                            , 습도 - <%= JSON.stringify(data.DEV.SET_HUMI) %> %</div>	
+						<div class="col-6">설정 전달 : 온도 - <%= JSON.stringify(data.DEV.PRE_TEMP) %> ℃
+                                            , 습도 - <%= JSON.stringify(data.DEV.PRE_HUMI) %> %</div>						
+					</div>
+				</div>
+
+
                 <table class="alt">
                     <tbody id="TABLE">
                         <tr>
@@ -67,13 +132,13 @@
                             <td id="cUse"> 사용</td>
                             <td id="cTemp">설정 온도</td>
                             <td id="cHumi">설정 습도</td>
-                            <td rowspan="2" onclick="tableform()">설정<br>변경</td>
+                            <td rowspan="2" onclick="tableform()"><span class="button primary fit" id="button1">설정</span></td>
                         </tr>
                         <tr>
-                            <td><%= data.DEV.NAME %></td>
+                            <td id="hive"><%= data.DEV.NAME %></td>
                             <td><%= data.DEV.STATE %></td>
                             <td><% let STATE = "정지";
-                                if(data.DEV.USE) STATE = "가동"; %><%= STATE %></td>
+                                if(data.DEV.PRE_USE) STATE = "가동"; %><%= STATE %></td>
                             <td><%= data.DEV.SET_TEMP %> ℃</td>
                             <td><%= data.DEV.SET_HUMI %> %</td>
                         </tr>                        

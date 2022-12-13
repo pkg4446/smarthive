@@ -4,11 +4,6 @@ const requestIp = require('request-ip');
 
 const read      = require("../../controller/device/read");
 
-const APIARY    = 0;
-const FARM      = "94:B9:7E:42:2E:80";
-const NAME      = "신규등록";
-const MODULE    = "3951267849";
-
 router.get('/apiary', async function(req, res) {
     res.render('regist/apiary');
 });
@@ -31,6 +26,12 @@ router.post('/hiveSensor', async function(req, res) {
 });
 
 
+
+
+const APIARY    = 0;
+const FARM      = "94:B9:7E:42:2E:80";
+const NAME      = "신규등록";
+const MODULE    = "3951267849";
 
 
 

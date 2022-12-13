@@ -28,4 +28,53 @@ module.exports  = {
             return false;
         }        
     },
+
+    sensor_confirm :  async function(MODULE){
+        try {
+            await Sensor.findByPk(MODULE)
+            .then(function(response) {
+                response.update({
+                    USE:        response.PRE_USE,
+                    SET_TEMP:   response.PRE_TEMP,
+                    SET_HUMI:   response.PRE_HUMI
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    sensor_set :  async function(data){
+        try {
+            await Sensor.findByPk(data.MODULE)
+            .then(function(response) {
+                response.update({
+                    PRE_USE:    response.USE,
+                    PRE_TEMP:   response.SET_TEMP,
+                    PRE_HUMI:   response.SET_HUMI
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    sensor_name :  async function(data){
+        try {
+            await Sensor.findByPk(data.MODULE)
+            .then(function(response) {
+                response.update({
+                    NAME: data.NAME
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
 }
