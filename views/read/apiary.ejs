@@ -106,11 +106,13 @@
             HTML_Text = `<section class="tiles">
                 <article class="style2" onclick="HTML('stack',null)">
                     <span class="image"><img src="/public/images/pic02.jpg" alt="" /></span>
-                    <a><h2>소비저장고<br>등록</h2></a>
+                    <a><h2>소비저장고<br>등록</h2><div class="content">
+				    <hr><p>소비저장고가 WIFI에 접속되어 있을 때<br>모니터의 문열기 버튼을 누른 후<br>상단의 로고를 누르면 ID가 표시됩니다.</p></div></a>
                 </article>
                 <article class="style6" onclick="submitfn('read','farmIP','null')">
                     <span class="image"><img src="/public/images/pic06.jpg" alt="" /></span>
-                    <a><h2>양봉구역<br>등록</h2></a>	
+                    <a><h2>양봉구역<br>등록</h2><div class="content">
+				    <hr><p>양봉구역을 등록하기 위해서는<br><br>양봉구역의 WIFI에 접속해야합니다.</p></div></a>	
                 </article>`;
             for (const iterator of RESPONSE.warehouse) {
                 HTML_Text += ` <article class="style3">
@@ -123,8 +125,12 @@
                     <span class="image"><img src="/public/images/pic05.jpg" alt="" /></span>     
                     <a onclick="document.getElementById('hive_${iterator.FARM}').submit();">                        
                         <h2>양봉구역<br>${iterator.NAME}</h2>
+                        <div class="content">
+				        <hr><span>양봉구역의 장비들을 로그를 확인하고</span>
                         <form action='/page/hive' method="post" id="hive_${iterator.FARM}">                        
                         <input type="hidden" name="MAC" value="${iterator.FARM}"></form>
+                        <span>설정을 변경할 수 있습니다.</span>
+                        </div>
                     </a>
                 </article>`;
             }
