@@ -13,10 +13,10 @@ const Sequelize = require('../module');
 const { Op }    = require("sequelize");
 
 module.exports  = {
-    regist :   async function(USER_IP){
+    regist :   async function(USER_IP,NAME){
         try {
             const farm = await Farm.findAll({
-                where: {IP: USER_IP},
+                where: {IP: USER_IP, NAME:NAME},
                 raw : true
             });
             return farm;
@@ -100,9 +100,7 @@ module.exports  = {
 
     sensor :   async function(MODULE){
         try {
-            const response = {
-                sensor: await Sensor.findByPk(MODULE,{raw : true}),
-            }
+            const response = await Sensor.findByPk(MODULE,{raw : true});
             return response;
         } catch (error) {
             console.log(error);

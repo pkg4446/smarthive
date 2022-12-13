@@ -1,5 +1,105 @@
 <script type="text/javascript">
-
+    let tableform_flage  = true;
+    let HTML_Text_origin = null;
+    const FARM   =   "<%= data.DEV.FARM %>";
+    const MODULE =  "<%= data.DEV.MODULE %>";
+    const STATE  =  "<%= data.DEV.STATE %>";    
+    let sendData = {
+        STATE:  STATE,
+        TEMP:   "<%= data.DEV.SET_TEMP %>",
+        HUMI:   "<%= data.DEV.SET_HUMI %>",
+    }
+    console.log();
+    function tableform(FARM,MODULE) {
+        if(tableform_flage){
+            HTML_Text_origin = document.getElementById("TABLE").innerHTML;
+            let HTML_Text = `<tr>
+                                <td colspan="2"></td>
+                                <td>
+                                    <select onchange="selectButton(this)">
+                                        <option value= null  >선택</option>
+                                        <option value= true  >ON</option>
+                                        <option value= false >OFF</option>
+                                    </select>
+                                </td>
+                                <td><input id="temp" type="number" min="0" max="46" onchange="chageTemp()" value="${sendData.TEMP}"></td>
+                                <td><input id="humi" type="number" min="10" max="90" onchange="chageHumi()" value="${sendData.HUMI}"></td>
+                                <td>확인</td>
+                            </tr>`;
+            document.getElementById("TABLE").innerHTML = HTML_Text_origin + HTML_Text;
+            tableform_flage = false;
+        }else{
+            document.getElementById("TABLE").innerHTML = HTML_Text_origin;
+            tableform_flage = true;
+        }
+    }
+    function selectButton(target) {
+        if(target.value == true){       sendData.STATE = 1;}
+        else if(target.value == false){ sendData.STATE = 0;}
+    }
+    function chageTemp() {
+        let temp_TEMP = document.getElementById("temp").value;
+        if(temp_TEMP > 46) {    temp_TEMP = 46;}
+        else if(temp_TEMP < 0){ temp_TEMP = 0;}
+        sendData.TEMP = temp_TEMP;
+    }
+    function chageHumi() {
+        let temp_HUMI = document.getElementById("humi").value;
+        if(temp_HUMI > 90) {    temp_HUMI = 90;}
+        else if(temp_HUMI < 10){ temp_HUMI = 10;}
+        sendData.HUMI = temp_HUMI;
+    }
 </script>
-<%= JSON.stringify(data) %>
 <!-- Main -->
+
+<%= JSON.stringify(data.DEV) %>
+
+<div id="main" class="alt">
+    <div class="inner">
+        <input type="number" min="10" max="99" onchange="">
+        <section>
+            <div class="table-wrapper">
+                <table class="alt">
+                    <tbody id="TABLE">
+                        <tr>
+                            <td>벌통</td>
+                            <td>상태</td>
+                            <td id="cUse"> 사용</td>
+                            <td id="cTemp">설정 온도</td>
+                            <td id="cHumi">설정 습도</td>
+                            <td rowspan="2" onclick="tableform()">설정<br>변경</td>
+                        </tr>
+                        <tr>
+                            <td><%= data.DEV.NAME %></td>
+                            <td><%= data.DEV.STATE %></td>
+                            <td><% let STATE = "정지";
+                                if(data.DEV.USE) STATE = "가동"; %><%= STATE %></td>
+                            <td><%= data.DEV.SET_TEMP %> ℃</td>
+                            <td><%= data.DEV.SET_HUMI %> %</td>
+                        </tr>                        
+                    </tbody>
+                </table>
+
+                <table class="alt">
+                    <thead>
+                        <tr>
+                            <th>온도</th>
+                            <th>습도</th>
+                            <th>시간</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (const log of data.LOG) { %>  
+                        <tr>
+                            <td><%= log.TEMP/100 %> ℃</td>
+                            <td><%= log.HUMI/100 %> %</td>
+                            <td><%= log.TMST %></td>
+                        </tr>  
+                        <% } %>                      
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+    </div>
+</div>
