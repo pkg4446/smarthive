@@ -45,14 +45,7 @@
                         })
                     }
                 }else if(TYPE == "read" && API=="farmIP"){
-                    let farmFlage = true;
-                    for (const iterator of response.data) {
-                        farmFlage = true;
-                        for (const arrays of RESPONSE.farm) {
-                            if(arrays.FARM == iterator.FARM) farmFlage = false;
-                        }
-                        if(farmFlage) RESPONSE.farm.push({FARM: iterator.FARM, NAME: iterator.NAME});
-                    }
+                    let farmFlage = response.data.length;                    
                     if(farmFlage){
                         Swal.fire({              
                                 position: 'top',
