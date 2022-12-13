@@ -13,10 +13,10 @@ const Sequelize = require('../module');
 const { Op }    = require("sequelize");
 
 module.exports  = {
-    regist :   async function(USER_IP,NAME){
+    regist :   async function(USER_IP){
         try {
             const farm = await Farm.findAll({
-                where: {IP: USER_IP, NAME:NAME},
+                where: {IP: USER_IP, APIARY:0},
                 raw : true
             });
             return farm;

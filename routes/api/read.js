@@ -42,10 +42,10 @@ router.post('/farmIP', async function(req, res) {
     }
     try {
         const IP  = requestIp.getClientIp(req);
-        response.data = await read.regist(IP,"신규등록");
+        response.data = await read.regist(IP);
         console.log(IP, req.body);
         for (const iterator of response.data) {
-            if(!iterator.APIARY) await read.regist_change(iterator.FARM,req.body.APIARY);
+            await read.regist_change(iterator.FARM,req.body.APIARY);
         }        
     } catch (error) {
         console.error(err);
