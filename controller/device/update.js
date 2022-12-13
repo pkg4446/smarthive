@@ -51,9 +51,9 @@ module.exports  = {
         try {            
             await Sensor.findByPk(data.MODULE)
             .then(async function(response) {
-                if(response.USE      == data.USE)   await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+USE=${data.USE};`);
-                if(response.SET_TEMP == data.TEMP)  await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+TEMP=${data.TEMP};`);
-                if(response.SET_HUMI == data.HUMI)  await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+HUMI=${data.HUMI};`);
+                if(response.USE      == data.USE)   await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+USE=${data.USE};`});
+                if(response.SET_TEMP == data.TEMP)  await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+TEMP=${data.TEMP};`});
+                if(response.SET_HUMI == data.HUMI)  await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+HUMI=${data.HUMI};`});
                 response.update({
                     PRE_USE:    data.USE,
                     PRE_TEMP:   data.TEMP,
