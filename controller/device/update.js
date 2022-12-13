@@ -1,4 +1,5 @@
 const Sensor    = require('../../models/sensor');
+const mqtt      = require("./mqtt");
 
 module.exports  = {
     sensor_error :  async function(MODULE,ERR){
@@ -47,13 +48,16 @@ module.exports  = {
     },
 
     sensor_set :  async function(data){
-        try {
+        try {            
             await Sensor.findByPk(data.MODULE)
-            .then(function(response) {
+            .then(async function(response) {
+                if(response.USE      == data.USE)   await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+USE=${data.USE};`);
+                if(response.SET_TEMP == data.TEMP)  await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+TEMP=${data.TEMP};`);
+                if(response.SET_HUMI == data.HUMI)  await mqtt.send(response.FARM,`;S=${data.MODULE}=AT+HUMI=${data.HUMI};`);
                 response.update({
-                    PRE_USE:    response.USE,
-                    PRE_TEMP:   response.SET_TEMP,
-                    PRE_HUMI:   response.SET_HUMI
+                    PRE_USE:    data.USE,
+                    PRE_TEMP:   data.TEMP,
+                    PRE_HUMI:   data.HUMI
                 })
             });
             return true;
