@@ -145,12 +145,24 @@
     <div class="inner" id="contents">
         <!-- Lists -->
         <section>
+            <div class="row">
+
                 <% for (const object of data) { %>
-                    <ul onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})">
-                        <li>양봉장: <%= object.NAME %></li>
-                        <li>주 소 : <%= object.ADDR %></li>
-                    </ul>
+                    <div class="col-12"><hr></div>                    
+                    <div class="col-8" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
+                        <ul>
+                            <li>양봉장: <%= object.NAME %></li>
+                            <li>주 소 : <%= object.ADDR %></li>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <span class="button primary fit">변 경</span>                        
+                    </div>   
+                    <div class="col-2">
+                        <span class="button fit">삭 제</span>                        
+                    </div>                  
                 <% } %>
+            </div>
         </section>
         
     </div>

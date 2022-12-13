@@ -11,7 +11,8 @@ router.post('/apiary', async function(req, res) {
         data:   null
     }    
     try {
-        response.data = await regist.regist_Apiary(req.body);
+        if(req.body.NAME && req.body.ADDR){response.data = await regist.regist_Apiary(req.body);}
+        else{response.result = false; response.data = "dataNull";}
     } catch (error) {
         console.error(err);
         response.result = false;
