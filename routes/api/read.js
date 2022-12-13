@@ -45,7 +45,7 @@ router.post('/farmIP', async function(req, res) {
         response.data = await read.regist(IP,"신규등록");
         console.log(IP, req.body);
         for (const iterator of response.data) {
-            await read.regist_change(iterator.FARM,req.body.APIARY)
+            if(!iterator.APIARY) await read.regist_change(iterator.FARM,req.body.APIARY);
         }        
     } catch (error) {
         console.error(err);
