@@ -32,8 +32,8 @@ module.exports  = {
     log_wh_O3 :    async function(data){
         try {
             await log_wh_O3.create({
-                MODULE: data.MODULE,
-                O3:     data.DATA*100,
+                WAREHOUSE:  data.MODULE,
+                O3:         data.DATA*100,
             });
         } catch (error) {
             console.log(error);
@@ -43,8 +43,8 @@ module.exports  = {
     log_wh_door :   async function(data){
         try {
             await log_wh_door.create({
-                MODULE: data.MODULE,
-                DOOR:   data.DATA,
+                WAREHOUSE:  data.MODULE,
+                DOOR:       data.DATA,
             });
         } catch (error) {
             console.log(error);
