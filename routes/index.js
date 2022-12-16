@@ -9,6 +9,9 @@ const device    = require('./device');
 const api       = require('./api');
 const web       = require('./front');
 
+const demo      = require('./demo');
+router.use('/demo',demo);
+
 router.use('/',web);
 router.use('/user',user);
 router.use('/reg',device);
