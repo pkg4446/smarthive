@@ -96,6 +96,20 @@ router.post('/hive', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/sensor', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.sensor(req.body.MODULE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/sensor_log', async function(req, res) {
     const response = {
         result: true,
