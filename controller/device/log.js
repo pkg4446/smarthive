@@ -2,6 +2,7 @@ const log_error     = require('../../models/log_error');
 const log_sensor    = require('../../models/log_sensor');
 const log_wh_O3     = require('../../models/log_wh_O3');
 const log_wh_door   = require('../../models/log_wh_door');
+const log_wh_plz    = require('../../models/log_wh_plz');
 
 module.exports  = {
     log_error :    async function(data){
@@ -47,6 +48,17 @@ module.exports  = {
             await log_wh_door.create({
                 WAREHOUSE:  data.MODULE,
                 DOOR:       door,
+            });
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    log_wh_plz :   async function(data){
+        try {
+            await log_wh_plz.create({
+                WAREHOUSE:  data.MODULE,
+                PLZ:        data.DATA,
             });
         } catch (error) {
             console.log(error);

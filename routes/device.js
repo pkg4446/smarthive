@@ -40,6 +40,8 @@ router.route('/hive')
             await log.log_wh_O3(req.body);            
         }else if(req.body.TYPE == "DOOR"){
             await log.log_wh_door(req.body); 
+        }else if(req.body.TYPE == "PLZ"){
+            await log.log_wh_plz(req.body); 
         }
         res.send("Post Request ACK");
     });

@@ -1,10 +1,3 @@
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-</script>
-<!-- Main -->
-
-
-
 <div id="main" class="alt">
     <div class="inner">
         <section>
@@ -14,17 +7,17 @@
                     <thead>
                         <tr>
                             <th>소비저장고 아이디</th>
-                            <th>열림/닫힘</th>
+                            <th>플라즈마 상태</th>
                             <th>시간</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% for (const log of data) {
-                            let door_state = "닫힘";
-                            if(log.DOOR) door_state = "열림"; %>  
+                            let plz_state = "ON";
+                            if(log.PLZ) plz_state = "OFF"; %>  
                         <tr>
                             <td><%= log.WAREHOUSE %></td>
-                            <td><%= door_state %></td>
+                            <td><%= plz_state %></td>
                             <td><%= log.TMST %></td>
                         </tr>  
                         <% } %>                      

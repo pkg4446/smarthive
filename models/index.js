@@ -61,4 +61,9 @@ db.log_wh_door  = log_wh_door;
 log_wh_door.init(sequelize);
 log_wh_door.associate(db);
 
+const log_wh_plz   = require('./log_wh_plz');
+db.log_wh_plz   = log_wh_plz;
+log_wh_plz.init(sequelize);
+log_wh_plz.associate(db);
+
 module.exports = db;
