@@ -41,6 +41,10 @@ router.route('/hive')
             await log.log_wh_O3(req.body);            
         }else if(req.body.TYPE == "DOOR"){
             await log.log_wh_door(req.body); 
+        }else if(req.body.TYPE == "POFF"){
+            await update.warehouse_OFF(req.body); 
+        }else if(req.body.TYPE == "PON"){
+            await update.warehouse_ON(req.body); 
         }
         res.send("Post Request ACK");
     });

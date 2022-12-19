@@ -1,4 +1,5 @@
 const Sensor    = require('../../models/sensor');
+const Warehouse    = require('../../models/warehouse');
 const mqtt      = require("./mqtt");
 
 module.exports  = {
@@ -73,6 +74,36 @@ module.exports  = {
             .then(function(response) {
                 response.update({
                     NAME: data.NAME
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    warehouse_ON :  async function(data){
+        try {
+            await Warehouse.findByPk(data.MODULE)
+            .then(function(response) {
+                response.update({
+                    ON: data.DATA
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
+    warehouse_OFF :  async function(data){
+        try {
+            await Warehouse.findByPk(data.MODULE)
+            .then(function(response) {
+                response.update({
+                    OFF: data.DATA
                 })
             });
             return true;
