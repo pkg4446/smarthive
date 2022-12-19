@@ -36,15 +36,10 @@ router.route('/hive')
 
     router.post('/save', async function(req, res) {    
         const IP  = requestIp.getClientIp(req);
-        console.log(req.body,IP);
         if(req.body.TYPE == "O3"){
             await log.log_wh_O3(req.body);            
         }else if(req.body.TYPE == "DOOR"){
             await log.log_wh_door(req.body); 
-        }else if(req.body.TYPE == "POFF"){
-            await update.warehouse_OFF(req.body); 
-        }else if(req.body.TYPE == "PON"){
-            await update.warehouse_ON(req.body); 
         }
         res.send("Post Request ACK");
     });

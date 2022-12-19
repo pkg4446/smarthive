@@ -1,8 +1,19 @@
 const Sensor    = require('../../models/sensor');
-const Warehouse    = require('../../models/warehouse');
 const mqtt      = require("./mqtt");
 
+const Sequelize   = require('../module');
+const { Op }    = require("sequelize");
+
 module.exports  = {
+    warehouse_update : async function(DEVICE,COLUMN,VALUE){
+        try {      
+            const object = await Sequelize.query('UPDATE warehouse SET `'+ COLUMN +'`="'+ VALUE +'" WHERE  WAREHOUSE="'+ DEVICE +'"');
+            return object;
+        } catch (error) {
+          console.error(error);
+        }
+    },
+
     sensor_error :  async function(MODULE,ERR){
         try {
             let CODE;
@@ -81,35 +92,5 @@ module.exports  = {
             console.log(error);
             return false;
         }        
-    },
-
-    warehouse_ON :  async function(data){
-        try {
-            await Warehouse.findByPk(data.MODULE)
-            .then(function(response) {
-                response.update({
-                    ON: data.DATA
-                })
-            });
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }        
-    },
-
-    warehouse_OFF :  async function(data){
-        try {
-            await Warehouse.findByPk(data.MODULE)
-            .then(function(response) {
-                response.update({
-                    OFF: data.DATA
-                })
-            });
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }        
-    },
+    }
 }
