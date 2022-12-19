@@ -22,7 +22,7 @@
                         <% for (const log of data) { %>  
                         <tr>
                             <td><%= log.WAREHOUSE %></td>
-                            <td><%= log.O3 %> PPM</td>
+                            <td><%= log.O3/10 %> PPM</td>
                             <td><%= log.TMST %></td>
                         </tr>  
                         <% } %>                      
