@@ -33,7 +33,7 @@ module.exports  = {
         try {
             await log_wh_O3.create({
                 WAREHOUSE:  data.MODULE,
-                O3:         data.DATA*100,
+                O3:         data.DATA,
             });
         } catch (error) {
             console.log(error);
@@ -41,10 +41,12 @@ module.exports  = {
     },
 
     log_wh_door :   async function(data){
+        let door = false;
+        if(data.DATA == "OPEN") door = true;
         try {
             await log_wh_door.create({
                 WAREHOUSE:  data.MODULE,
-                DOOR:       data.DATA,
+                DOOR:       door,
             });
         } catch (error) {
             console.log(error);
