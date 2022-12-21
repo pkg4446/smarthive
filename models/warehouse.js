@@ -36,7 +36,7 @@ module.exports = class Warehouse extends Sequelize.Model{
             OFF:    {
                 type: Sequelize.TINYINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 20
+                defaultValue: 1
             },
 
         },{

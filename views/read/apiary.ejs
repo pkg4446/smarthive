@@ -129,9 +129,18 @@
 				    <hr><p>양봉구역을 등록하기 위해서는<br><br>양봉구역의 WIFI에 접속해야합니다.</p></div></a>	
                 </article>`;
             for (const iterator of RESPONSE.warehouse) {
+                console.log(iterator);
                 HTML_Text += ` <article class="style3">
                     <span class="image"><img src="/public/images/pic03.jpg" alt="" /></span>
-                    <a><h2>소비저장고<br>${iterator.NAME}</h2></a>
+                    <a onclick="document.getElementById('warehouse_${iterator.WAREHOUSE}').submit();">
+                        <h2>소비저장고<br>${iterator.NAME}</h2>
+                        <div class="content">
+				        <hr><span>소비저장고의 로그를 확인하고</span>
+                        <form action='/page/warehouse' method="post" id="warehouse_${iterator.WAREHOUSE}">                        
+                        <input type="hidden" name="MAC" value="${iterator.WAREHOUSE}"></form>
+                        <span>설정변경과 제어를 할 수 있습니다.</span>
+                        </div>
+                    </a>
                 </article>`;
             }
             for (const iterator of RESPONSE.farm) {

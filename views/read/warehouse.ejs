@@ -1,0 +1,99 @@
+<script>
+
+</script>
+<!-- Main -->
+<div id="main" class="alt">
+    <div class="inner" id="contents">
+        <!-- Lists -->
+        <section>
+            <div class="row">
+                <div class="col-12">                    
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th><%= data.WAREHOUSE %></th></tr>
+                                <tr><th>이름</th><th><%= data.NAME %></th></tr>
+                                <tr><th>ON / OFF</th><th><%let onoff="OFF"; if(data.USE)onoff="ON"; %><%= onoff %></th></tr>
+                                <tr><th><%= data.OFF %></th><th>시간 중</th></tr>
+                                <tr><th><%= data.ON  %></th><th>분 켜짐</th></tr>
+                            </thead>
+                            <tbody>
+
+                       
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="col-4 col-12-medium">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>시간</th>
+                                    <th>오존 농도</th>
+                                </tr>                                
+                            </thead>
+                            <tbody>                                
+                                <% for (const log of logs.O3) { %>
+                                <tr>
+                                    <td><%= log.TMST %></td>
+                                    <td><%= log.O3/10 %> PPM</td>                                    
+                                </tr>  
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-4 col-12-medium">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>시간</th>
+                                    <th>플라즈마 ON/OFF</th>
+                                </tr>                                
+                            </thead>
+                            <tbody>                                
+                                <% for (const log of logs.PLZ) { 
+                                    let plz_state = "OFF";
+                                    if(log.PLZ) plz_state = "ON"; %>
+                                <tr>
+                                    <td><%= log.TMST %></td>
+                                    <td><%= plz_state %></td>
+                                </tr>  
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-4 col-12-medium">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>                                    
+                                    <th>시간</th>
+                                    <th>문 열림/닫힘</th>
+                                </tr>                                
+                            </thead>
+                            <tbody>                                
+                                <% for (const log of logs.DOOR) { 
+                                    let door_state = "닫힘";
+                                    if(log.DOOR) door_state = "열림"; %>  
+                                <tr>
+                                    <td><%= log.TMST %></td>
+                                    <td><%= door_state %></td>
+                                </tr>  
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>               
+
+            </div>
+        </section>
+        
+    </div>
+</div>

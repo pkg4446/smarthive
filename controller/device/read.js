@@ -8,6 +8,7 @@ const Log_error     = require('../../models/log_error');
 const Log_sensor    = require('../../models/log_sensor');
 const Log_wh_O3     = require('../../models/log_wh_O3');
 const Log_wh_door   = require('../../models/log_wh_door');
+const Log_wh_plz    = require('../../models/log_wh_plz');
 
 const Sequelize = require('../module');
 const { Op }    = require("sequelize");
@@ -81,6 +82,58 @@ module.exports  = {
             console.log(error);
         }        
     },
+
+    warehouse :   async function(MODULE){
+        try {
+            const response = await Warehouse.findByPk(MODULE,{raw : true});
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    log_wh_O3:   async function(MODULE){
+        try {
+            const response = await Log_wh_O3.findAll(
+                {where: {WAREHOUSE: MODULE},
+                order :[['IDX', 'DESC']],
+                limit: 288,
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    log_wh_door:   async function(MODULE){
+        try {
+            const response = await Log_wh_door.findAll(
+                {where: {WAREHOUSE: MODULE},
+                order :[['IDX', 'DESC']],
+                limit: 288,
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    log_wh_plz:   async function(MODULE){
+        try {
+            const response = await Log_wh_plz.findAll(
+                {where: {WAREHOUSE: MODULE},
+                order :[['IDX', 'DESC']],
+                limit: 288,
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
 
     farm :   async function(FARM_ID){
         try {
