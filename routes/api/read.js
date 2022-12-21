@@ -177,4 +177,59 @@ router.post('/error_device', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/warehouse', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.warehouse(req.body.WAREHOUSE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+router.post('/warehouse_O3', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.log_wh_O3(req.body.WAREHOUSE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+router.post('/warehouse_door', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.log_wh_door(req.body.WAREHOUSE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+router.post('/warehouse_plz', async function(req, res) {
+    const response = {
+        result: true,
+        data:   null
+    }
+    try {
+        response.data = await read.log_wh_plz(req.body.WAREHOUSE);
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
 module.exports = router;
