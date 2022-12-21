@@ -1,43 +1,104 @@
-<script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
 
-function submitfn(API,DATA){
+let WAREHOUSE_HTML;
+let WAREHOUSE_NAME;
+let INIT;
+
+function submitfn(DATA){
     $.ajax({
-                contentType: "application/json; charset=utf-8",
-                url : `/api/update/${API}`,
-                type : 'POST', 
-                dataType:'json',
-                data : JSON.stringify(DATA), 
-                success : function(response) {  
-                    console.log(response);
-                    if(response.result){    
-                        if(API == "hiveSensorName" && DATA.NAME){
-                            document.getElementById("hive").innerText = DATA.NAME;
-                            Swal.fire({              
-                                position: 'top',
-                                icon: 'success',
-                                title: "이름 변경",
-                                text: "벌통 이름이 변경되었습니다.",
-                                showConfirmButton: false,                                    
-                                timer: 1500
-                            })
-                        }else if(API == "hiveSensor"){
-                            Swal.fire({              
-                                position: 'top',
-                                icon: 'success',
-                                title: "설정 중",
-                                text: "컨트롤러에 명령을 전달했습니다.",
-                                showConfirmButton: false,                                    
-                                timer: 1500
-                            })
-                        }
-                    }
-                }, // success 
-                error : function(xhr, status) {
-                    alert(xhr + " : " + status);
-                    console.log(xhr);
-                }            
-            }); // $.ajax 
+        contentType: "application/json; charset=utf-8",
+        url :   '/api/update/warehouse',
+        type :  'POST', 
+        dataType:'json',
+        data : JSON.stringify(DATA), 
+        success : function(response) {  
+            console.log(response);
+            if(DATA.TYPE == 'DELETE'){
+                Swal.fire({              
+                    position: 'top',
+                    icon: 'success',
+                    title: "소비저장고 삭제",
+                    text:  "현 양봉장에서 소비저장고 목록이 삭제되었습니다.",
+                    showConfirmButton: false,                                    
+                    timer: 1000
+                })
+                .then((result) => {     
+                    window.location.href = "/page/apiaryList";
+                })   
+            }else if(DATA.TYPE == 'NAME'){
+                Swal.fire({              
+                    position: 'top',
+                    icon: 'success',
+                    title: "이름 변경",
+                    text:  "소비저장고 이름이 변경되었습니다.",
+                    showConfirmButton: false,                                    
+                    timer: 1000
+                })
+            }              
+        }, // success 
+        error : function(xhr, status) {
+            alert(xhr + " : " + status);
+            console.log(xhr);
+        }            
+    }); // $.ajax 
+}
+
+function CANCLE() {
+    document.getElementById("warehouse").innerHTML = WAREHOUSE_HTML;
+    document.getElementById("warehouse_name").innerText = WAREHOUSE_NAME;  
+}
+
+function NAME() {
+    const name_change = document.getElementById("NAME").value;
+    if(name_change == ""){
+        Swal.fire({              
+            position: 'top',
+            icon: 'error',
+            title: "텅 빈 이름",
+            text:  "소비저장고 이름이 비어있습니다..",
+            showConfirmButton: false,                                    
+            timer: 1000
+        })
+    }else{
+        WAREHOUSE_NAME = name_change;
+        submitfn({MODULE:'<%= data.WAREHOUSE %>',TYPE:'NAME',NAME:name_change});
     }
+}
+
+function DELETE() {
+    Swal.fire({
+        title: '양봉장을 삭제하시겠습니까?',
+        showDenyButton: true,
+        confirmButtonText: '네',
+        denyButtonText: '아니오',
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            submitfn({MODULE:'<%= data.WAREHOUSE %>',TYPE:'DELETE'});
+        } 
+    });     
+}
+
+function MODIFY(DATA) {
+    INIT = JSON.parse(DATA);
+    WAREHOUSE_HTML = document.getElementById("warehouse").innerHTML;   
+    WAREHOUSE_NAME = document.getElementById("warehouse_name").innerText;   
+    let PLZ_ONOFF = "OFF";
+    if(INIT.USE) PLZ_ONOFF = "ON";
+    let HTML_TEXT = `<div class="table-wrapper">
+                        <table class="alt">
+                            <thead>
+                                <tr><th>ID</th><th>${INIT.WAREHOUSE}</th><th><span class="button small fit" onclick="CANCLE()">취&emsp;소</th></tr>
+                                <tr><th>이름</th><th><input type="text" name="NAME" id="NAME" value="${INIT.NAME}" maxlength='16' placeholder="소비저장고 이름" /></th><th><span class="button small fit" onclick="NAME()">이름변경</th></tr>
+                                <tr><th>ON / OFF</th><th>${PLZ_ONOFF}</th></tr>
+                                <tr><th>${INIT.OFF}</th><th>시간 중</th></tr>
+                                <tr><th>${INIT.ON }</th><th>분 켜짐</th></tr>
+                            </thead>
+                        </table>
+                    </div>`;
+    document.getElementById("warehouse").innerHTML = HTML_TEXT;
+}
 
 </script>
 <!-- Main -->
@@ -46,32 +107,39 @@ function submitfn(API,DATA){
         <!-- Lists -->
         <section>
             <div class="row">
-                <div class="col-8">                    
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr><th>ID</th><th><%= data.WAREHOUSE %></th></tr>
-                                <tr><th>이름</th><th><%= data.NAME %></th></tr>
-                                <tr><th>ON / OFF</th><th><%let onoff="OFF"; if(data.USE)onoff="ON"; %><%= onoff %></th></tr>
-                                <tr><th><%= data.OFF %></th><th>시간 중</th></tr>
-                                <tr><th><%= data.ON  %></th><th>분 켜짐</th></tr>
-                            </thead>
-                        </table>
-                    </div>
+                <div class="col-12" id="warehouse">                         
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="table-wrapper">
+                                <table class="alt">
+                                    <thead>
+                                        <tr><th>ID</th><th><%= data.WAREHOUSE %></th></tr>
+                                        <tr><th>이름</th><th id="warehouse_name"><%= data.NAME %></th></tr>
+                                        <tr><th>ON / OFF</th><th><%let onoff="OFF"; if(data.USE)onoff="ON"; %><%= onoff %></th></tr>
+                                        <tr><th><%= data.OFF %></th><th>시간 중</th></tr>
+                                        <tr><th><%= data.ON  %></th><th>분 켜짐</th></tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-4"> 
+                            <div class="table-wrapper">
+                                <table class="alt">
+                                    <thead>
+                                        <tr><th><span class="button primary small fit" onclick="MODIFY('<%=JSON.stringify(data)%>')">설&emsp;정</span></th></tr>
+                                        <tr><th>&nbsp;</th></tr>
+                                        <tr><th><span class="button small fit" onclick="DELETE()">삭&emsp;제</th></tr>
+                                        <tr><th>&ensp; </th></tr>                              
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>  
+                    <hr>
                 </div>
 
-                <div class="col-4">                    
-                    <div class="table-wrapper">
-                        <table class="alt">
-                            <thead>
-                                <tr><th><span class="button primary small fit" id="button1">설&emsp;정</span></th></tr>
-                                <tr><th>&nbsp;</th></tr>
-                                <tr><th><span class="button small fit" id="button1">삭&emsp;제</th></tr>
-                                <tr><th>&ensp; </th></tr>                              
-                            </thead>
-                        </table>
-                    </div>
-                </div>
+                
                 
                 <div class="col-4 col-12-medium">
                     <div class="table-wrapper">

@@ -20,15 +20,19 @@ module.exports  = {
     },
 
     regist_warehouse : async function(data){
-        try {            
+        try {    
+            let res = false;      
             await Warehouse.findByPk(data.WAREHOUSE)
             .then(function(response) {
-                response.update({
-                    APIARY:     data.APIARY,
-                    NAME:       data.NAME,
-                })
+                if(response.APIARY == 0){
+                    res = true;
+                    response.update({
+                        APIARY:     data.APIARY,
+                        NAME:       data.NAME,
+                    })
+                }
             });
-            return true;
+            return res;
         } catch (error) {
             console.log(error);
             return false;

@@ -30,6 +30,7 @@
                     document.getElementById(id="TABLE_"+DATA.APIARY+"_BUTTON_D").innerHTML = null;    
                     return true;     
                 }else if(TYPE == "write" && API=="warehouse"){
+                    console.log(response);
                     if(response.data){
                         RESPONSE.warehouse.push({WAREHOUSE: sendData.WAREHOUSE, NAME: sendData.NAME});
                         Swal.fire({              
