@@ -76,6 +76,7 @@
             }            
         }); // $.ajax 
     }
+
     function HTML(API,DATA){
         let HTML_Text = "";
         if(API == "stack"){
@@ -130,7 +131,7 @@
             HTML_Text += "</section>";
         }
         document.getElementById("contents").innerHTML = HTML_Text;
-    }
+    }    
 </script>
 
 <!-- Main -->
@@ -139,19 +140,30 @@
         <!-- Lists -->
         <section>
             <div class="row">
-
                 <% for (const object of data) { %>
                     <div class="col-12"><hr></div>                    
-                    <div class="col-8" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
+                    <div class="col-6" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
                         <ul>
-                            <li>양봉장: <%= object.NAME %></li>
-                            <li>주 소 : <%= object.ADDR %></li>
+                            <li> 
+                                <div class="row">
+                                    <div class="col-4">양봉장 :</div>
+                                    <div class="col-8"><%= object.NAME %></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="row">
+                                    <div class="col-4">주&emsp;소 :</div>
+                                    <div class="col-8"><%= object.ADDR %></div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
-                    <div class="col-2">
-                        <span class="button primary fit">변 경</span>                        
+                    <div class="col-3">
+                        <span class="button primary fit" onclick="document.getElementById('MODIFY_<%= object.APIARY %>').submit();">변 경</span> 
+                        <form action='/page/apiaryUpdate' method="post" id="MODIFY_<%= object.APIARY %>">                        
+                        <input type="hidden" name="APIARY" value="<%= object.APIARY %>"></form>
                     </div>   
-                    <div class="col-2">
+                    <div class="col-3">
                         <span class="button fit">삭 제</span>                        
                     </div>                  
                 <% } %>

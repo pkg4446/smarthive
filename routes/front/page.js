@@ -7,6 +7,11 @@ const read      = require("../../controller/device/read");
 router.get('/apiary', async function(req, res) {
     res.render('regist/apiary');
 });
+router.post('/apiaryUpdate', async function(req, res) {
+    console.log("apiaryUpdate",req.body);
+    const response = await read.apiaryPK(req.body.APIARY);
+    res.render('modify/apiary',{data:response});
+});
 router.get('/apiaryList', async function(req, res) {
     const response = await read.apiary(req.user.EMAIL);
     res.render('read/apiary',{data:response});

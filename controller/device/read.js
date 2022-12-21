@@ -45,6 +45,15 @@ module.exports  = {
             console.log(error);
         }        
     },
+
+    apiaryPK :   async function(APIARY){
+        try {
+            const apiary = await Apiary.findByPk(APIARY,{raw : true});      
+            return apiary;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
     
     apiary :   async function(USER_ID){
         try {
