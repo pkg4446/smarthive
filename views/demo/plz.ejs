@@ -13,8 +13,8 @@
                     </thead>
                     <tbody>
                         <% for (const log of data) {
-                            let plz_state = "ON";
-                            if(log.PLZ) plz_state = "OFF"; %>  
+                            let plz_state = "OFF";
+                            if(log.PLZ) plz_state = "ON"; %>  
                         <tr>
                             <td><%= log.WAREHOUSE %></td>
                             <td><%= plz_state %></td>
