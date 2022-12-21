@@ -1,5 +1,44 @@
 <script>
 
+function submitfn(API,DATA){
+    $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url : `/api/update/${API}`,
+                type : 'POST', 
+                dataType:'json',
+                data : JSON.stringify(DATA), 
+                success : function(response) {  
+                    console.log(response);
+                    if(response.result){    
+                        if(API == "hiveSensorName" && DATA.NAME){
+                            document.getElementById("hive").innerText = DATA.NAME;
+                            Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "이름 변경",
+                                text: "벌통 이름이 변경되었습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1500
+                            })
+                        }else if(API == "hiveSensor"){
+                            Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "설정 중",
+                                text: "컨트롤러에 명령을 전달했습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1500
+                            })
+                        }
+                    }
+                }, // success 
+                error : function(xhr, status) {
+                    alert(xhr + " : " + status);
+                    console.log(xhr);
+                }            
+            }); // $.ajax 
+    }
+
 </script>
 <!-- Main -->
 <div id="main" class="alt">
@@ -7,7 +46,7 @@
         <!-- Lists -->
         <section>
             <div class="row">
-                <div class="col-12">                    
+                <div class="col-8">                    
                     <div class="table-wrapper">
                         <table>
                             <thead>
@@ -17,10 +56,19 @@
                                 <tr><th><%= data.OFF %></th><th>시간 중</th></tr>
                                 <tr><th><%= data.ON  %></th><th>분 켜짐</th></tr>
                             </thead>
-                            <tbody>
+                        </table>
+                    </div>
+                </div>
 
-                       
-                            </tbody>
+                <div class="col-4">                    
+                    <div class="table-wrapper">
+                        <table class="alt">
+                            <thead>
+                                <tr><th><span class="button primary small fit" id="button1">설&emsp;정</span></th></tr>
+                                <tr><th>&nbsp;</th></tr>
+                                <tr><th><span class="button small fit" id="button1">삭&emsp;제</th></tr>
+                                <tr><th>&ensp; </th></tr>                              
+                            </thead>
                         </table>
                     </div>
                 </div>
