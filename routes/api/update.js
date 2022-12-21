@@ -3,6 +3,21 @@ const router    = express.Router();
 
 const update    = require("../../controller/device/update");
 
+router.post('/apiary', async function(req, res) {   
+    const response = {
+        result: true,
+        data:   null
+    }    
+    try {
+        if(req.body.NAME && req.body.ADDR){response.data = await update.apiary(req.body);}
+        else{response.result = false; response.data = "dataNull";}
+    } catch (error) {
+        console.error(err);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/hiveSensorName', async function(req, res) {    
     const response = {
         result: true,

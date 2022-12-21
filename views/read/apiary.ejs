@@ -6,6 +6,7 @@
     function submitfn(TYPE,API,DATA){
         let sendData; 
         if(TYPE == "read" && API == "apiaryGroup"){sendData = DATA; APIARY_ID=DATA.APIARY;}
+        else if(TYPE == "delete" && API == "apiary"){sendData = DATA;}
         else if(TYPE == "write" && API == "warehouse"){
             sendData = {
                 WAREHOUSE:  document.getElementById("WAREHOUSE").value,
@@ -23,7 +24,12 @@
             data : JSON.stringify(sendData), 
             success : function(response) {       
                 if(TYPE == "read" && API=="apiaryGroup"){RESPONSE = response.data;}
-                else if(TYPE == "write" && API=="warehouse"){
+                else if(TYPE == "delete" && API == "apiary"){
+                    document.getElementById(id="TABLE_"+DATA.APIARY+"_INFO").innerHTML = null;   
+                    document.getElementById(id="TABLE_"+DATA.APIARY+"_BUTTON_M").innerHTML = null;   
+                    document.getElementById(id="TABLE_"+DATA.APIARY+"_BUTTON_D").innerHTML = null;    
+                    return true;     
+                }else if(TYPE == "write" && API=="warehouse"){
                     if(response.data){
                         RESPONSE.warehouse.push({WAREHOUSE: sendData.WAREHOUSE, NAME: sendData.NAME});
                         Swal.fire({              
@@ -75,6 +81,20 @@
                 console.log(xhr);
             }            
         }); // $.ajax 
+    }
+
+    function DELETE(DATA) {
+        Swal.fire({
+            title: '양봉장을 삭제하시겠습니까?',
+            showDenyButton: true,
+            confirmButtonText: '네',
+            denyButtonText: '아니오',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                submitfn('delete','apiary',{APIARY:DATA});
+            } 
+        });        
     }
 
     function HTML(API,DATA){
@@ -142,7 +162,7 @@
             <div class="row">
                 <% for (const object of data) { %>
                     <div class="col-12"><hr></div>                    
-                    <div class="col-6" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
+                    <div class="col-6" id="TABLE_<%= object.APIARY %>_INFO" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
                         <ul>
                             <li> 
                                 <div class="row">
@@ -158,13 +178,13 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3" id="TABLE_<%= object.APIARY %>_BUTTON_M">
                         <span class="button primary fit" onclick="document.getElementById('MODIFY_<%= object.APIARY %>').submit();">변 경</span> 
                         <form action='/page/apiaryUpdate' method="post" id="MODIFY_<%= object.APIARY %>">                        
                         <input type="hidden" name="APIARY" value="<%= object.APIARY %>"></form>
                     </div>   
-                    <div class="col-3">
-                        <span class="button fit">삭 제</span>                        
+                    <div class="col-3" id="TABLE_<%= object.APIARY %>_BUTTON_D">
+                        <span class="button fit" onclick="DELETE('<%= object.APIARY %>')">삭 제</span>                        
                     </div>                  
                 <% } %>
             </div>

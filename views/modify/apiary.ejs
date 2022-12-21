@@ -5,13 +5,14 @@
 
     function submitfn(){
         let joindata = {
-            NAME:    document.getElementById('NAME').value,
-            ADDR:     document.getElementById('ADDR').value,
+            APIARY: '<%= data.APIARY %>',
+            NAME:   document.getElementById('NAME').value,
+            ADDR:   document.getElementById('ADDR').value,
             };
             if(joindata.NAME && joindata.ADDR){
                 $.ajax({
                     contentType: "application/json; charset=utf-8",
-                    url : "/api/write/apiary",
+                    url : "/api/update/apiary",
                     type : 'POST', 
                     dataType:'json',
                     data : JSON.stringify(joindata), 

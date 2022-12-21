@@ -1,3 +1,4 @@
+const Apiary    = require('../../models/apiary');
 const Sensor    = require('../../models/sensor');
 const mqtt      = require("./mqtt");
 
@@ -5,6 +6,23 @@ const Sequelize   = require('../module');
 const { Op }    = require("sequelize");
 
 module.exports  = {
+
+    apiary :   async function(data){
+        try {
+            const apiary = await Apiary.findByPk(data.APIARY)
+            .then(function(response) {
+                response.update({
+                    NAME:     data.NAME,
+                    ADDR:     data.ADDR,
+                })
+            });
+
+            return apiary;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
     warehouse_update : async function(DEVICE,COLUMN,VALUE){
         try {      
             const object = await Sequelize.query('UPDATE warehouse SET `'+ COLUMN +'`="'+ VALUE +'" WHERE  WAREHOUSE="'+ DEVICE +'"');
