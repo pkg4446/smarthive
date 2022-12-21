@@ -1,6 +1,7 @@
 const express   = require('express');
 const router    = express.Router();
 
+const mqtt      = require("../../controller/device/mqtt");
 const update    = require("../../controller/device/update");
 
 router.post('/apiary', async function(req, res) {   
@@ -53,7 +54,8 @@ router.post('/warehouse', async function(req, res) {
     }    
     console.log(req.body);
     try {
-        if(req.body.TYPE == "DELETE"){response.data     = await update.warehouse_update(req.body.MODULE,"APIARY",0);}
+        if(req.body.TYPE == "MQTT"){ await mqtt.send({TARGET:req.body.MODULE, COMMEND:req.body.COMMEND});}
+        else if(req.body.TYPE == "DELETE"){response.data     = await update.warehouse_update(req.body.MODULE,"APIARY",0);}
         else if(req.body.TYPE == "NAME"){response.data  = await update.warehouse_update(req.body.MODULE,"NAME",req.body.NAME);}
     } catch (error) {
         console.error(err);

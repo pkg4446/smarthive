@@ -3,7 +3,8 @@
 
 let WAREHOUSE_HTML;
 let WAREHOUSE_NAME;
-let INIT;
+let WAREHOUSE_HOUR;
+let WAREHOUSE_MINUTE;
 
 function submitfn(DATA){
     $.ajax({
@@ -35,7 +36,16 @@ function submitfn(DATA){
                     showConfirmButton: false,                                    
                     timer: 1000
                 })
-            }              
+            }else if(DATA.TYPE == 'MQTT'){
+                Swal.fire({              
+                    position: 'top',
+                    icon: 'success',
+                    title: "명령 전달",
+                    text:  "소비저장고로 명령을 전달했습니다.",
+                    showConfirmButton: false,                                    
+                    timer: 1000
+                })
+            }          
         }, // success 
         error : function(xhr, status) {
             alert(xhr + " : " + status);
@@ -44,9 +54,39 @@ function submitfn(DATA){
     }); // $.ajax 
 }
 
+function MQTT(commend) {
+    submitfn({MODULE:'<%= data.WAREHOUSE %>',TYPE:'MQTT',COMMEND:commend});
+}
+
+function RUN(DATA) {
+    if(DATA){
+        MQTT('AT+ON=0');
+        document.getElementById("warehouse_onoff").innerText = "ON";
+    }else{
+        MQTT('AT+OFF=0')
+        document.getElementById("warehouse_onoff").innerText = "OFF";
+    }
+}
+
+function TIMESET() {
+    let unitHour = Number(document.getElementById("HOUR").value);
+    let runTime  = Number(document.getElementById("MINUTE").value); 
+
+    if(unitHour<0){      unitHour = 0;}
+    else if(unitHour>24){unitHour = 24;}
+    if(runTime> unitHour*60){runTime = unitHour*60;}
+    else if(runTime<0){      runTime = 0;}
+
+    MQTT("AT+TC="+unitHour);
+    MQTT("AT+TO="+runTime);
+        
+}
+
 function CANCLE() {
-    document.getElementById("warehouse").innerHTML = WAREHOUSE_HTML;
-    document.getElementById("warehouse_name").innerText = WAREHOUSE_NAME;  
+    document.getElementById("warehouse_button").innerHTML = WAREHOUSE_HTML;
+    document.getElementById("warehouse_name").innerText   = WAREHOUSE_NAME;  
+    document.getElementById("warehouse_hour").innerText   = WAREHOUSE_HOUR;  
+    document.getElementById("warehouse_minute").innerText = WAREHOUSE_MINUTE;  
 }
 
 function NAME() {
@@ -81,23 +121,28 @@ function DELETE() {
 }
 
 function MODIFY(DATA) {
-    INIT = JSON.parse(DATA);
-    WAREHOUSE_HTML = document.getElementById("warehouse").innerHTML;   
+    const INIT = JSON.parse(DATA);
+    WAREHOUSE_HTML = document.getElementById("warehouse_button").innerHTML;   
     WAREHOUSE_NAME = document.getElementById("warehouse_name").innerText;   
+    WAREHOUSE_HOUR = document.getElementById("warehouse_hour").innerText; 
+    WAREHOUSE_MINUTE = document.getElementById("warehouse_minute").innerText; 
     let PLZ_ONOFF = "OFF";
     if(INIT.USE) PLZ_ONOFF = "ON";
     let HTML_TEXT = `<div class="table-wrapper">
                         <table class="alt">
                             <thead>
-                                <tr><th>ID</th><th>${INIT.WAREHOUSE}</th><th><span class="button small fit" onclick="CANCLE()">취&emsp;소</th></tr>
-                                <tr><th>이름</th><th><input type="text" name="NAME" id="NAME" value="${INIT.NAME}" maxlength='16' placeholder="소비저장고 이름" /></th><th><span class="button small fit" onclick="NAME()">이름변경</th></tr>
-                                <tr><th>ON / OFF</th><th>${PLZ_ONOFF}</th></tr>
-                                <tr><th>${INIT.OFF}</th><th>시간 중</th></tr>
-                                <tr><th>${INIT.ON }</th><th>분 켜짐</th></tr>
+                                <tr><th colspan="2"><span class="button small fit" onclick="CANCLE()">취&emsp;소</th></tr>
+                                <tr><th colspan="2"><span class="button small primary fit" onclick="NAME()">이름변경</th></tr>
+                                <tr><th colspan="2" ></th>&emsp;</tr>
+                                <tr><th><span class="button small primary fit" onclick="RUN(true)">O N</span></th><th><span class="button small fit" onclick="RUN(false)">OFF</span></th></tr>                                
+                                <tr><th colspan="2" ><span class="button small primary fit" onclick="TIMESET()">시간설정</th></tr>
                             </thead>
                         </table>
                     </div>`;
-    document.getElementById("warehouse").innerHTML = HTML_TEXT;
+    document.getElementById("warehouse_button").innerHTML = HTML_TEXT;
+    document.getElementById("warehouse_name").innerHTML   = `<input type="text" name="NAME" id="NAME" value="${WAREHOUSE_NAME}" maxlength='16' placeholder="소비저장고 이름" />`;
+    document.getElementById("warehouse_hour").innerHTML   = `<input type="number" min="0" max="24" name="HOUR" id="HOUR" value="${WAREHOUSE_HOUR}" placeholder="시간" style="width:60px;height:20px;font-size:16px;" />`;
+    document.getElementById("warehouse_minute").innerHTML = `<input type="number" min="0" max="1440" step="5" name="MINUTE" id="MINUTE" value="${WAREHOUSE_MINUTE}" placeholder="분" style="width:60px;height:20px;font-size:16px;" />`;    
 }
 
 </script>
@@ -107,7 +152,7 @@ function MODIFY(DATA) {
         <!-- Lists -->
         <section>
             <div class="row">
-                <div class="col-12" id="warehouse">                         
+                <div class="col-12">                         
                     <div class="row">
                         <div class="col-8">
                             <div class="table-wrapper">
@@ -115,9 +160,9 @@ function MODIFY(DATA) {
                                     <thead>
                                         <tr><th>ID</th><th><%= data.WAREHOUSE %></th></tr>
                                         <tr><th>이름</th><th id="warehouse_name"><%= data.NAME %></th></tr>
-                                        <tr><th>ON / OFF</th><th><%let onoff="OFF"; if(data.USE)onoff="ON"; %><%= onoff %></th></tr>
-                                        <tr><th><%= data.OFF %></th><th>시간 중</th></tr>
-                                        <tr><th><%= data.ON  %></th><th>분 켜짐</th></tr>
+                                        <tr><th>ON / OFF</th><th id="warehouse_onoff"><%let onoff="OFF"; if(data.USE)onoff="ON"; %><%= onoff %></th></tr>
+                                        <tr><th id="warehouse_hour"><%= data.OFF %></th><th>시간 중</th></tr>
+                                        <tr><th id="warehouse_minute"><%= data.ON  %></th><th>분 켜짐</th></tr>
                                     </thead>
                                 </table>
                             </div>
@@ -126,7 +171,7 @@ function MODIFY(DATA) {
                         <div class="col-4"> 
                             <div class="table-wrapper">
                                 <table class="alt">
-                                    <thead>
+                                    <thead id="warehouse_button">
                                         <tr><th><span class="button primary small fit" onclick="MODIFY('<%=JSON.stringify(data)%>')">설&emsp;정</span></th></tr>
                                         <tr><th>&nbsp;</th></tr>
                                         <tr><th><span class="button small fit" onclick="DELETE()">삭&emsp;제</th></tr>
