@@ -1,5 +1,6 @@
 const Apiary    = require('../../models/apiary');
 const Sensor    = require('../../models/sensor');
+const Warehouse = require('../../models/warehouse');
 const mqtt      = require("./mqtt");
 
 const Sequelize   = require('../module');

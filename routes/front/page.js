@@ -24,7 +24,6 @@ router.post('/warehouse', async function(req, res) {
         DOOR:   await read.log_wh_door(req.body.MAC),
         PLZ:    await read.log_wh_plz(req.body.MAC)
     }    
-    console.log(response,logData);
     res.render('read/warehouse',{data:response,logs:logData});
 });
 
