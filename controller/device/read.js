@@ -129,7 +129,7 @@ module.exports  = {
     farm :   async function(FARM_ID){
         try {
             const response = {
-                farm:   await Farm.findOne(FARM_ID,{raw : true}),
+                farm:   await Farm.findByPk(FARM_ID,{raw : true}),
                 pump:   await Pump.findAll({where: {FARM: FARM_ID},raw : true}),
                 sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true}),
                 door:   await Door.findAll({where: {FARM: FARM_ID},raw : true})

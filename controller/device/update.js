@@ -24,6 +24,15 @@ module.exports  = {
         }        
     },
 
+    farm_update : async function(DEVICE,COLUMN,VALUE){
+        try {      
+            const object = await Sequelize.query('UPDATE farm SET `'+ COLUMN +'`="'+ VALUE +'" WHERE  FARM="'+ DEVICE +'"');
+            return object;
+        } catch (error) {
+          console.error(error);
+        }
+    },
+
     warehouse_update : async function(DEVICE,COLUMN,VALUE){
         try {      
             const object = await Sequelize.query('UPDATE warehouse SET `'+ COLUMN +'`="'+ VALUE +'" WHERE  WAREHOUSE="'+ DEVICE +'"');

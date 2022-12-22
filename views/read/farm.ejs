@@ -1,9 +1,99 @@
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+    
+let farmName;
+function submitfn(DATA){
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url :   '/api/update/farm',
+        type :  'POST', 
+        dataType:'json',
+        data : JSON.stringify(DATA), 
+        success : function(response) { 
+            if(DATA.TYPE == 'DELETE'){
+                Swal.fire({              
+                    position: 'top',
+                    icon: 'success',
+                    title: "양봉구역 삭제",
+                    text:  "현 양봉장에서 양봉구역이 삭제되었습니다.",
+                    showConfirmButton: false,                                    
+                    timer: 1000
+                })
+                .then((result) => {     
+                    window.location.href = "/page/apiaryList";
+                })   
+            }
+        }, // success 
+        error : function(xhr, status) {
+            alert(xhr + " : " + status);
+            console.log(xhr);
+        }            
+    }); // $.ajax 
+}
+
+function NAME() {
+    const name_change = document.getElementById("NAME").value;
+    if(name_change == ""){
+        Swal.fire({              
+            position: 'top',
+            icon: 'error',
+            title: "텅 빈 이름",
+            text:  "양봉구역 이름이 비어있습니다.",
+            showConfirmButton: false,                                    
+            timer: 1000
+        })
+    }else{
+        farmName = name_change;
+        submitfn({MODULE:'<%= data.farm.FARM %>',TYPE:'NAME',NAME:name_change});
+    }
+}
+
+function DELETE() {
+    Swal.fire({
+        title: '양봉구역을 삭제하시겠습니까?',
+        showDenyButton: true,
+        confirmButtonText: '네',
+        denyButtonText: '아니오',
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            submitfn({MODULE:'<%= data.farm.FARM %>',TYPE:'DELETE'});
+        } 
+    });     
+}
+
+
+function MODIFY() {
+    farmName = document.getElementById("farm_name").innerText
+    document.getElementById("farm_name").innerHTML = `<input type="text" name="NAME" id="NAME" value="${farmName}" maxlength='16' placeholder="소비저장고 이름" />`;    
+    document.getElementById("buttons").innerHTML = `<div class="row"><div class="col-6"><span class="button small primary fit" onclick="NAME()">이름변경</span></div><div class="col-3"><span class="button small primary fit" onclick="DELETE()">삭제</span></div><div class="col-3"><span class="button small fit" onclick="CANCLE()">취소</span></div></div>`;    
+}
+function CANCLE() {
+    document.getElementById("farm_name").innerText = farmName;
+    document.getElementById("buttons").innerHTML = `<span class="button small primary fit" onclick="MODIFY()">양봉구역 설정</span>`;    
+}
+</script>
+
 <!-- Main -->
 <div id="main" class="alt">
     <div class="inner" id="contents">
         <!-- Lists -->
         <section>
             <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-3">   
+                            <h3 id="farm_name"><%= data.farm.NAME %></h3>                            
+                        </div>
+                        <div class="col-3">   
+                            <h3>양봉구역</h3>
+                        </div>
+                        <div class="col-6" id="buttons">                    
+                            <span class="button small primary fit" onclick="MODIFY()">양봉구역 설정</span>
+                        </div>
+                    </div>
+                    <hr>
+                </div>                
                 <div class="col-12">                    
                     <div class="table-wrapper">
                         <table>

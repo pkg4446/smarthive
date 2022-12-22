@@ -62,6 +62,9 @@
                                 showConfirmButton: false,                                    
                                 timer: 1000
                             })
+                            .then((result) => {     
+                                window.location.href = "/page/apiaryList";
+                            })  
                     }else{
                         Swal.fire({              
                                 position: 'top',
