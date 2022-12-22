@@ -54,8 +54,8 @@ router.post('/farm', async function(req, res) {
     }    
     console.log(req.body);
     try {
-        if(req.body.TYPE == "DELETE"){response.data     = await update.farm_update(req.body.MODULE,"APIARY",0);}
-        else if(req.body.TYPE == "NAME"){response.data  = await update.farm_update(req.body.MODULE,"NAME",req.body.NAME);}
+        if(req.body.TYPE == "DELETE"){   response.data  = await update.farm_update(req.body.FARM,"APIARY",0);}
+        else if(req.body.TYPE == "NAME"){response.data  = await update.farm_update(req.body.FARM,"NAME",req.body.NAME);}
     } catch (error) {
         console.error(err);
         response.result = false;

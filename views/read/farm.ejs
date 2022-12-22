@@ -65,9 +65,18 @@ function NAME() {
             showConfirmButton: false,                                    
             timer: 1000
         })
+    }else if(name_change == farmName){
+        Swal.fire({              
+            position: 'top',
+            icon: 'info',
+            title: "동일한 이름",
+            text:  "이름이 그대로 유지됩니다.",
+            showConfirmButton: false,                                    
+            timer: 1000
+        })
     }else{
         farmName = name_change;
-        submitfn({MODULE:'<%= data.farm.FARM %>',TYPE:'NAME',NAME:name_change});
+        submitfn({FARM:'<%= data.farm.FARM %>',TYPE:'NAME',NAME:name_change});
     }
 }
 
@@ -80,7 +89,7 @@ function DELETE() {
     }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-            submitfn({MODULE:'<%= data.farm.FARM %>',TYPE:'DELETE'});
+            submitfn({FARM:'<%= data.farm.FARM %>',TYPE:'DELETE'});
         } 
     });     
 }

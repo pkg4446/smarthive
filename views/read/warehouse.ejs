@@ -110,6 +110,15 @@ function NAME() {
             showConfirmButton: false,                                    
             timer: 1000
         })
+    }else if(name_change == WAREHOUSE_NAME){
+        Swal.fire({              
+            position: 'top',
+            icon: 'info',
+            title: "동일한 이름",
+            text:  "이름이 그대로 유지됩니다.",
+            showConfirmButton: false,                                    
+            timer: 1000
+        })
     }else{
         WAREHOUSE_NAME = name_change;
         submitfn({MODULE:'<%= data.WAREHOUSE %>',TYPE:'NAME',NAME:name_change});
