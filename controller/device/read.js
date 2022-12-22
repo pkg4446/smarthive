@@ -26,15 +26,6 @@ module.exports  = {
         }        
     },    
 
-    regist_mac :   async function(MAC_ADDR){
-        try {
-            const farm = await Farm.findOne(MAC_ADDR,{raw : true});
-            return farm;
-        } catch (error) {
-            console.log(error);
-        }
-    },
-
     regist_change :   async function(MAC_ADDR,APIARY_ID){
         try {
             const farm = await Farm.findByPk(MAC_ADDR)
@@ -138,6 +129,7 @@ module.exports  = {
     farm :   async function(FARM_ID){
         try {
             const response = {
+                farm:   await Farm.findOne(FARM_ID,{raw : true}),
                 pump:   await Pump.findAll({where: {FARM: FARM_ID},raw : true}),
                 sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true}),
                 door:   await Door.findAll({where: {FARM: FARM_ID},raw : true})
