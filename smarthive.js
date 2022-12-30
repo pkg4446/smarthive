@@ -21,6 +21,7 @@ app.use(favicon(path.join(__dirname, '/public', 'favicon.ico')));
 passportConfig();
 
 // view engine setup
+app.set('trust proxy', '127.0.0.1');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
