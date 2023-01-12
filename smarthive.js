@@ -14,7 +14,7 @@ const {sequelize}     = require('./models');
 const passportConfig  = require('./passport');
 const { application } = require('express');
 
-var http  = require('http');
+const http  = require('http');
 const HTTP_PORT  = process.env.PORT || 3004;
 const app = express();
 app.use(favicon(path.join(__dirname, '/public', 'favicon.ico')));
