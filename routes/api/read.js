@@ -1,3 +1,4 @@
+const e = require('express');
 const express   = require('express');
 const router    = express.Router();
 const requestIp = require('request-ip');
@@ -102,9 +103,11 @@ router.post('/sensor_log', async function(req, res) {
         data:   null
     }
     try {
-        req.body.END    = new Date();
-        req.body.START  = new Date();
-        req.body.START.setDate(req.body.END.getDate()-1);
+        if(!req.body.END){
+            req.body.END    = new Date();
+            req.body.START  = new Date();
+            req.body.START.setDate(req.body.END.getDate()-1);
+        }
         response.data = await read.log_sensor(req.body);
     } catch (error) {
         console.error(err);

@@ -11,6 +11,7 @@
         TEMP:   "<%= data.DEV.PRE_TEMP %>",
         HUMI:   "<%= data.DEV.PRE_HUMI %>",
     }
+    let LOG_DATA = null;
 
     function submitfn(API,DATA){
         let POST = false;
@@ -25,14 +26,14 @@
         if(POST){
             $.ajax({
                 contentType: "application/json; charset=utf-8",
-                url : `/api/update/${API}`,
+                url : '/api/' + API,
                 type : 'POST', 
                 dataType:'json',
                 data : JSON.stringify(DATA), 
                 success : function(response) {  
                     console.log(response);
                     if(response.result){    
-                        if(API == "hiveSensorName" && DATA.NAME){
+                        if(API == "update/hiveSensorName" && DATA.NAME){
                             document.getElementById("hive").innerText = DATA.NAME;
                             Swal.fire({              
                                 position: 'top',
@@ -42,12 +43,21 @@
                                 showConfirmButton: false,                                    
                                 timer: 1500
                             })
-                        }else if(API == "hiveSensor"){
+                        }else if(API == "update/hiveSensor"){
                             Swal.fire({              
                                 position: 'top',
                                 icon: 'success',
                                 title: "설정 중",
                                 text: "컨트롤러에 명령을 전달했습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1500
+                            })
+                        }else if(API == "read/sensor_log"){                            
+                            Swal.fire({              
+                                position: 'top',
+                                icon: 'success',
+                                title: "로그 데이터",
+                                text: "로그데이터를 받아왔습니다.",
                                 showConfirmButton: false,                                    
                                 timer: 1500
                             })
@@ -67,7 +77,7 @@
             HTML_Text_origin = document.getElementById("TABLE").innerHTML;
             let HTML_Text = `<tr>
                                 <td><input id="hiveName" placeholder="벌통 이름"></td>
-                                <td onclick="submitfn('hiveSensorName',null)"><span class="button primary fit">변경</span></td></td>
+                                <td onclick="submitfn('update/hiveSensorName',null)"><span class="button primary fit">변경</span></td></td>
                                 <td>
                                     <select onchange="selectButton(this)">
                                         <option value= null  >선택</option>
@@ -77,7 +87,7 @@
                                 </td>
                                 <td><input type="number" min="0" max="46" onchange="chageTemp(this)" value="${sendData.TEMP}"></td>
                                 <td><input type="number" min="10" max="90" onchange="chageHumi(this)" value="${sendData.HUMI}"></td>
-                                <td onclick="submitfn('hiveSensor',null)"><span class="button primary fit">변경</span></td>
+                                <td onclick="submitfn('update/hiveSensor',null)"><span class="button primary fit">변경</span></td>
                             </tr>`;                            
             document.getElementById("TABLE").innerHTML = HTML_Text_origin + HTML_Text;            
             document.getElementById("button1").innerText = "취 소";
@@ -153,7 +163,7 @@
                             <th>시간</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="log">
                         <% for (const log of data.LOG) { %>  
                         <tr>
                             <td><%= log.TEMP/100 %> ℃</td>
