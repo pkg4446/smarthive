@@ -116,7 +116,7 @@
             const link = document.createElement("a");
             link.href = fileObjectUrl;
             link.style.display = "none";
-            link.download = MODULE + "_LOG_" + LOG_API.START + "_" + LOG_API.END + ".csv";
+            link.download = document.getElementById("hive").innerText + "_" + MODULE + "_LOG_" + LOG_API.START + "_to_" + LOG_API.END + ".csv";
             document.body.appendChild(link);
             link.click();
             link.remove();
