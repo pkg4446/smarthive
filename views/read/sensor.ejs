@@ -2,25 +2,56 @@
 <script type="text/javascript">
     let tableform_flage  = true;
     let HTML_Text_origin = null;
-    const USE    =  "<%= data.DEV.USE %>";    
-    const MODULE = "<%= data.DEV.MODULE %>";
+    const USE    =  "<%= data.USE %>";    
+    const MODULE = "<%= data.MODULE %>";
     let sendData = {
-        FARM:   "<%= data.DEV.FARM %>",
+        FARM:   "<%= data.FARM %>",
         MODULE: MODULE,
         USE:    USE,
-        TEMP:   "<%= data.DEV.PRE_TEMP %>",
-        HUMI:   "<%= data.DEV.PRE_HUMI %>",
+        TEMP:   "<%= data.PRE_TEMP %>",
+        HUMI:   "<%= data.PRE_HUMI %>",
     }
-    let LOG_DATA = null;
+    let LOG_DATA    = null;
+    const LOG_API   = {
+        MODULE:MODULE,
+        START: null,
+        END:   null,
+    };
+
+    window.onload = function(){
+        LOG_API.START = new Date();
+        LOG_API.END   = new Date();
+        LOG_API.START.setDate(LOG_API.END.getDate()-1);
+        document.getElementById("start").value  = LOG_API.START.toISOString().split("T")[0];
+        document.getElementById("end").value    = LOG_API.END.toISOString().split("T")[0];
+        submitfn("read/sensor_log",null);
+        LOG_API.START = LOG_API.START.toISOString().split("T")[0];
+        LOG_API.END   = LOG_API.END.toISOString().split("T")[0];
+    }
+
+    function periode(TYPE,DATA) {
+        LOG_API[TYPE] = DATA;
+        if(LOG_API.END && (LOG_API.START>LOG_API.END)){
+            const TEMPORARY = LOG_API.END;
+            LOG_API.END     = LOG_API.START;
+            LOG_API.START   = TEMPORARY;
+            document.getElementById("start").value  = LOG_API.START;
+            document.getElementById("end").value    = LOG_API.END;
+        }
+        console.log(LOG_API);
+    }
 
     function submitfn(API,DATA){
         let POST = false;
-        if(API == "hiveSensor") {
+        if(API == "update/hiveSensor") {
             POST = true;
             DATA = sendData;            
-        }else if(API == "hiveSensorName"){
+        }else if(API == "update/hiveSensorName"){
             POST = true;
             DATA = {MODULE:MODULE, NAME: document.getElementById("hiveName").value}
+        }else if(API == "read/sensor_log" && LOG_API.START && LOG_API.END){
+            POST = true;
+            DATA = LOG_API;
         }
 
         if(POST){
@@ -41,7 +72,7 @@
                                 title: "이름 변경",
                                 text: "벌통 이름이 변경되었습니다.",
                                 showConfirmButton: false,                                    
-                                timer: 1500
+                                timer: 1000
                             })
                         }else if(API == "update/hiveSensor"){
                             Swal.fire({              
@@ -50,17 +81,19 @@
                                 title: "설정 중",
                                 text: "컨트롤러에 명령을 전달했습니다.",
                                 showConfirmButton: false,                                    
-                                timer: 1500
+                                timer: 1000
                             })
-                        }else if(API == "read/sensor_log"){                            
+                        }else if(API == "read/sensor_log"){       
+                            LOG_DATA = response.data;
                             Swal.fire({              
                                 position: 'top',
                                 icon: 'success',
                                 title: "로그 데이터",
                                 text: "로그데이터를 받아왔습니다.",
                                 showConfirmButton: false,                                    
-                                timer: 1500
+                                timer: 500
                             })
+                            log_view(LOG_DATA);
                         }
                     }
                 }, // success 
@@ -70,6 +103,46 @@
                 }            
             }); // $.ajax 
         }
+    }
+
+    function downloadFile() {
+        if(LOG_DATA && LOG_DATA[0]){
+            let csv_file = "Temperature,Humidity,Timestamp\r\n";
+            for (let index = LOG_DATA.length-1; index >= 0; index--) {
+                csv_file += `${LOG_DATA[index].TEMP},${LOG_DATA[index].HUMI},${LOG_DATA[index].TMST}\r\n`;
+            }
+            const blob = new Blob([csv_file], {type: 'text/plain'});
+            const fileObjectUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = fileObjectUrl;
+            link.style.display = "none";
+            link.download = MODULE + "_LOG_" + LOG_API.START + "_" + LOG_API.END + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(fileObjectUrl);
+        }else{
+            Swal.fire({              
+                position: 'top',
+                icon: 'error',
+                title: "No Data!",
+                text: "기록이 없습니다.",
+                showConfirmButton: false,                                    
+                timer: 1500
+            })
+        }
+    }
+
+    function log_view(DATA) {
+        let HTML_Text = "";
+        for (const log of DATA) {
+            HTML_Text += `<tr>
+                            <td>${log.TEMP/100} ℃</td>
+                            <td>${log.HUMI/100} %</td>
+                            <td>${log.TMST} </td>
+                        </tr>`;
+        }
+        document.getElementById("log").innerHTML = HTML_Text;
     }
 
     function tableform(FARM,MODULE) {
@@ -126,13 +199,16 @@
 
                 <div class="box alt">
 					<div class="row gtr-uniform">
-						<div class="col-6">응답 대기 중 : 온도 - <%= JSON.stringify(data.DEV.SET_TEMP) %> ℃
-                                            , 습도 - <%= JSON.stringify(data.DEV.SET_HUMI) %> %</div>	
-						<div class="col-6">설정 전달 : 온도 - <%= JSON.stringify(data.DEV.PRE_TEMP) %> ℃
-                                            , 습도 - <%= JSON.stringify(data.DEV.PRE_HUMI) %> %</div>						
+						<div class="col-6">응답 대기 중 : 온도 - <%= JSON.stringify(data.SET_TEMP) %> ℃
+                                            , 습도 - <%= JSON.stringify(data.SET_HUMI) %> %</div>	
+						<div class="col-6">설정 전달 : 온도 - <%= JSON.stringify(data.PRE_TEMP) %> ℃
+                                            , 습도 - <%= JSON.stringify(data.PRE_HUMI) %> %</div>	
+                        <div class="col-6">S:<input type="date" id="start" onchange="periode('START',this.value)">
+                                          ,E:<input type="date" id="end" onchange="periode('END',this.value)"></div>
+                        <div class="col-3"><span class="button primary fit" onclick="submitfn('read/sensor_log',null)">불러오기</span></div>
+                        <div class="col-3"><span class="button primary fit" onclick="downloadFile()">저장하기</span></div>
 					</div>
 				</div>
-
 
                 <table class="alt">
                     <tbody id="TABLE">
@@ -145,12 +221,12 @@
                             <td rowspan="2" onclick="tableform()"><span class="button primary fit" id="button1">설정</span></td>
                         </tr>
                         <tr>
-                            <td id="hive"><%= data.DEV.NAME %></td>
-                            <td><%= data.DEV.STATE %></td>
+                            <td id="hive"><%= data.NAME %></td>
+                            <td><%= data.STATE %></td>
                             <td><% let STATE = "정지";
-                                if(data.DEV.PRE_USE) STATE = "가동"; %><%= STATE %></td>
-                            <td><%= data.DEV.SET_TEMP %> ℃</td>
-                            <td><%= data.DEV.SET_HUMI %> %</td>
+                                if(data.PRE_USE) STATE = "가동"; %><%= STATE %></td>
+                            <td><%= data.SET_TEMP %> ℃</td>
+                            <td><%= data.SET_HUMI %> %</td>
                         </tr>                        
                     </tbody>
                 </table>
@@ -164,13 +240,6 @@
                         </tr>
                     </thead>
                     <tbody id="log">
-                        <% for (const log of data.LOG) { %>  
-                        <tr>
-                            <td><%= log.TEMP/100 %> ℃</td>
-                            <td><%= log.HUMI/100 %> %</td>
-                            <td><%= log.TMST %></td>
-                        </tr>  
-                        <% } %>                      
                     </tbody>
                 </table>
             </div>
