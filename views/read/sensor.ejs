@@ -107,7 +107,7 @@
 
     function downloadFile() {
         if(LOG_DATA && LOG_DATA[0]){
-            let csv_file = "Temperature,Humidity,Timestamp\r\n";
+            let csv_file = "Temperature(°C),Humidity(%),Timestamp\r\n";
             for (let index = LOG_DATA.length-1; index >= 0; index--) {
                 csv_file += `${LOG_DATA[index].TEMP/100},${LOG_DATA[index].HUMI/100},${LOG_DATA[index].TMST}\r\n`;
             }
