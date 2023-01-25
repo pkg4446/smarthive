@@ -107,11 +107,11 @@
 
     function downloadFile() {
         if(LOG_DATA && LOG_DATA[0]){
-            let csv_file = "Temperature(Celsius),Humidity(%),Timestamp\r\n";
+            let csv_file = "Temperature(*C),Humidity(%),Timestamp\r\n";
             for (let index = LOG_DATA.length-1; index >= 0; index--) {
                 csv_file += `${LOG_DATA[index].TEMP/100},${LOG_DATA[index].HUMI/100},${LOG_DATA[index].TMST}\r\n`;
             }
-            const blob = new Blob([csv_file], {type: 'text/plain'});
+            const blob = new Blob([csv_file], {type: 'text/csv;charset=utf-8;'});
             const fileObjectUrl = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = fileObjectUrl;
