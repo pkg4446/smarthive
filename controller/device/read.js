@@ -161,12 +161,14 @@ module.exports  = {
         }
     },
     
-    log_sensor:   async function(SENSOR_ID){
+    log_sensor:   async function(DATA){
         try {
-            const response = await Log_sensor.findAll(
-                {where: {MODULE: SENSOR_ID},
+            const response = await Log_sensor.findAll({
+                where: {
+                    MODULE: DATA.MODULE,
+                    TMST:{[Op.between]:[DATA.START,DATA.END]}
+                },
                 order :[['IDX', 'DESC']],
-                limit: 1440,
                 raw : true
             });
             return response;
