@@ -109,7 +109,7 @@
         if(LOG_DATA && LOG_DATA[0]){
             let csv_file = "Temperature,Humidity,Timestamp\r\n";
             for (let index = LOG_DATA.length-1; index >= 0; index--) {
-                csv_file += `${LOG_DATA[index].TEMP},${LOG_DATA[index].HUMI},${LOG_DATA[index].TMST}\r\n`;
+                csv_file += `${LOG_DATA[index].TEMP/100},${LOG_DATA[index].HUMI/100},${LOG_DATA[index].TMST}\r\n`;
             }
             const blob = new Blob([csv_file], {type: 'text/plain'});
             const fileObjectUrl = window.URL.createObjectURL(blob);
