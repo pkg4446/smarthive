@@ -199,10 +199,10 @@
 
                 <div class="box alt">
 					<div class="row gtr-uniform">
-						<div class="col-6">응답 대기 중 : 온도 ○ <%= JSON.stringify(data.SET_TEMP) %> ℃
-                                            , 습도 ○ <%= JSON.stringify(data.SET_HUMI) %> %</div>	
-						<div class="col-6">설정 전달 : 온도 ○ <%= JSON.stringify(data.PRE_TEMP) %> ℃
-                                            , 습도 ○ <%= JSON.stringify(data.PRE_HUMI) %> %</div>	
+						<div class="col-6">응답 대기 중 : 온도 ▶ <%= JSON.stringify(data.SET_TEMP) %> ℃
+                                            , 습도 ▶ <%= JSON.stringify(data.SET_HUMI) %> %</div>	
+						<div class="col-6">설정 전달 : 온도 ▶ <%= JSON.stringify(data.PRE_TEMP) %> ℃
+                                            , 습도 ▶ <%= JSON.stringify(data.PRE_HUMI) %> %</div>	
                         <div class="col-6">S:<input type="date" id="start" onchange="periode('START',this.value)">
                                           ,E:<input type="date" id="end" onchange="periode('END',this.value)"></div>
                         <div class="col-3"><span class="button primary fit" onclick="submitfn('read/sensor_log',null)">불러오기</span></div>
