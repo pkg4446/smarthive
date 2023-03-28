@@ -10,7 +10,7 @@ const char* mqttUser      = "hive";
 const char* mqttPassword  = "hive";
 const char* topic_pub     = "SHS";
 char        deviceID[18];
-boolean     connection   = false;
+char        sendID[21]    = "ID=";
 
 WiFiClient mqtt_client;
 PubSubClient mqttClient(mqtt_client);
@@ -87,9 +87,16 @@ void setup() {
   mqttClient.setServer(mqttServer, mqttPort);
   mqttClient.setCallback(callback);
 
+  for (int i = 0; i < 17; i++) {
+    sendID[i + 3] = WiFi.macAddress()[i];
+    deviceID[i]   = sendID[i + 3];
+  }
+  
+  char* topic_sub = deviceID;
+  char* sub_ID    = sendID;
   while (!mqttClient.connected()) {
     Serial.println("Connecting to MQTT...");
-    if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
+    if (mqttClient.connect(deviceID, mqttUser, mqttPassword )) {
       Serial.println("connected");
     } else {
       Serial.print("failed with state ");
@@ -97,15 +104,6 @@ void setup() {
       delay(2000);
     }
   }
-  connection = true;
-
-  char sendID[20]   = "ID=";
-  for (int i = 0; i < 17; i++) {
-    sendID[i + 3] = WiFi.macAddress()[i];
-    deviceID[i]   = sendID[i + 3];
-  }
-  char* topic_sub = deviceID;
-  char* sub_ID    = sendID;
 
   mqttClient.subscribe(topic_sub);
   mqttClient.publish(topic_pub, sub_ID);
@@ -115,8 +113,24 @@ void setup() {
   Serial.println(" - MQTT Connected");
 }//End Of Setup()
 
+void reconnect(){
+  char* topic_sub = deviceID;
+  char* sub_ID    = sendID;
+  while (!mqttClient.connected()) {
+    Serial.println("Connecting to MQTT...");
+    if (mqttClient.connect(deviceID, mqttUser, mqttPassword )) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed with state ");
+      Serial.print(mqttClient.state());
+      delay(2000);
+    }
+  }
+}
+
 void loop() {
-  if (connection) mqttClient.loop();
+  if (mqttClient.connected()){mqttClient.loop();}
+  else{reconnect();}
   if (rootDvice.available()) command_Process();//post
 }
 

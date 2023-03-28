@@ -97,7 +97,7 @@ void Serial_process() {
 
 //taskSendMessage funtion
 void sendMessage() ; // Prototype so PlatformIO doesn't complain
-Task sensorLog( TASK_SECOND * 60, TASK_FOREVER, &sensorValue );
+Task sensorLog( TASK_SECOND * 10, TASK_FOREVER, &sensorValue );
 void sensorValue() {
   String msg = "SENSOR=" + (String)sht31.readTemperature() + "=" + (String)sht31.readHumidity() + ';' ;
   mesh.sendBroadcast( msg );
@@ -173,7 +173,7 @@ void setup() {
 void loop() {
   mesh.update();
   //sensor_Water();
-  stable();
+  //stable();
   if (Serial.available()) {
     Serial_process();
   }

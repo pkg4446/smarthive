@@ -61,4 +61,23 @@ void loop() {
   if (rootDvice.available()) {
     command_Process();
   }
+  if (Serial.available()) {
+    Serial_process();
+  }
+}
+
+void Serial_process() {
+  char ch;
+  ch = Serial.read();
+  switch (ch) {
+    case ';':
+      command_Buf[command_Num] = ';';
+      command_Service();
+      command_Num = 0;
+      break;
+    default:
+      command_Buf[command_Num++] = ch;
+      command_Num %= SERIAL_MAX;
+      break;
+  }
 }
