@@ -6,6 +6,16 @@ const db        = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 db.sequelize    = sequelize;
 
+const custom_log    = require('./custom_multi_log');
+db.custom_log       = custom_log;
+custom_log.init(sequelize);
+custom_log.associate(db);
+
+const custom_sensor = require('./custom_multi_sensor');
+db.custom_sensor    = custom_sensor;
+custom_sensor.init(sequelize);
+custom_sensor.associate(db);
+
 const user  = require('./user');
 db.user     = user;
 user.init(sequelize);
