@@ -28,7 +28,12 @@ router.post('/read', async function(req, res) {
         data:   null
     }    
     try {
-        if(req.body.MODULE && req.body.START && req.body.END){            
+        if(req.body.MODULE){            
+            if(!req.body.END){
+                req.body.END    = new Date();
+                req.body.START  = new Date();
+                req.body.START.setDate(req.body.END.getDate()-1);
+            }
             response.data = await multi.read(req.body);
         }else{response.result = false; response.data = "dataNull";}
     } catch (error) {

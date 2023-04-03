@@ -1,6 +1,9 @@
 const multi_log     = require('../../models/custom_multi_log');
 const multi_sensor  = require('../../models/custom_multi_sensor');
 
+const Sequelize = require('../module');
+const { Op }    = require("sequelize");
+
 module.exports  = {
     log :    async function(data){
         try {
@@ -35,7 +38,7 @@ module.exports  = {
                     MODULE: DATA.MODULE,
                     TMST:{[Op.between]:[DATA.START,DATA.END]}
                 },
-                order :[['IDX', 'DESC']],
+                order :[['IDX', 'ASC']],
                 raw : true
             });
             return response;
