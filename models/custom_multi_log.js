@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Log_sensor extends Sequelize.Model{
+module.exports = class custom_multi_log extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             IDX:    {
@@ -120,8 +120,8 @@ module.exports = class Log_sensor extends Sequelize.Model{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Log_sensor',
-            tableName  : 'log_sensor',
+            modelName  : 'custom_multi_log',
+            tableName  : 'custom_multi_log',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

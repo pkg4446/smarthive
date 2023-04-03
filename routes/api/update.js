@@ -13,7 +13,7 @@ router.post('/apiary', async function(req, res) {
         if(req.body.NAME && req.body.ADDR){response.data = await update.apiary(req.body);}
         else{response.result = false; response.data = "dataNull";}
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -27,7 +27,7 @@ router.post('/hiveSensorName', async function(req, res) {
     try {
         if(req.body.NAME) response.data = await update.sensor_name(req.body);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -41,7 +41,7 @@ router.post('/hiveSensor', async function(req, res) {
     try {
         response.data = await update.sensor_set(req.body);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -57,7 +57,7 @@ router.post('/farm', async function(req, res) {
         if(req.body.TYPE == "DELETE"){   response.data  = await update.farm_update(req.body.FARM,"APIARY",0);}
         else if(req.body.TYPE == "NAME"){response.data  = await update.farm_update(req.body.FARM,"NAME",req.body.NAME);}
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -74,7 +74,7 @@ router.post('/warehouse', async function(req, res) {
         else if(req.body.TYPE == "DELETE"){response.data     = await update.warehouse_update(req.body.MODULE,"APIARY",0);}
         else if(req.body.TYPE == "NAME"){response.data  = await update.warehouse_update(req.body.MODULE,"NAME",req.body.NAME);}
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);

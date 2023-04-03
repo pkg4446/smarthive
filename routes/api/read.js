@@ -14,7 +14,7 @@ router.post('/apiary', async function(req, res) {
     try {
         response.data = await read.apiary(req.body.USER);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -28,7 +28,7 @@ router.post('/apiaryGroup', async function(req, res) {
     try {
         response.data = await read.apiaryGroup(req.body.APIARY);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -49,7 +49,7 @@ router.post('/farmIP', async function(req, res) {
             await read.regist_change(iterator.FARM,req.body.APIARY);
         }        
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -63,7 +63,7 @@ router.post('/farm', async function(req, res) {
     try {
         response.data = await read.farm(req.body.FARM);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -77,7 +77,7 @@ router.post('/hive', async function(req, res) {
     try {
         response.data = await read.hive(req.body.NAME);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -91,7 +91,7 @@ router.post('/sensor', async function(req, res) {
     try {
         response.data = await read.sensor(req.body.MODULE);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -110,7 +110,7 @@ router.post('/sensor_log', async function(req, res) {
         }
         response.data = await read.log_sensor(req.body);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -124,7 +124,7 @@ router.post('/sensor_log_day', async function(req, res) {
     try {
         response.data = await read.log_sensor(req.body);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -141,13 +141,13 @@ router.post('/error_log_all', async function(req, res) {
         response.data = [];
         const group = await read.apiaryGroup(area.APIARY);
         for (const iterator1 of group.farm) {
-            const errLog = await read.log_error(iterator1.FARM);
-            for (const iterator2 of errLog) {
+            const errorLog = await read.log_error(iterator1.FARM);
+            for (const iterator2 of errorLog) {
                 response.data.push(iterator2);
             }
         }
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -161,7 +161,7 @@ router.post('/error_log', async function(req, res) {
     try {
         response.data = await read.log_error(req.body.FARM);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -177,7 +177,7 @@ router.post('/error_device', async function(req, res) {
         if(req.body.TYPE == "SENSOR"){response.data = await read.sensor(req.body.MODULE);}
         else if(req.body.TYPE == "DOOR"){}
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -191,7 +191,7 @@ router.post('/warehouse', async function(req, res) {
     try {
         response.data = await read.warehouse(req.body.WAREHOUSE);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -205,7 +205,7 @@ router.post('/warehouse_O3', async function(req, res) {
     try {
         response.data = await read.log_wh_O3(req.body.WAREHOUSE);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -219,7 +219,7 @@ router.post('/warehouse_door', async function(req, res) {
     try {
         response.data = await read.log_wh_door(req.body.WAREHOUSE);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);
@@ -233,7 +233,7 @@ router.post('/warehouse_plz', async function(req, res) {
     try {
         response.data = await read.log_wh_plz(req.body.WAREHOUSE);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);

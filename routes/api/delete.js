@@ -12,7 +12,7 @@ router.post('/apiary', async function(req, res) {
     try {
         response.data = await Delete.apiary(req.body.APIARY);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         response.result = false;
     }
     return res.json(response);

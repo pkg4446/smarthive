@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Sensor extends Sequelize.Model{
+module.exports = class custom_multi_sensor extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             MODULE: {
@@ -24,8 +24,8 @@ module.exports = class Sensor extends Sequelize.Model{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Sensor',
-            tableName  : 'sensor',
+            modelName  : 'custom_multi_sensor',
+            tableName  : 'custom_multi_sensor',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'
