@@ -9,11 +9,15 @@ Adafruit_SHT31 sht31  = Adafruit_SHT31();
 const char* ssid      = "Daesung2G";
 const char* password  = "smarthive123";
 
+uint8_t   LED = 17;
+
+char      deviceID[18];
 uint16_t  Temperature[8]  = {40400,};
 uint16_t  Humidity[8]     = {40400,};
 
 unsigned long timer_SHT31 = 0;
 unsigned long timer_SEND = 0;
+unsigned long timer_WIFI = 0;
 
 void tca_select(uint8_t index) {
   if (index > 7) return;
@@ -25,9 +29,12 @@ void tca_select(uint8_t index) {
 // standard Arduino setup()
 void setup()
 {
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.begin(115200);
   Wire.begin();
+  pinMode(LED, OUTPUT);
 
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi not connected");
@@ -44,8 +51,23 @@ void loop()
   send_sensor(millis());
 }
 
+void wifiCheck(unsigned long millisec) {
+  if ((millisec - timer_WIFI) > 1000) {
+    timer_WIFI = millisec;
+        
+    if (WiFi.status() != WL_CONNECTED) {
+      digitalWrite(LED, true);
+    } else {
+      WiFi.begin(ssid, password);
+      digitalWrite(LED, false);
+    }
+
+  }
+}
+
 void send_sensor(unsigned long millisec) {
-  if ((millisec - timer_SEND) > 1000) {
+  if ((millisec - timer_SEND) > 10 * 1000) {
+    timer_SEND = millisec;
 
     for (uint8_t channel = 0; channel < 8; channel++) {
       Serial.print("TCA Port #"); Serial.print(channel);
@@ -55,14 +77,21 @@ void send_sensor(unsigned long millisec) {
       Serial.print(Humidity[channel]);
       Serial.println("%");
     }
+    if (WiFi.status() == WL_CONNECTED) {
+      for (int i = 0; i < 17; i++) {
+        deviceID[i]   = WiFi.macAddress()[i];
+      }
+      httpPOSTRequest("http://192.168.1.15:3004/api/costom/log");
+    } else {
+      Serial.println("WiFi not connected");
+    }
     Serial.println("");
-    
-    timer_SEND = millisec;
   }
 }
 
 void get_sensor(unsigned long millisec) {
   if ((millisec - timer_SHT31) > 300) {
+    timer_SHT31 = millisec;
 
     for (uint8_t channel = 0; channel < 8; channel++) {
       tca_select(channel);
@@ -74,29 +103,39 @@ void get_sensor(unsigned long millisec) {
         Temperature[channel]  = 40400;
         Humidity[channel]     = 40400;
       }
-    }
-    timer_SHT31 = millisec;
-  }
+    }//for
+  }//if
 }
 
-/*
-  ////Send Data//////////////////////////////////////
-  void httpPOSTRequest(struct dataSet *ptr, String serverUrl) {
+
+////Send Data//////////////////////////////////////
+void httpPOSTRequest(String serverUrl) {
   WiFiClient client;
   HTTPClient http;
   http.begin(client, serverUrl);
 
-  http.addHeader("Content-Type", "application/json");
-  String httpRequestData =  (String)"{\"eqnum\" : \"safemotion\","  +
-                            "\"temp\"   :" + ptr->MESURE_VAL_01 + "," +
-                            "\"humi\"   :" + ptr->MESURE_VAL_02 + "," +
-                            "\"weigh\"  :" + ptr->MESURE_VAL_03 + "," +
-                            "\"sugar\"  :" + ptr->MESURE_VAL_04 + "}";
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  String httpRequestData =  (String)"MODULE=" + deviceID +
+                            "&TEMP1=" + Temperature[0] +
+                            "&TEMP2=" + Temperature[1] +
+                            "&TEMP3=" + Temperature[2] +
+                            "&TEMP4=" + Temperature[3] +
+                            "&TEMP5=" + Temperature[4] +
+                            "&TEMP6=" + Temperature[5] +
+                            "&TEMP7=" + Temperature[6] +
+                            "&TEMP8=" + Temperature[7] +
+                            "&HUMI1=" + Humidity[0] +
+                            "&HUMI2=" + Humidity[1] +
+                            "&HUMI3=" + Humidity[2] +
+                            "&HUMI4=" + Humidity[3] +
+                            "&HUMI5=" + Humidity[4] +
+                            "&HUMI6=" + Humidity[5] +
+                            "&HUMI7=" + Humidity[6] +
+                            "&HUMI8=" + Humidity[7];
 
   int httpResponseCode = http.POST(httpRequestData);
-  Serial.print(httpRequestData);
+  Serial.println(httpRequestData);
   Serial.print("HTTP Response code: ");
   Serial.println(httpResponseCode);
   http.end();           // Free resources
-  }////httpPOSTRequest_End
-*/
+}////httpPOSTRequest_End
