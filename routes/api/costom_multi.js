@@ -22,6 +22,23 @@ router.post('/log', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/device', async function(req, res) {   
+    const response = {
+        result: true,
+        data:   null
+    }    
+    try {
+        if(!req.body.IP){
+            req.body.IP = requestIp.getClientIp(req);
+        }
+        response.data = await multi.device(req.body.IP);
+    } catch (error) {
+        console.error(error);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/read', async function(req, res) {   
     const response = {
         result: true,

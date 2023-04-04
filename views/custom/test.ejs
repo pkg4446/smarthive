@@ -3,24 +3,82 @@
 
 <script type="text/javascript">
 
+    let farmIP = "192.168.1.3"//"0.0.0.0";
+
     const API_DAY   = {
         START: null,
         END:   null,
     };    
 
-    window.onload = function() { // 페이지 로드 시 실행
-        document.getElementById("drawLine").addEventListener('click', drawChart); 
+    window.onload = function() { // 페이지 로드 시 실행 
         API_DAY.START = new Date();
         API_DAY.END   = new Date();
         API_DAY.START.setDate(API_DAY.END.getDate()-1);
         document.getElementById("start").value  = API_DAY.START.toISOString().split("T")[0];
         document.getElementById("end").value    = API_DAY.END.toISOString().split("T")[0];
+    }    
+
+    function changeIP(DATA) {
+        farmIP = DATA;        
     }
 
-    
-    function drawChart () { 
+    function periode(TYPE,DATA) {
+        API_DAY[TYPE] = DATA;
+        if(API_DAY.END && (API_DAY.START>API_DAY.END)){
+            const TEMPORARY = API_DAY.END;
+            API_DAY.END     = API_DAY.START;
+            API_DAY.START   = TEMPORARY;
+            document.getElementById("start").value  = API_DAY.START;
+            document.getElementById("end").value    = API_DAY.END;
+        }
+    }
 
-        var myChart = echarts.init(document.getElementById('chart'));
+    function submitfn(API,DATA){
+        let POST = false;
+        let sendData = null;
+        if(API == "costom/device") {
+            POST = true;
+            sendData = {IP:farmIP};
+        }else if(API == "costom/read" && API_DAY.START && API_DAY.END){
+            POST = true;
+            sendData = API_DAY;
+            sendData.MODULE = DATA;
+        }
+
+        if(POST){
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url : '/api/' + API,
+                type : 'POST', 
+                dataType:'json',
+                data : JSON.stringify(sendData), 
+                success : function(response) {  
+                    console.log(response);
+                    if(API == "costom/device" && response.result){
+                        deviceBTN(response.data);
+                    }
+                }, // success 
+                error : function(xhr, status) {
+                    alert(xhr + " : " + status);
+                    console.log(xhr,sendData);
+                }                
+            }); // $.ajax 
+        }
+    }
+
+    function deviceBTN(ARRAY) {
+        let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
+        for (const SENSOR of ARRAY) {
+            HTML_Text += `<div class="col-6">${SENSOR.NAME}</div><div class="col-6"><span class="button primary fit" onclick="submitfn('costom/name',${SENSOR.NAME})">이름변경</span></div>
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_TEMP" style="height:300px;">1</div>
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_HUMI" style="height:300px;">2</div>`;
+        }        
+        HTML_Text += '</div></div>'
+        document.getElementById("chartForm").innerHTML = HTML_Text;
+    }
+
+    function drawChart () {      
+        let myChart = echarts.init(document.getElementById('chart'));
 
         let _rawData = [["Income","Life Expectancy","Population","Country","Year"],[41706,81.8,22542371,"Australia",2011],[41567,81.3,34499905,"Canada",2011],[10274,76.1,1348174478,"China",2011],[19005,78.1,11323570,"Cuba",2011],[40251,80.3,5395816,"Finland",2011],[37328,81.4,63268405,"France",2011],[42080,80.3,80424665,"Germany",2011],[39619,82.7,321030,"Iceland",2011],[4787,65.5,1247446011,"India",2011],[34316,82.8,127252900,"Japan",2011],[1397,71,24631359,"North Korea",2011],[31327,80.3,49356692,"South Korea",2011],[32283,80.6,4404483,"New Zealand",2011],[62737,81.1,4953945,"Norway",2011],[22333,76.5,38594217,"Poland",2011],[22570,69.4,143211476,"Russia",2011],[17908,76,73517002,"Turkey",2011],[36549,80.4,63164949,"United Kingdom",2011],[49781,78.7,312390368,"United States",2011],[42522,81.8,22911375,"Australia",2012],[41865,81.4,34868151,"Canada",2012],[11017,76.3,1355386952,"China",2012],[19586,78.2,11342631,"Cuba",2012],[39489,80.5,5424644,"Finland",2012],[37227,81.6,63561798,"France",2012],[42959,80.5,80477952,"Germany",2012],[39925,82.8,323407,"Iceland",2012],[4967,65.9,1263589639,"India",2012],[34988,83.2,127139821,"Japan",2012],[1393,71.1,24763353,"North Korea",2012],[31901,80.4,49608451,"South Korea",2012],[32806,80.6,4435883,"New Zealand",2012],[63620,81.3,5018367,"Norway",2012],[22740,76.7,38609486,"Poland",2012],[23299,70.4,143287536,"Russia",2012],[18057,76.2,74849187,"Turkey",2012],[36535,80.8,63573766,"United Kingdom",2012],[50549,78.8,314799465,"United States",2012],[42840,81.8,23270465,"Australia",2013],[42213,81.5,35230612,"Canada",2013],[11805,76.5,1362514260,"China",2013],[20122,78.3,11362505,"Cuba",2013],[38788,80.6,5453061,"Finland",2013],[37309,81.7,63844529,"France",2013],[42887,80.7,80565861,"Germany",2013],[40958,82.8,325392,"Iceland",2013],[5244,66.2,1279498874,"India",2013],[35614,83.3,126984964,"Japan",2013],[1392,71.2,24895705,"North Korea",2013],[32684,80.5,49846756,"South Korea",2013],[33360,80.6,4465276,"New Zealand",2013],[63322,81.4,5083450,"Norway",2013],[23144,76.9,38618698,"Poland",2013],[23561,71.3,143367341,"Russia",2013],[18579,76.3,76223639,"Turkey",2013],[36908,81,63955654,"United Kingdom",2013],[51282,78.9,317135919,"United States",2013],[43219,81.8,23622353,"Australia",2014],[42817,81.6,35587793,"Canada",2014],[12609,76.7,1369435670,"China",2014],[20704,78.4,11379111,"Cuba",2014],[38569,80.7,5479660,"Finland",2014],[37218,81.8,64121249,"France",2014],[43444,80.9,80646262,"Germany",2014],[41237,82.8,327318,"Iceland",2014],[5565,66.5,1295291543,"India",2014],[35635,83.4,126794564,"Japan",2014],[1391,71.3,25026772,"North Korea",2014],[33629,80.6,50074401,"South Korea",2014],[33538,80.6,4495482,"New Zealand",2014],[64020,81.5,5147970,"Norway",2014],[23952,77.1,38619974,"Poland",2014],[23293,72.21,143429435,"Russia",2014],[18884,76.4,77523788,"Turkey",2014],[37614,81.2,64331348,"United Kingdom",2014],[52118,79,319448634,"United States",2014],[44056,81.8,23968973,"Australia",2015],[43294,81.7,35939927,"Canada",2015],[13334,76.9,1376048943,"China",2015],[21291,78.5,11389562,"Cuba",2015],[38923,80.8,5503457,"Finland",2015],[37599,81.9,64395345,"France",2015],[44053,81.1,80688545,"Germany",2015],[42182,82.8,329425,"Iceland",2015],[5903,66.8,1311050527,"India",2015],[36162,83.5,126573481,"Japan",2015],[1390,71.4,25155317,"North Korea",2015],[34644,80.7,50293439,"South Korea",2015],[34186,80.6,4528526,"New Zealand",2015],[64304,81.6,5210967,"Norway",2015],[24787,77.3,38611794,"Poland",2015],[23038,73.13,143456918,"Russia",2015],[19360,76.5,78665830,"Turkey",2015],[38225,81.4,64715810,"United Kingdom",2015],[53354,79.1,321773631,"United States",2015]]
         // var countries = ['Australia', 'Canada', 'China', 'Cuba', 'Finland', 'France', 'Germany', 'Iceland', 'India', 'Japan', 'North Korea', 'South Korea', 'New Zealand', 'Norway', 'Poland', 'Russia', 'Turkey', 'United Kingdom', 'United States'];
@@ -77,7 +135,7 @@
             }
             });
         });
-        option = {
+        const option = {
             animationDuration: 1000,
             dataset: [
             {
@@ -113,18 +171,21 @@
     <div class="inner">
         <section>
             <div class="row gtr-uniform">
-                <div class="col-1">시작:</div>
-                <div class="col-3"><input type="date" id="start" onchange="periode('START',this.value)"></div>
-                <div class="col-1">끝:</div>
-                <div class="col-3"><input type="date" id="end" onchange="periode('END',this.value)"></div>
-                <div class="col-4"><span class="button primary fit" onclick="submitfn('read/sensor_log',null)">불러오기</span></div>
-                <div class="col-8"><span class="button primary fit" id="drawLine" value="line">Chart</span></div>
-                <div class="col-4"><span class="button fit" onclick="downloadFile()">저장하기</span></div>
-            </div>
-
-            
-
-            <div id="chart" style="width: 100%; height:500px;"> 
+                <div class="col-1 col-1-small">IP:</div>
+                <div class="col-3 col-11-small"><input type="text" id="farmIP" onchange="changeIP(this.value)" value="192.168.1.3"></div>
+                <div class="col-3 col-6-small">시작:<input type="date" id="start" onchange="periode('START',this.value)"></div>
+                <div class="col-3 col-6-small">끝:<input type="date" id="end" onchange="periode('END',this.value)"></div>
+                <div class="col-6"><span class="button primary fit" onclick="submitfn('costom/device',null)">불러오기</span></div>
+                <div class="col-6"><span class="button fit" onclick="downloadFile()">저장하기</span></div>
+                <div class="col-12"><span class="button primary fit" onclick="drawChart()">Chart</span></div>
+            </div>            
+        </section>
+        <hr>
+        <section>
+            <div class="row gtr-uniform" id="chartForm">
+                <div class="col-6 col-12-small" id="chart" style="height:300px;"> 1 </div> 
+                <div class="col-6 col-12-small" id="chart1" style="height:300px;"> 1 </div>   
+            </div>                    
         </section>
         
     </div>

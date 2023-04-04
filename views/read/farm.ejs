@@ -98,7 +98,7 @@ function DELETE() {
 function MODIFY() {
     farmName = document.getElementById("farm_name").innerText
     document.getElementById("farm_name").innerHTML = `<input type="text" name="NAME" id="NAME" value="${farmName}" maxlength='16' placeholder="소비저장고 이름" />`;    
-    document.getElementById("buttons").innerHTML = `<div class="row"><div class="col-6"><span class="button small primary fit" onclick="NAME()">이름변경</span></div><div class="col-3"><span class="button small primary fit" onclick="DELETE()">삭제</span></div><div class="col-3"><span class="button small fit" onclick="CANCLE()">취소</span></div></div>`;    
+    document.getElementById("buttons").innerHTML = `<div class="row"><div class="col-6 col-12-small"><span class="button small primary fit" onclick="NAME()">이름변경</span></div><div class="col-3 col-12-small"><span class="button small primary fit" onclick="DELETE()">삭제</span></div><div class="col-3 col-12-small"><span class="button small fit" onclick="CANCLE()">취소</span></div></div>`;    
 }
 function CANCLE() {
     document.getElementById("farm_name").innerText = farmName;
@@ -114,13 +114,13 @@ function CANCLE() {
             <div class="row">
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-3">   
+                        <div class="col-3 col-12-small">   
                             <h3 id="farm_name"><%= data.farm.NAME %></h3>                            
                         </div>
-                        <div class="col-3">   
+                        <div class="col-3 col-12-small">   
                             <h3>양봉구역</h3>
                         </div>
-                        <div class="col-6" id="buttons">                    
+                        <div class="col-6 col-12-small" id="buttons">                    
                             <span class="button small primary fit" onclick="MODIFY()">양봉구역 설정</span>
                         </div>
                     </div>

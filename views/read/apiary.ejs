@@ -175,28 +175,28 @@
             <div class="row">
                 <% for (const object of data) { %>
                     <div class="col-12"><hr></div>                    
-                    <div class="col-6" id="TABLE_<%= object.APIARY %>_INFO" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
+                    <div class="col-6 col-12-small" id="TABLE_<%= object.APIARY %>_INFO" onclick="submitfn('read','apiaryGroup',{APIARY:<%= object.APIARY %>})"> 
                         <ul>
                             <li> 
                                 <div class="row">
-                                    <div class="col-4">양봉장 :</div>
-                                    <div class="col-8"><%= object.NAME %></div>
+                                    <div class="col-4 col-12-small">양봉장 :</div>
+                                    <div class="col-8 col-12-small"><%= object.NAME %></div>
                                 </div>
                             </li>
                             <li>
                                 <div class="row">
-                                    <div class="col-4">주&emsp;소 :</div>
-                                    <div class="col-8"><%= object.ADDR %></div>
+                                    <div class="col-4 col-12-small">주&emsp;소 :</div>
+                                    <div class="col-8 col-12-small"><%= object.ADDR %></div>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-3" id="TABLE_<%= object.APIARY %>_BUTTON_M">
+                    <div class="col-3 col-12-small" id="TABLE_<%= object.APIARY %>_BUTTON_M">
                         <span class="button primary fit" onclick="document.getElementById('MODIFY_<%= object.APIARY %>').submit();">변 경</span> 
                         <form action='/page/apiaryUpdate' method="post" id="MODIFY_<%= object.APIARY %>">                        
                         <input type="hidden" name="APIARY" value="<%= object.APIARY %>"></form>
                     </div>   
-                    <div class="col-3" id="TABLE_<%= object.APIARY %>_BUTTON_D">
+                    <div class="col-3 col-12-small" id="TABLE_<%= object.APIARY %>_BUTTON_D">
                         <span class="button fit" onclick="DELETE('<%= object.APIARY %>')">삭 제</span>                        
                     </div>                  
                 <% } %>

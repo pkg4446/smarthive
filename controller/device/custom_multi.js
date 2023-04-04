@@ -47,6 +47,20 @@ module.exports  = {
         }        
     },
 
+    device: async function(DATA){
+        try {
+            const response = await multi_sensor.findAll({
+                where: {
+                    FARM: DATA,
+                },
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
     regist : async function(data){
         try {
             const device = await multi_sensor.findByPk(data.MODULE,{raw : true});

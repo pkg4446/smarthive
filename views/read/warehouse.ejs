@@ -150,11 +150,11 @@ function MODIFY(DATA) {
     let HTML_TEXT = `<div class="table-wrapper">
                         <table class="alt">
                             <thead>
-                                <tr><th colspan="2"><span class="button small fit" onclick="CANCLE()">취&emsp;소</span></th></tr>
-                                <tr><th colspan="2"><span class="button small primary fit" onclick="NAME()">이름변경</span></th></tr>
-                                <tr><th colspan="2" ></th>&emsp;</tr>
+                                <tr><th colspan="2 col-12-small"><span class="button small fit" onclick="CANCLE()">취&emsp;소</span></th></tr>
+                                <tr><th colspan="2 col-12-small"><span class="button small primary fit" onclick="NAME()">이름변경</span></th></tr>
+                                <tr><th colspan="2 col-12-small" ></th>&emsp;</tr>
                                 <tr><th><span class="button small primary fit" onclick="RUN(true)">O N</span></th><th><span class="button small fit" onclick="RUN(false)">OFF</span></th></tr>                                
-                                <tr><th colspan="2" ><span class="button small primary fit" onclick="TIMESET()">시간설정</span></th></tr>
+                                <tr><th colspan="2 col-12-small" ><span class="button small primary fit" onclick="TIMESET()">시간설정</span></th></tr>
                             </thead>
                         </table>
                     </div>`;
@@ -173,7 +173,7 @@ function MODIFY(DATA) {
             <div class="row">
                 <div class="col-12">                         
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-8 col-12-small">
                             <div class="table-wrapper">
                                 <table class="alt">
                                     <thead>
@@ -187,7 +187,7 @@ function MODIFY(DATA) {
                             </div>
                         </div>
 
-                        <div class="col-4"> 
+                        <div class="col-4 col-12-small"> 
                             <div class="table-wrapper">
                                 <table class="alt">
                                     <thead id="warehouse_button">
