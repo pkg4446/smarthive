@@ -13,7 +13,7 @@ uint8_t   LED = 17;
 
 char      deviceID[18];
 int16_t  Temperature[8]   = {14040,};
-int16_t  Humidity[8]      = {14040,};
+uint16_t Humidity[8]      = {14040,};
 
 unsigned long timer_SHT31 = 0;
 unsigned long timer_SEND  = 0;
