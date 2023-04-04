@@ -3,9 +3,20 @@
 
 <script type="text/javascript">
 
+    const API_DAY   = {
+        START: null,
+        END:   null,
+    };    
+
     window.onload = function() { // 페이지 로드 시 실행
-        document.getElementById("drawLine").addEventListener('click', drawChart); // Line Chart 버튼 클릭 시 이벤트 정의 : drawChart 매서드 실행
+        document.getElementById("drawLine").addEventListener('click', drawChart); 
+        API_DAY.START = new Date();
+        API_DAY.END   = new Date();
+        API_DAY.START.setDate(API_DAY.END.getDate()-1);
+        document.getElementById("start").value  = API_DAY.START.toISOString().split("T")[0];
+        document.getElementById("end").value    = API_DAY.END.toISOString().split("T")[0];
     }
+
     
     function drawChart () { 
 
@@ -101,7 +112,17 @@
 <div id="main" class="alt">
     <div class="inner">
         <section>
-            <button id="drawLine" value="line">Chart</button>
+            <div class="row gtr-uniform">
+                <div class="col-1">시작:</div>
+                <div class="col-3"><input type="date" id="start" onchange="periode('START',this.value)"></div>
+                <div class="col-1">끝:</div>
+                <div class="col-3"><input type="date" id="end" onchange="periode('END',this.value)"></div>
+                <div class="col-4"><span class="button primary fit" onclick="submitfn('read/sensor_log',null)">불러오기</span></div>
+                <div class="col-8"><span class="button primary fit" id="drawLine" value="line">Chart</span></div>
+                <div class="col-4"><span class="button fit" onclick="downloadFile()">저장하기</span></div>
+            </div>
+
+            
 
             <div id="chart" style="width: 100%; height:500px;"> 
         </section>
