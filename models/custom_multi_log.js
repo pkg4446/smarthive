@@ -21,99 +21,99 @@ module.exports = class custom_multi_log extends Sequelize.Model{
             },
 
             TEMP1:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP2:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP3:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP4:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP5:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP6:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP7:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             TEMP8:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI1:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI2:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI3:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI4:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI5:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI6:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI7:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },
 
             HUMI8:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
-                defaultValue: 40400
+                defaultValue: 14040
             },            
 
         },{

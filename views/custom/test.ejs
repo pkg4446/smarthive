@@ -14,6 +14,7 @@
         API_DAY.START = new Date();
         API_DAY.END   = new Date();
         API_DAY.START.setDate(API_DAY.END.getDate()-7);
+        API_DAY.END.setDate(API_DAY.END.getDate()+8);
         document.getElementById("start").value  = API_DAY.START.toISOString().split("T")[0];
         document.getElementById("end").value    = API_DAY.END.toISOString().split("T")[0];
     }    
@@ -74,8 +75,8 @@
             HTML_Text += `<div class="col-3 col-12-small">${SENSOR.NAME}</div>
                         <div class="col-3 col-12-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
                         <div class="col-6 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:300px;"></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:300px;"></div>`;
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:500px;"></div>
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:500px;"></div>`;
         }        
         HTML_Text += '</div></div>'
         document.getElementById("chartForm").innerHTML = HTML_Text;
@@ -180,7 +181,7 @@
             ...datasetWithFilters
             ],
             title: {
-            text: TYPE + ' of hive'
+            text: TYPE
             },
             tooltip: {
             order: 'valueDesc',
