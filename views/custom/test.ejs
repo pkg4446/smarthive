@@ -75,8 +75,8 @@
             HTML_Text += `<div class="col-3 col-12-small">${SENSOR.NAME}</div>
                         <div class="col-3 col-12-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
                         <div class="col-6 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:500px;"></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:500px;"></div>`;
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
+                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;"></div>`;
         }        
         HTML_Text += '</div></div>'
         document.getElementById("chartForm").innerHTML = HTML_Text;
@@ -219,7 +219,6 @@
         <section>
             <div class="row gtr-uniform" id="chartForm">                
             </div>                    
-        </section>
-        
+        </section>        
     </div>
 </div>
