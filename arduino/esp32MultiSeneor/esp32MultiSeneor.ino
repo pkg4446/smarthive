@@ -12,12 +12,12 @@ const char* password  = "smarthive123";
 uint8_t   LED = 17;
 
 char      deviceID[18];
-uint16_t  Temperature[8]  = {40400,};
-uint16_t  Humidity[8]     = {40400,};
+int16_t  Temperature[8]   = {14040,};
+int16_t  Humidity[8]      = {14040,};
 
 unsigned long timer_SHT31 = 0;
-unsigned long timer_SEND = 0;
-unsigned long timer_WIFI = 0;
+unsigned long timer_SEND  = 0;
+unsigned long timer_WIFI  = 0;
 
 void tca_select(uint8_t index) {
   if (index > 7) return;
@@ -100,8 +100,8 @@ void get_sensor(unsigned long millisec) {
         Temperature[channel]  = sht31.readTemperature() * 100;
         Humidity[channel]     = sht31.readHumidity() * 100;
       } else {
-        Temperature[channel]  = 40400;
-        Humidity[channel]     = 40400;
+        Temperature[channel]  = 14040;
+        Humidity[channel]     = 14040;
       }
     }//for
   }//if
