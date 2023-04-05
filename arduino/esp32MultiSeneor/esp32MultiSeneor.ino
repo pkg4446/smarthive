@@ -81,7 +81,7 @@ void send_sensor(unsigned long millisec) {
       for (int i = 0; i < 17; i++) {
         deviceID[i]   = WiFi.macAddress()[i];
       }
-      httpPOSTRequest("http://192.168.1.15:3004/api/costom/log");
+      httpPOSTRequest("http://smarthive.kro.kr/api/costom/log");
     } else {
       Serial.println("WiFi not connected");
     }
