@@ -72,8 +72,8 @@
     function deviceBTN(ARRAY) {
         let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
         for (const SENSOR of ARRAY) {
-            HTML_Text += `<div class="col-3 col-12-small">${SENSOR.NAME}</div>
-                        <div class="col-3 col-12-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
+            HTML_Text += `<div class="col-3 col-6-small">${SENSOR.NAME}</div>
+                        <div class="col-3 col-6-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
                         <div class="col-6 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
@@ -222,7 +222,7 @@
         let dataIndex = 0;
         const upperCaseStr = TYPE.toUpperCase();        
         
-        setInterval(function () {
+        let interval = setInterval(function () {
             gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
             gaugeData[1].value = +(_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
             gaugeData[2].value = +(_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
@@ -232,7 +232,7 @@
             gaugeData[6].value = +(_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
             gaugeData[7].value = +(_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
             dataIndex++;
-            if(dataIndex >= _rawData.length) dataIndex = 0;
+            if(dataIndex >= _rawData.length)  clearInterval(interval);
             myChart.setOption({
                 series: [
                 {
@@ -243,7 +243,7 @@
                 }
                 ]
             });
-        }, 1000);
+        }, 500);
         option && myChart.setOption(option);
     }
 
