@@ -5,6 +5,7 @@
 
     let farmIP = "192.168.1.3"//"0.0.0.0";
 
+    const GET_DATA  = {};
     const API_DAY   = {
         START: null,
         END:   null,
@@ -44,6 +45,9 @@
             POST = true;
             sendData = API_DAY;
             sendData.MODULE = DATA;
+        }else if(API == "costom/rename" && DATA.MODULE && DATA.NAME){
+            POST = true;
+            sendData = DATA;
         }
 
         if(POST){
@@ -59,22 +63,87 @@
                         deviceBTN(response.data);
                     }else if(API == "costom/read" && response.result){
                         graphDrawing(response.data);
+                    }else if(API == "costom/rename" && response.result){
+                        Swal.fire({              
+                            position: 'top',
+                            icon: 'success',
+                            title: "Confirm!",
+                            text: "이름이 수정되었습니다.",
+                            showConfirmButton: false,                                    
+                            timer: 1500
+                        })
                     }
                 }, // success 
                 error : function(xhr, status) {
-                    alert(xhr + " : " + status);
-                    console.log(xhr,sendData);
-                }                
+                    Swal.fire({              
+                        position: 'top',
+                        icon: 'error',
+                        title: xhr,
+                        text: status,
+                        showConfirmButton: false,                                    
+                        timer: 1500
+                    })
+                }
             }); // $.ajax 
         }
+    }
+
+    function downloadFile(MODULE) {        
+        if(GET_DATA[MODULE] != undefined){
+            let csv_file    = "DEVICE_ID," + GET_DATA[MODULE][0].MODULE + "\r\n";
+            csv_file       += "Timestamp,Temperature1(°C),Temperature2(°C),Temperature3(°C),Temperature4(°C),Temperature5(°C),Temperature6(°C),Temperature7(°C),Temperature8(°C),Humidity1(%),Humidity2(%),Humidity3(%),Humidity4(%),Humidity5(%),Humidity6(%),Humidity7(%),Humidity8(%)\r\n";
+            for (let index  = GET_DATA[MODULE].length-1; index >= 0; index--) {
+                csv_file += `${GET_DATA[MODULE][index].TMST},${GET_DATA[MODULE][index].TEMP1/100},${GET_DATA[MODULE][index].TEMP2/100},${GET_DATA[MODULE][index].TEMP3/100},${GET_DATA[MODULE][index].TEMP4/100},${GET_DATA[MODULE][index].TEMP5/100},${GET_DATA[MODULE][index].TEMP6/100},${GET_DATA[MODULE][index].TEMP7/100},${GET_DATA[MODULE][index].TEMP8/100},`+
+                            `${GET_DATA[MODULE][index].HUMI1/100},${GET_DATA[MODULE][index].HUMI2/100},${GET_DATA[MODULE][index].HUMI3/100},${GET_DATA[MODULE][index].HUMI4/100},${GET_DATA[MODULE][index].HUMI5/100},${GET_DATA[MODULE][index].HUMI6/100},${GET_DATA[MODULE][index].HUMI7/100},${GET_DATA[MODULE][index].HUMI8/100}\r\n`;
+            }
+            const blob  = new Blob([csv_file], {type: 'text/csv;charset=utf-8;'});
+            const fileObjectUrl = window.URL.createObjectURL(blob);
+            const link  = document.createElement("a");
+            link.href   = fileObjectUrl;
+            link.style.display = "none";
+            const START = GET_DATA[MODULE][0].TMST;
+            const END   = GET_DATA[MODULE][GET_DATA[MODULE].length-1].TMST;
+            link.download = MODULE + "_LOG_" + START + "_to_" + END + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(fileObjectUrl);
+        }else{
+            Swal.fire({              
+                position: 'top',
+                icon: 'error',
+                title: "No Data!",
+                text: "그래프 버튼을 누른 후 다시 시도해주세요.",
+                showConfirmButton: false,                                    
+                timer: 1500
+            })
+        }
+    }
+
+    function NameChange(TYPE,MODULE){
+        let HTML_View   = '';
+        let HTML_BTN    = '';
+        if(TYPE){
+            HTML_View   = document.getElementById(MODULE+"_Name").value;
+            HTML_BTN    = `<span class="button fit" onclick="NameChange(false,'${MODULE}')">이름변경</span>`;
+            submitfn('costom/rename',{MODULE:MODULE,NAME:HTML_View})
+        }else{
+            const Name  = document.getElementById(MODULE+"_NameView").innerText;
+            HTML_View   = `<input id="${MODULE}_Name" type="text" value="${Name}" maxlength="16">`;
+            HTML_BTN    = `<span class="button fit" onclick="NameChange(true,'${MODULE}')">확인</span>`;
+        }        
+        console.log(HTML_View,HTML_BTN)
+        document.getElementById(MODULE+"_NameView").innerHTML   = HTML_View;
+        document.getElementById(MODULE+"_NameBTN").innerHTML    = HTML_BTN;
     }
 
     function deviceBTN(ARRAY) {
         let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
         for (const SENSOR of ARRAY) {
-            HTML_Text += `<div class="col-3 col-6-small">${SENSOR.NAME}</div>
-                        <div class="col-3 col-6-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
-                        <div class="col-6 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
+            HTML_Text += `<div class="col-3 col-6-small"id="${SENSOR.MODULE}_NameView">${SENSOR.NAME}</div>
+                        <div class="col-2 col-6-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
+                        <div class="col-2 col-12-small"><span class="button fit" onclick="downloadFile('${SENSOR.MODULE}')">저장하기</span></div>
+                        <div class="col-5 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;"></div>
@@ -84,9 +153,10 @@
         document.getElementById("chartForm").innerHTML = HTML_Text;
     }
 
-    function graphDrawing(ARRAY) {
+    function graphDrawing(ARRAY) {        
         let chartData   = [["Time","Temp","Humi","Area"]];
-        if(ARRAY.length){         
+        if(ARRAY.length){       
+            GET_DATA[ARRAY[0].MODULE] = ARRAY;
             for (const iterator of ARRAY) {
                 const TSMT  = new Date(iterator.TMST);
                 const time  = ((((TSMT.getYear()-100)*100+(TSMT.getMonth()+1))*100+TSMT.getDate())+TSMT.getHours()/100+TSMT.getMinutes()/10000+TSMT.getSeconds()/1000000).toFixed(6);
@@ -102,11 +172,19 @@
             const MODULE = ARRAY[0].MODULE;
             drawChart(MODULE,"Temp",chartData);
             drawChart(MODULE,"Humi",chartData)
-            drawGauge(MODULE,"Temp",ARRAY,'C°');
+            drawGauge(MODULE,"Temp",ARRAY,'°C');
             drawGauge(MODULE,"Humi",ARRAY,'%');
 
-        }else{alert("No Data!");}
-        
+        }else{
+            Swal.fire({              
+                position: 'top',
+                icon: 'error',
+                title: "No Data!",
+                text: "해당 기간동안 저장된 데이터가 없습니다.",
+                showConfirmButton: false,                                    
+                timer: 1500
+            })
+        }
     }
 
     function drawGauge(divID,TYPE,_rawData,Unit){
@@ -340,14 +418,15 @@
         <section>
             <div class="row gtr-uniform">
                 <div class="col-1 col-1-small">IP:</div>
-                <div class="col-3 col-11-small"><input type="text" id="farmIP" onchange="changeIP(this.value)" value="192.168.1.3"></div>
-                <div class="col-3 col-6-small">시작:<input type="date" id="start" onchange="periode('START',this.value)"></div>
-                <div class="col-3 col-6-small">끝:<input type="date" id="end" onchange="periode('END',this.value)"></div>
-                <div class="col-6"><span class="button primary fit" onclick="submitfn('costom/device',null)">불러오기</span></div>
-                <div class="col-6"><span class="button fit" onclick="downloadFile()">저장하기</span></div>
+                <div class="col-2 col-11-small"><input type="text" id="farmIP" onchange="changeIP(this.value)" value="192.168.1.3"></div>
+                <div class="col-1 col-1-small">S:</div>
+                <div class="col-2 col-5-small"><input type="date" id="start" onchange="periode('START',this.value)"></div>
+                <div class="col-1 col-1-small">E:</div>
+                <div class="col-2 col-5-small"><input type="date" id="end" onchange="periode('END',this.value)"></div>
+                <div class="col-3 col-12-small"><span class="button primary fit" onclick="submitfn('costom/device',null)">불러오기</span></div>
             </div>            
         </section>
-        <hr>
+        <br>
         <section>
             <div class="row gtr-uniform" id="chartForm">                
             </div>                    

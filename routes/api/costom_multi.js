@@ -60,4 +60,20 @@ router.post('/read', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/rename', async function(req, res) {   
+    const response = {
+        result: true,
+        data:   null
+    }    
+    try {
+        if(req.body.MODULE && req.body.NAME){            
+            response.data = await multi.rename(req.body);
+        }else{response.result = false; response.data = "dataNull";}
+    } catch (error) {
+        console.error(error);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 module.exports = router;

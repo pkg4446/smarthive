@@ -81,4 +81,17 @@ module.exports  = {
             return false;
         }
     },
+
+    rename : async function(data){
+        try {
+            await multi_sensor.findByPk(data.MODULE)
+                .then(function(response) {
+                    response.update({NAME: data.NAME})
+                });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    },
 }
