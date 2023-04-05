@@ -58,7 +58,7 @@
                     if(API == "costom/device" && response.result){
                         deviceBTN(response.data);
                     }else if(API == "costom/read" && response.result){
-                        chartDrawing(response.data);
+                        graphDrawing(response.data);
                     }
                 }, // success 
                 error : function(xhr, status) {
@@ -75,14 +75,16 @@
             HTML_Text += `<div class="col-3 col-12-small">${SENSOR.NAME}</div>
                         <div class="col-3 col-12-small"><span class="button fit" onclick="submitfn('costom/name','${SENSOR.NAME}')">이름변경</span></div>
                         <div class="col-6 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
-                        <div class="col-6 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;"></div>`;
+                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;"></div>
+                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
+                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;"></div>
+                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;"></div>`;
         }        
         HTML_Text += '</div></div>'
         document.getElementById("chartForm").innerHTML = HTML_Text;
     }
 
-    function chartDrawing(ARRAY) {
+    function graphDrawing(ARRAY) {
         let chartData   = [["Time","Temp","Humi","Area"]];
         if(ARRAY.length){         
             for (const iterator of ARRAY) {
@@ -96,23 +98,153 @@
                 chartData.push([time,iterator.TEMP6/100,iterator.HUMI6/100,"Sensor6"]);
                 chartData.push([time,iterator.TEMP7/100,iterator.HUMI7/100,"Sensor7"]);
                 chartData.push([time,iterator.TEMP8/100,iterator.HUMI8/100,"Sensor8"]);
-                /*
-                chartData.push([iterator.IDX,iterator.TEMP1,iterator.HUMI1,"Sensor1"]);
-                chartData.push([iterator.IDX,iterator.TEMP2,iterator.HUMI2,"Sensor2"]);
-                chartData.push([iterator.IDX,iterator.TEMP3,iterator.HUMI3,"Sensor3"]);
-                chartData.push([iterator.IDX,iterator.TEMP4,iterator.HUMI4,"Sensor4"]);
-                chartData.push([iterator.IDX,iterator.TEMP5,iterator.HUMI5,"Sensor5"]);
-                chartData.push([iterator.IDX,iterator.TEMP6,iterator.HUMI6,"Sensor6"]);
-                chartData.push([iterator.IDX,iterator.TEMP7,iterator.HUMI7,"Sensor7"]);
-                chartData.push([iterator.IDX,iterator.TEMP8,iterator.HUMI8,"Sensor8"]);
-                */
             }        
             const MODULE = ARRAY[0].MODULE;
             drawChart(MODULE,"Temp",chartData);
             drawChart(MODULE,"Humi",chartData)
+            drawGauge(MODULE,"Temp",ARRAY,'C°');
+            drawGauge(MODULE,"Humi",ARRAY,'%');
 
         }else{alert("No Data!");}
         
+    }
+
+    function drawGauge(divID,TYPE,_rawData,Unit){
+        let myChart = echarts.init(document.getElementById(`${divID}_${TYPE}_ring`));
+
+        const gaugeData = [ 
+            {
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['-25%', '-30%']
+                }
+            }, 
+            {
+                detail: {
+                valueAnimation: true,       
+                offsetCenter: ['-25%', '-10%']
+                }
+            }, 
+            {
+                value: 0,
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['-25%', '10%']
+                }
+            }, 
+            {
+                value: 0,
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['-25%', '30%']
+                }
+            }, 
+            {
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['25%', '-30%']
+                }
+            }, 
+            {
+                detail: {
+                valueAnimation: true,       
+                offsetCenter: ['25%', '-10%']
+                }
+            }, 
+            {
+                value: 0,
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['25%', '10%']
+                }
+            }, 
+            {
+                value: 0,
+                detail: {
+                valueAnimation: true,   
+                offsetCenter: ['25%', '30%']
+                }
+            }, 
+                
+        ];
+
+        const option = {
+            series: [
+                {
+                    type: 'gauge',
+                    startAngle: -90,
+                    endAngle:   270,
+                    pointer: {
+                        show: false
+                    },
+                    progress: {
+                        show: true,
+                        overlap: false,
+                        roundCap: true,
+                        clip: false,
+                        itemStyle: {
+                        borderWidth: 1,
+                        borderColor: '#464646'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                        width: 50
+                        }
+                    },
+                    splitLine: {
+                        show: false,
+                        distance: 0,
+                        length: 10
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        show: false,
+                        distance: 50
+                    },
+                    data: gaugeData,
+                    detail: {
+                        width: 40,
+                        height: 10,
+                        fontSize: 12,
+                        color: 'inherit',
+                        borderColor: 'inherit',
+                        borderRadius: 20,
+                        borderWidth: 2,
+                        formatter: '{value}'+Unit
+                    }
+                }
+            ]
+        };
+
+        let dataIndex = 0;
+        const upperCaseStr = TYPE.toUpperCase();        
+        
+        setInterval(function () {
+            gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
+            gaugeData[1].value = +(_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
+            gaugeData[2].value = +(_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
+            gaugeData[3].value = +(_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2);
+            gaugeData[4].value = +(_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2);
+            gaugeData[5].value = +(_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2);
+            gaugeData[6].value = +(_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
+            gaugeData[7].value = +(_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
+            dataIndex++;
+            if(dataIndex >= _rawData.length) dataIndex = 0;
+            myChart.setOption({
+                series: [
+                {
+                    data: gaugeData,
+                    pointer: {
+                    show: false
+                    }
+                }
+                ]
+            });
+        }, 1000);
+        option && myChart.setOption(option);
     }
 
     function drawChart (divID,TYPE,_rawData) {      
@@ -172,7 +304,7 @@
             });
         });
         const option = {
-            animationDuration: 1000,
+            animationDuration: 3000,
             dataset: [
             {
                 id: 'dataset_raw',
@@ -199,7 +331,7 @@
             },
             series: seriesList
         };
-        myChart.setOption(option);
+        option && myChart.setOption(option);
     }
 </script>
 
