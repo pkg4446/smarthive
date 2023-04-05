@@ -299,7 +299,10 @@
         };
 
         let dataIndex = 0;
-        const upperCaseStr = TYPE.toUpperCase();        
+        const upperCaseStr = TYPE.toUpperCase();     
+        
+        let interverTime = Math.round(60*1000/_rawData.length);
+        if(interverTime>1000) interverTime = 1000;
         
         let interval = setInterval(function () {
             gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
@@ -322,7 +325,7 @@
                 }
                 ]
             });
-        }, Math.round(60*1000/_rawData.length));
+        }, interverTime);
         option && myChart.setOption(option);
     }
 
