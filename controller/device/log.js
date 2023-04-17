@@ -22,8 +22,8 @@ module.exports  = {
         try {
             await log_sensor.create({
                 MODULE: data.MODULE,
-                TEMP:   data.VALUE1*100,
-                HUMI:   data.VALUE2*100
+                TEMP:   data.VALUE1,
+                HUMI:   data.VALUE2
             });
         } catch (error) {
             console.log(error);
