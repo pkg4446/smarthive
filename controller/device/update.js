@@ -1,7 +1,6 @@
 const Apiary    = require('../../models/apiary');
 const Sensor    = require('../../models/sensor');
 const Warehouse = require('../../models/warehouse');
-const mqtt      = require("./mqtt");
 
 const Sequelize   = require('../module');
 const { Op }    = require("sequelize");
@@ -89,18 +88,18 @@ module.exports  = {
 
     sensor_set :  async function(data){
         try {            
+            let sensor;
             await Sensor.findByPk(data.MODULE)
             .then(async function(response) {
-                if(response.USE      == data.USE)   await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+USE=${data.USE};`});
-                if(response.SET_TEMP == data.TEMP)  await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+TEMP=${data.TEMP};`});
-                if(response.SET_HUMI == data.HUMI)  await mqtt.send({TARGET:response.FARM, COMMEND:`;S=${data.MODULE}=AT+HUMI=${data.HUMI};`});
+                sensor = response.dataValues;
                 response.update({
                     PRE_USE:    data.USE,
                     PRE_TEMP:   data.TEMP,
                     PRE_HUMI:   data.HUMI
                 })
-            });
-            return true;
+            });            
+            
+            return sensor;
         } catch (error) {
             console.log(error);
             return false;

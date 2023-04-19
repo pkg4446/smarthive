@@ -61,6 +61,11 @@ db.log_sensor       = log_sensor;
 log_sensor.init(sequelize);
 log_sensor.associate(db);
 
+const log_sensor_ctrl   = require('./log_sensor_ctrl');
+db.log_sensor_ctrl      = log_sensor_ctrl;
+log_sensor_ctrl.init(sequelize);
+log_sensor_ctrl.associate(db);
+
 const log_wh_O3     = require('./log_wh_O3');
 db.log_wh_O3        = log_wh_O3;
 log_wh_O3.init(sequelize);

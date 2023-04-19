@@ -2,7 +2,7 @@
 <script type="text/javascript">
     let tableform_flage  = true;
     let HTML_Text_origin = null;
-    const USE    =  "<%= data.USE %>";    
+    const USE    = "<%= data.USE %>";    
     const MODULE = "<%= data.MODULE %>";
     let sendData = {
         FARM:   "<%= data.FARM %>",
@@ -171,8 +171,8 @@
         }
     }
     function selectButton(target) {
-        if(target.value == true){       sendData.USE = 1;}
-        else if(target.value == false){ sendData.USE = 0;}
+        if(target.value == "true"){       sendData.USE = true;}
+        else if(target.value == "false"){ sendData.USE = false;}
     }
     function chageTemp(data) {
         let temp_TEMP = data.value;

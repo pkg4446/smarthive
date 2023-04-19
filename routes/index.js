@@ -1,8 +1,9 @@
 //require('./test');
 
-require('../controller/device/mqtt');
+const mqtt      = require('./mqtt');
 const express   = require('express');
 const router    = express.Router();
+
 
 const user      = require('./user/userAuth');
 const device    = require('./device');

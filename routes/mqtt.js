@@ -1,6 +1,6 @@
 const mqtt      = require("mqtt");
-const regist    = require('../../controller/device/regist');
-const update    = require('../../controller/device/update');
+const regist    = require('../controller/device/regist');
+const update    = require('../controller/device/update');
 
 const options   = {
     host:       process.env.host,
