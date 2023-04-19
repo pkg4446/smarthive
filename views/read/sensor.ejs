@@ -84,7 +84,7 @@
                                 timer: 1000
                             })
                         }else if(API == "read/sensor_log"){       
-                            LOG_DATA = response.data;
+                            LOG_DATA = response.data.value;
                             Swal.fire({              
                                 position: 'top',
                                 icon: 'success',
