@@ -115,7 +115,10 @@ router.post('/sensor_log', async function(req, res) {
             req.body.END    = new Date(req.body.END);
             req.body.END.setDate(now.getDate()+1);
         }
-        response.data = await read.log_sensor(req.body);
+        response.data = {
+            value : await read.log_sensor(req.body),
+            ctrl  : await read.log_sensor_ctrl(req.body),
+        };
     } catch (error) {
         console.error(error);
         response.result = false;
