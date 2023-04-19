@@ -14,15 +14,15 @@ module.exports = class Log_sensor_ctrl extends Sequelize.Model{
                 allowNull: false
             },
 
-            TYPE:   {
-                type: Sequelize.STRING(16),
-                allowNull: false
-            },
-
             OPERATION:   {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
+            },            
+
+            TYPE:   {
+                type: Sequelize.STRING(16),
+                allowNull: false
             },
 
             TMST:   {

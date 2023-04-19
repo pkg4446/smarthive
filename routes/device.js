@@ -19,7 +19,11 @@ router.route('/hive')
                         await update.sensor_error(req.body.MODULE,req.body.VALUE2);
                     }else if(req.body.VALUE1 == "SET"){
                         await update.sensor_confirm(req.body.MODULE);
-                    }else{await log.log_sensor(req.body);}
+                    }else if(req.body.VALUE1 == "ON" || req.body.VALUE1 == "OFF"){                        
+                        await log.log_sensor_ctrl(req.body);
+                    }else{
+                        await log.log_sensor(req.body);
+                    }
                     break;
                 case "PUMP":  
                     await regist.regist_pump(req.body);

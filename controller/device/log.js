@@ -1,5 +1,6 @@
 const log_error     = require('../../models/log_error');
 const log_sensor    = require('../../models/log_sensor');
+const log_sensor_ctrl   = require('../../models/log_sensor_ctrl');
 const log_wh_O3     = require('../../models/log_wh_O3');
 const log_wh_door   = require('../../models/log_wh_door');
 const log_wh_plz    = require('../../models/log_wh_plz');
@@ -24,6 +25,23 @@ module.exports  = {
                 MODULE: data.MODULE,
                 TEMP:   data.VALUE1,
                 HUMI:   data.VALUE2
+            });
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    log_sensor_ctrl :    async function(data){
+        try {
+            if(data.VALUE1 == "ON"){
+                data.VALUE1 == true;
+            }else if(data.VALUE1 == "OFF"){
+                data.VALUE1 == false;
+            }
+            await log_sensor_ctrl.create({
+                MODULE:     data.MODULE,
+                OPERATION:  data.VALUE1,
+                TYPE:       data.VALUE2
             });
         } catch (error) {
             console.log(error);

@@ -6,6 +6,7 @@ const Sensor    = require('../../models/sensor');
 const Warehouse = require('../../models/warehouse');
 const Log_error     = require('../../models/log_error');
 const Log_sensor    = require('../../models/log_sensor');
+const Log_sensor_ctrl   = require('../../models/log_sensor_ctrl');
 const Log_wh_O3     = require('../../models/log_wh_O3');
 const Log_wh_door   = require('../../models/log_wh_door');
 const Log_wh_plz    = require('../../models/log_wh_plz');
@@ -164,6 +165,22 @@ module.exports  = {
     log_sensor:   async function(DATA){
         try {
             const response = await Log_sensor.findAll({
+                where: {
+                    MODULE: DATA.MODULE,
+                    TMST:{[Op.between]:[DATA.START,DATA.END]}
+                },
+                order :[['IDX', 'DESC']],
+                raw : true
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    log_sensor_ctrl:   async function(DATA){
+        try {
+            const response = await Log_sensor_ctrl.findAll({
                 where: {
                     MODULE: DATA.MODULE,
                     TMST:{[Op.between]:[DATA.START,DATA.END]}
