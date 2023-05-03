@@ -37,24 +37,6 @@ module.exports = (server) => {
         }else if(data.ACCESS == "OUT"){
             socket.leave(data.UUID)
         }
-    });
-
-    socket.on('invasion', async function (data) {
-      if(turn && World.SITE[UUID]){        
-        const participants  = Object.keys(World.SITE[UUID]).length
-        if(data.SEND.M == "CAPTURE"){
-          data.SEND.D = await capture(USERID,UUID);
-        }
-        const response  = await invasionAction(USERID,participants,instanceId,data.SEND,UUID);
-        socket.emit('active',response);
-        socket.in(UUID).emit('passive',response);
-        turn = false;
-      }else if(!World.SITE[UUID]){
-        socket.emit('active',{command: 'ERR', result: 0});
-      }else{        
-        socket.emit('active',{command: 'WAIT', result: TURN_INTERVAL - (new Date().getTime() - INTERVAL)});
-      }
-    });
-
-  });
+    });  
+  });//connection
 };
