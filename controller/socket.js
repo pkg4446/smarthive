@@ -1,5 +1,6 @@
 const SocketIO  = require('socket.io');
-const DataBase  = require('./device/whisper');
+const DataBase  = require('./app/whisper');
+const firebase  = require('firebase-admin');
 
 const clients   = {};
 
@@ -25,27 +26,32 @@ module.exports = (server) => {
     });    
 
     socket.on('init',async function (DATA) {
+
       if( DATA.ID != undefined &&clients[DATA.id] == undefined ){
-        clients[DATA.ID] = [instanceId,DATA.RESV];
+        clients[DATA.ID] = [instanceId,DATA.RECV];
         userID = DATA.ID;
-        DATA.SEND = DATA.ID;
+        DATA.SEND = userID;
         const pastChat = await DataBase.read(DATA);
-        socket.emit('client',{type:"init",result:true,DATA:pastChat});
+        socket.emit('client',{type:"init",result:true,data:pastChat});
       }else{
-        socket.emit('client',{type:"init",result:false,DATA:null});
+        socket.emit('client',{type:"init",result:false,data:null});
       }
-      console.log(DATA,clients);
+      
+      console.log("init",DATA,clients);
     });
 
-    socket.on('chat',async function (DATA) {
-      //await DataBase.write();
-      let read = false;
-      socket.emit('client',{type:"chat",result:true,data:DATA.text});
-      if((clients[DATA.RESV] != undefined) && (clients[DATA.RESV][1] == userID)){
-        read = true;
-        io.to(clients[DATA.RESV][0]).emit('client',{type:"chat",result:true,data:DATA});
+    socket.on('chat',async function (DATA) {     
+
+      DATA.SEND = userID;
+      DATA.READ = false;
+      if((clients[DATA.RECV] != undefined) && (clients[DATA.RECV][1] == userID)){
+        DATA.READ = true;
+        io.to(clients[DATA.RECV][0]).emit('client',{type:"chat",result:true,data:DATA});
       }
-      socket.emit('client',{type:"chat",result:true,DATA:read});
+      await DataBase.write(DATA);
+      socket.emit('client',{type:"chat",result:true,data:DATA.READ});
+      
+      console.log("chat",DATA);
     });
   });//connection
 };

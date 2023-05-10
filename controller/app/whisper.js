@@ -8,8 +8,8 @@ module.exports  = {
         try {
             const response = await Whisper.findAll({
                 where: {[Op.or]: [
-                    {SEND: DATA.SEND, RECV: DATA.RESV}, 
-                    {SEND: DATA.RESV, RECV: DATA.SEND}
+                    {SEND: DATA.SEND, RECV: DATA.RECV, READ: 0}, 
+                    {SEND: DATA.RECV, RECV: DATA.SEND, READ: 0}
                 ]},
                 order :[['IDX', 'DESC']],
                 raw : true,
@@ -26,6 +26,7 @@ module.exports  = {
                 SEND:     DATA.SEND,
                 RECV:     DATA.RECV,
                 TEXT:     DATA.TEXT,
+                READ:     DATA.READ,
             });
             return true;
         } catch (error) {

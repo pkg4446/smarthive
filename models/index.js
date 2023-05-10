@@ -21,6 +21,11 @@ db.user     = user;
 user.init(sequelize);
 user.associate(db);
 
+const fcm   = require('./fcm');
+db.fcm      = fcm;
+fcm.init(sequelize);
+fcm.associate(db);
+
 const apiary    = require('./apiary');
 db.apiary       = apiary;
 apiary.init(sequelize);
