@@ -11,7 +11,7 @@ module.exports = class FCM extends Sequelize.Model{
             },
 
             TOKEN: {
-                type: Sequelize.TEXT,
+                type: Sequelize.STRING(160),
                 allowNull: false,
             },
 
