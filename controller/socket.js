@@ -31,8 +31,8 @@ module.exports = (server) => {
         clients[DATA.ID] = [instanceId,DATA.RECV];
         userID = DATA.ID;
         DATA.SEND = userID;
-        await DataBase.write(DATA);
-        const pastChat = await DataBase.read(DATA);        
+        const pastChat = await DataBase.read(DATA);  
+        await DataBase.view(DATA);//읽음 표시
         socket.emit('client',{type:"init",result:true,data:pastChat});
       }else{
         socket.emit('client',{type:"init",result:false,data:null});
