@@ -31,7 +31,8 @@ module.exports = (server) => {
         clients[DATA.ID] = [instanceId,DATA.RECV];
         userID = DATA.ID;
         DATA.SEND = userID;
-        const pastChat = await DataBase.read(DATA);
+        await DataBase.write(DATA);
+        const pastChat = await DataBase.read(DATA);        
         socket.emit('client',{type:"init",result:true,data:pastChat});
       }else{
         socket.emit('client',{type:"init",result:false,data:null});
@@ -46,10 +47,10 @@ module.exports = (server) => {
       DATA.READ = false;
       if((clients[DATA.RECV] != undefined) && (clients[DATA.RECV][1] == userID)){
         DATA.READ = true;
-        io.to(clients[DATA.RECV][0]).emit('client',{type:"chat",result:true,data:DATA});
+        io.to(clients[DATA.RECV][0]).emit('client',{type:"chat",result:true,data:{TYPE:"recv",RES:DATA}});        
       }
       await DataBase.write(DATA);
-      socket.emit('client',{type:"chat",result:true,data:DATA.READ});
+      socket.emit('client',{type:"chat",result:true,data:{TYPE:"send",RES:{READ:DATA.READ}}});
       
       console.log("chat",DATA);
     });

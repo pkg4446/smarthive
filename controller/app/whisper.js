@@ -34,4 +34,18 @@ module.exports  = {
             return false;
         }
     },
+
+    view : async function(data){
+        try {
+          const object = await Whisper.update({
+            READ:  true,
+          },{
+            where: {SEND: data.RECV, RECV: data.SEND, READ:false}
+          });
+          return object;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    
 }
