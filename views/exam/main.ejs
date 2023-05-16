@@ -1,3 +1,9 @@
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+	const socket = io();
+	socket.emit("init", {ID: "WEB_TEST", RECV: "WEB_CLIENT"});
+    socket.on('client', function (data) {console.log(data);});
+</script>
 <!-- Main -->
 <div id="main">
 	<div class="inner">
