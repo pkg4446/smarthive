@@ -18,12 +18,10 @@ module.exports  = {
                   },
                 token: DATA.TOKEN,
             }
-            console.log(message);
             admin
               .messaging()
               .send(message)
               .then(function (response) {
-                console.log('Successfully sent message: : ', response)
                 return true;
               })
               .catch(function (err) {
@@ -64,7 +62,7 @@ module.exports  = {
         try {
             let response = false;
             const FCM = await fcm.findByPk(EMAIL,{raw : true});
-            if(FCM.TOKEN){
+            if(FCM != null && FCM.TOKEN != undefined){
                 response = FCM.TOKEN;
             }
             return response;

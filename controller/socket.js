@@ -1,6 +1,6 @@
 const SocketIO  = require('socket.io');
 const DataBase  = require('./app/whisper');
-const firebase  = require('firebase-admin');
+const FCM       = require('./app/fcm');
 
 const clients   = {};
 
@@ -37,8 +37,6 @@ module.exports = (server) => {
       }else{
         socket.emit('client',{type:"init",result:false,data:null});
       }
-      
-      console.log("init",DATA,clients);
     });
 
     socket.on('chat',async function (DATA) {     
@@ -48,11 +46,17 @@ module.exports = (server) => {
       if((clients[DATA.RECV] != undefined) && (clients[DATA.RECV][1] == userID)){
         DATA.READ = true;
         io.to(clients[DATA.RECV][0]).emit('client',{type:"chat",result:true,data:{TYPE:"recv",RES:DATA}});        
+      }else{
+        const Cloud = {TOKEN:await FCM.read(DATA.RECV)}
+        if(Cloud.TOKEN != false){
+          Cloud.EMAIL = DATA.RECV;
+          Cloud.TITLE = "메세지";
+          Cloud.TEXT  = DATA.SEND + " 님으로 부터 새로운 메세지가 도착했습니다.";
+          await FCM.pushMessege(Cloud);
+        }
       }
       await DataBase.write(DATA);
       socket.emit('client',{type:"chat",result:true,data:{TYPE:"send",RES:{READ:DATA.READ}}});
-      
-      console.log("chat",DATA);
     });
   });//connection
 };
