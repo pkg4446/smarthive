@@ -11,7 +11,7 @@ module.exports  = {
                     {SEND: DATA.SEND, RECV: DATA.RECV, READ: 0}, 
                     {SEND: DATA.RECV, RECV: DATA.SEND, READ: 0}
                 ]},
-                order :[['IDX', 'DESC']],
+                order :[['IDX', 'ASC']],
                 raw : true,
             });
             return response;
