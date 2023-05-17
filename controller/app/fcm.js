@@ -1,9 +1,41 @@
-const fcm   = require('../../models/fcm');
+const fcm       = require('../../models/fcm');
 
-const Sequelize = require('../module');
-const { Op }    = require("sequelize");
+const admin   = require('firebase-admin');
+const serviceAccount    = JSON.parse(process.env.firebase_adminsdk);
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 module.exports  = {    
+
+    pushMessege :  async function(DATA){
+        try {
+
+            const message = {
+                notification: {
+                    title: DATA.TITLE,
+                    body:  DATA.TEXT,
+                  },
+                token: DATA.TOKEN,
+            }
+            console.log(message);
+            admin
+              .messaging()
+              .send(message)
+              .then(function (response) {
+                console.log('Successfully sent message: : ', response)
+                return true;
+              })
+              .catch(function (err) {
+                  console.log('Error Sending message!!! : ', err)
+                  return false;
+              });
+              
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
 
     regist :   async function(DATA){
         try {
@@ -30,10 +62,15 @@ module.exports  = {
 
     read :   async function(EMAIL){
         try {
+            let response = false;
             const FCM = await fcm.findByPk(EMAIL,{raw : true});
-            return FCM;
+            if(FCM.TOKEN){
+                response = FCM.TOKEN;
+            }
+            return response;
         } catch (error) {
             console.log(error);
+            return false;
         }        
     },
 }
