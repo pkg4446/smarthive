@@ -27,22 +27,36 @@ module.exports = (server) => {
 
     socket.on('init',async function (DATA) {
 
-      if( DATA.ID != undefined &&clients[DATA.id] == undefined ){
+      if( DATA.ID != undefined && clients[DATA.id] == undefined ){
         clients[DATA.ID] = [instanceId,DATA.RECV];
         userID = DATA.ID;
         DATA.SEND = userID;
-        const pastChat = await DataBase.read(DATA);  
+        const pastChat = await DataBase.read(DATA);
         await DataBase.view(DATA);//읽음 표시
         socket.emit('client',{type:"init",result:true,data:pastChat});
       }else{
         socket.emit('client',{type:"init",result:false,data:null});
       }
+      if((clients[DATA.RECV] != undefined) && (clients[DATA.RECV][1] == userID)){
+        io.to(clients[DATA.RECV][0]).emit('client',{type:"read",result:true,data:{TYPE:"read",RES:true}});        
+      }
     });
 
-    socket.on('chat',async function (DATA) {     
+    socket.on('chat',async function (DATA) {    
 
-      DATA.SEND = userID;
       DATA.READ = false;
+
+      if( DATA.ID != undefined && clients[DATA.id] == undefined ){
+        clients[DATA.ID] = [instanceId,DATA.RECV];
+        userID = DATA.ID;
+        DATA.SEND = userID;
+        const pastChat = await DataBase.read(DATA);
+        await DataBase.view(DATA);//읽음 표시
+        socket.emit('client',{type:"init",result:true,data:pastChat});
+      }else{
+        DATA.SEND = userID;
+      }
+      
       if((clients[DATA.RECV] != undefined) && (clients[DATA.RECV][1] == userID)){
         DATA.READ = true;
         io.to(clients[DATA.RECV][0]).emit('client',{type:"chat",result:true,data:{TYPE:"recv",RES:DATA}});        

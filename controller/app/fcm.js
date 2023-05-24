@@ -12,10 +12,10 @@ module.exports  = {
         try {
 
             const message = {
-                notification: {
+                data:{
                     title: DATA.TITLE,
                     body:  DATA.TEXT,
-                  },
+                },
                 token: DATA.TOKEN,
             }
             admin
