@@ -17,7 +17,6 @@ module.exports = class Order_item extends Sequelize.Model{
             ORDER_IDX:    {
                 type: Sequelize.INTEGER.UNSIGNED,
                 primaryKey: true,
-                autoIncrement: true
             },
 
             EMAIL:   {

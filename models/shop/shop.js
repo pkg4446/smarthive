@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Basket extends Sequelize.Model{
+module.exports = class Shop extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             IDX:    {
@@ -14,21 +14,26 @@ module.exports = class Basket extends Sequelize.Model{
                 allowNull: false
             },
 
-            ITEM_IDX:   {
-                type: Sequelize.INTEGER.UNSIGNED,  //1677만원까지
+            NAME:   {
+                type: Sequelize.STRING(32),
                 allowNull: false
             },
 
-            PIECE:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+            ADDRESS:   {
+                type: Sequelize.STRING(256),
+                allowNull: false
+            },
+
+            TEXT:   {
+                type: Sequelize.TEXT,
                 allowNull: false
             },
         },{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Basket',
-            tableName  : 'basket',
+            modelName  : 'Shop',
+            tableName  : 'shop',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'
