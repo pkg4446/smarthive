@@ -18,9 +18,14 @@ module.exports = class Order extends Sequelize.Model{
                 type: Sequelize.BIGINT.UNSIGNED, //total price
                 allowNull: false
             },
-
+           
             INVOICE:    {
                 type: Sequelize.STRING(32),
+                allowNull: false
+            },
+            
+            COMPANY:    {
+                type: Sequelize.STRING(8),
                 allowNull: false
             },
 

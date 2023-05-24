@@ -6,40 +6,28 @@ const db        = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 db.sequelize    = sequelize;
 
-DBinit('./custom_multi_log');
-DBinit('./custom_multi_sensor');
-DBinit('./user');
-DBinit('./fcm');
-DBinit('./apiary');
-DBinit('./door');
-DBinit('./farm');
-DBinit('./pump');
-DBinit('./sensor')
-DBinit('./warehouse')
-DBinit('./log_error')
-DBinit('./log_sensor');
-DBinit('./log_sensor_ctrl');
-DBinit('./log_wh_O3');
-DBinit('./log_wh_door');
-DBinit('./log_wh_plz');
-DBinit('./whisper');
+DBpath('./models',"./");
 
-DBinit('./shop/basket');
-DBinit('./shop/item_pic');
-DBinit('./shop/item');
-DBinit('./shop/license');
-DBinit('./shop/order_addr');
-DBinit('./shop/order_item');
-DBinit('./shop/order_payment');
-DBinit('./shop/order');
-DBinit('./shop/shop');
+function DBpath(filepath,dbpath){
+    const FS    = require('fs');
+    const list  = FS.readdirSync(filepath, 'utf8');
+    for (const name of list) {
+        const file = name.split('.js');
+        if(file.length == 1){         
+            DBpath(`${filepath}/${file}`,dbpath + file + '/');
+        }else if(file[0] != "index"){    
+            DBinit(dbpath,file[0]);
+        }
+    }
+    return true;
+}
 
-module.exports = db;
-
-function DBinit(path){
-    const database = require(path);
-    const DBname   = path.split('/');
-    db[DBname[DBname.length-1]] = database;
+function DBinit(path,name){
+    const database = require(path+name);
+    db[name] = database;
     database.init(sequelize);    
     database.associate(db);
+    return true;
 }
+
+module.exports = db;

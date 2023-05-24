@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Shop extends Sequelize.Model{
+module.exports = class Store extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
             IDX:    {
@@ -32,8 +32,8 @@ module.exports = class Shop extends Sequelize.Model{
             sequelize,
             timestamps : false,
             underscored: false,
-            modelName  : 'Shop',
-            tableName  : 'shop',
+            modelName  : 'Store',
+            tableName  : 'store',
             paranoid   : true,
             charset    : 'utf8',
             collate    : 'utf8_general_ci'

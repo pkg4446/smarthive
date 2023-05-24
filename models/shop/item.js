@@ -31,7 +31,7 @@ module.exports = class Item extends Sequelize.Model{
 
             TEXT:   {
                 type: Sequelize.TEXT,
-                allowNull: false
+                allowNull: true
             },
         },{
             sequelize,
