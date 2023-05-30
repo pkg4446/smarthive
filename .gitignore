@@ -1,4 +1,5 @@
 /config
+/image
 /.env
 /node_modules
 /.vscode
