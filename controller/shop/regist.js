@@ -19,23 +19,6 @@ module.exports  = {
         }        
     },
 
-    resize  : function(image,email){
-        try {
-            sharp(image.path)  // 압축할 이미지 경로
-              .resize({ width: 600 }) // 비율을 유지하며 가로 크기 줄이기
-              .withMetadata()	// 이미지의 exif데이터 유지
-              .toBuffer((err, buffer) => {
-                if (err) throw err;
-                const savepath = "image/"+email+"/convert/"+image.filename;
-                fs.writeFile(savepath, buffer, (err) => {
-                  if (err) throw err;
-                });      
-              });              
-          } catch (err) {
-            console.log(err);
-          }     
-    },
-
     item    : async function(data){
         try {    
 
@@ -45,6 +28,7 @@ module.exports  = {
                 STOCK:      data.STOCK,
                 PRICE:      data.PRICE,
                 DELIVERY:   data.DELIVERY,
+                TITLE:      data.TITLE,
                 TEXT:       data.TEXT,
             })
             .then(async function(response){
@@ -57,11 +41,12 @@ module.exports  = {
         }        
     },
 
-    item_pic    : async function(data){
+    pic     : async function(IDX,EMAIL,FILE_NAME){
         try {            
-            await item.create({
-                ITEM_IDX:   data.IDX,
-                PATH:       data.PATH,
+            await item_pic.create({
+                ITEM_IDX:   IDX,
+                EMAIL:      EMAIL,
+                FILE_NAME:  FILE_NAME
             });
             return true;
         } catch (error) {

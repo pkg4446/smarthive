@@ -16,7 +16,8 @@ module.exports = class Item extends Sequelize.Model{
 
             STOCK:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
-                allowNull: false
+                allowNull: false,
+                defaultValue: 1
             },
 
             PRICE:   {
@@ -26,6 +27,12 @@ module.exports = class Item extends Sequelize.Model{
 
             DELIVERY:   {
                 type: Sequelize.SMALLINT.UNSIGNED,  //6만5천500원까지
+                allowNull: false,
+                defaultValue: 0
+            },
+
+            TITLE:   {
+                type: Sequelize.Sequelize.STRING(64),
                 allowNull: false
             },
 

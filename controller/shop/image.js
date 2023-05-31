@@ -35,7 +35,7 @@ module.exports  = {
         limits: { fileSize: 8 * 1024 * 1024 } 
     }),
 
-    resize  : function(image,email){
+    resize  : async function(image,email){
         try {
             sharp(image.path)  // 압축할 이미지 경로
               .resize({ width: 600 }) // 비율을 유지하며 가로 크기 줄이기

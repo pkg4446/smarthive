@@ -14,8 +14,13 @@ module.exports = class Item_pic extends Sequelize.Model{
                 allowNull: false
             },
 
-            PATH:   {
-                type: Sequelize.STRING(256),
+            EMAIL:   {
+                type: Sequelize.STRING(32),
+                allowNull: false
+            },
+
+            FILE_NAME:   {
+                type: Sequelize.STRING(128),
                 allowNull: false
             },
         },{
