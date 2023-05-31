@@ -7,8 +7,8 @@ const write     = require('./write');
 const del       = require('./delete');
 const fcm       = require('./fcm');
 
-const multer    = require('./multer');
-router.use('/upload', multer);
+const shop      = require('./shop');
+router.use('/shop', shop);
 
 router.use('/read', read);
 router.use('/update', update);

@@ -3,7 +3,7 @@ const item      = require('../../models/shop/item');
 const item_pic  = require('../../models/shop/item_pic');
 const store     = require('../../models/shop/store');
 
-module.exports  = {
+module.exports  = {    
     store   : async function(data){
         try {            
             await store.create({
@@ -17,6 +17,23 @@ module.exports  = {
             console.log(error);
             return false;
         }        
+    },
+
+    resize  : function(image,email){
+        try {
+            sharp(image.path)  // 압축할 이미지 경로
+              .resize({ width: 600 }) // 비율을 유지하며 가로 크기 줄이기
+              .withMetadata()	// 이미지의 exif데이터 유지
+              .toBuffer((err, buffer) => {
+                if (err) throw err;
+                const savepath = "image/"+email+"/convert/"+image.filename;
+                fs.writeFile(savepath, buffer, (err) => {
+                  if (err) throw err;
+                });      
+              });              
+          } catch (err) {
+            console.log(err);
+          }     
     },
 
     item    : async function(data){
