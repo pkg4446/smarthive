@@ -1,23 +1,8 @@
 const basket    = require('../../models/shop/basket');
 const item      = require('../../models/shop/item');
 const item_pic  = require('../../models/shop/item_pic');
-const store     = require('../../models/shop/store');
 
 module.exports  = {    
-    store   : async function(data){
-        try {            
-            await store.create({
-                EMAIL:      data.EMAIL,
-                NAME:       data.NAME,
-                ADDRESS:    data.ADDR,
-                TEXT:       data.TEXT,
-            });
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }        
-    },
 
     item    : async function(data){
         try {    
@@ -25,6 +10,7 @@ module.exports  = {
             let IDX;
             await item.create({
                 EMAIL:      data.EMAIL,
+                KATEGORIE:  data.KATEGORIE,
                 STOCK:      data.STOCK,
                 PRICE:      data.PRICE,
                 DELIVERY:   data.DELIVERY,

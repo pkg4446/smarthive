@@ -14,6 +14,11 @@ module.exports = class Item extends Sequelize.Model{
                 allowNull: false
             },
 
+            KATEGORIE:   {
+                type: Sequelize.STRING(16),
+                allowNull: false
+            },
+
             STOCK:   {
                 type: Sequelize.SMALLINT.UNSIGNED,
                 allowNull: false,
