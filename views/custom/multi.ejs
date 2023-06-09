@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-    let farmIP = "192.168.1.10"//"0.0.0.0";
+    let farmIP = "0.0.0.0"//"0.0.0.0";
 
     const GET_DATA  = {};
     const API_DAY   = {
@@ -46,6 +46,10 @@
             POST = true;
             sendData = API_DAY;
             sendData.MODULE = DATA;
+            document.getElementById(DATA+"_Temp_ring").style.display = 'block';
+            document.getElementById(DATA+"_Temp").style.display = 'block';
+            document.getElementById(DATA+"_Humi_ring").style.display = 'block';
+            document.getElementById(DATA+"_Humi").style.display = 'block';
         }else if(API == "costom/rename" && DATA.MODULE && DATA.NAME){
             POST = true;
             sendData = DATA;
@@ -140,16 +144,18 @@
 
     function deviceBTN(ARRAY) {
         let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
+            console.log(HTML_Text);
         for (const SENSOR of ARRAY) {
             HTML_Text += `<div class="col-3 col-6-small"id="${SENSOR.MODULE}_NameView">${SENSOR.NAME}</div>
                         <div class="col-2 col-6-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
                         <div class="col-2 col-12-small"><span class="button fit" onclick="downloadFile('${SENSOR.MODULE}')">저장하기</span></div>
                         <div class="col-5 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
-                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;"></div>
-                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;"></div>
-                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;"></div>
-                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;"></div>`;
+                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;display:none;"></div>
+                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;display:none;"></div>
+                        <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;display:none;"></div>
+                        <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;display:none;"></div>`;
         }        
+        console.log(HTML_Text);
         HTML_Text += '</div></div>'
         document.getElementById("chartForm").innerHTML = HTML_Text;
     }
