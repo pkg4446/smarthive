@@ -7,12 +7,12 @@ const requestIp = require('request-ip');
 router.post('/log', async function(req, res) {   
     const response = {
         result: true,
-        data:   null
+        data:   new Date()
     }    
     try {
         if(req.body.MODULE){            
             req.body.FARM = requestIp.getClientIp(req);
-            response.data = await multi.regist(req.body);
+            await multi.regist(req.body);
             await multi.log(req.body);
         }else{response.result = false; response.data = "dataNull";}
     } catch (error) {
