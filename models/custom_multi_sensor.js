@@ -15,6 +15,12 @@ module.exports = class custom_multi_sensor extends Sequelize.Model{
                 defaultValue: "신규등록"
             },
 
+            TYPE:   {
+                type: Sequelize.STRING(16),
+                allowNull: false,
+                defaultValue: "미정"
+            },
+
             FARM:   {
                 type: Sequelize.STRING(32),
                 allowNull: false
