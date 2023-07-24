@@ -3,10 +3,10 @@
 
 <script type="text/javascript">
 
-    let farmTYPE = "Null"
-
-    const GET_DATA  = {};
-    const API_DAY   = {
+    let farmTYPE = "미정"
+    let FARM_DATA = {};
+    let GET_DATA  = {};
+    let API_DAY   = {
         START: null,
         END:   null,
     };    
@@ -137,44 +137,59 @@
             HTML_View   = `<input id="${MODULE}_Name" type="text" value="${Name}" maxlength="16">`;
             HTML_BTN    = `<span class="button fit" onclick="NameChange(true,'${MODULE}')">확인</span>`;
         }        
-        console.log(HTML_View,HTML_BTN)
         document.getElementById(MODULE+"_NameView").innerHTML   = HTML_View;
         document.getElementById(MODULE+"_NameBTN").innerHTML    = HTML_BTN;
     }
 
     function deviceBTN(ARRAY) {
-        let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
-            console.log(HTML_Text);
         for (const SENSOR of ARRAY) {
-            HTML_Text += `<div class="col-3 col-6-small"id="${SENSOR.MODULE}_NameView">${SENSOR.NAME}</div>
-                        <div class="col-2 col-6-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
-                        <div class="col-2 col-12-small"><span class="button fit" onclick="downloadFile('${SENSOR.MODULE}')">저장하기</span></div>
+            if(FARM_DATA[SENSOR.FARM] == undefined){
+                FARM_DATA[SENSOR.FARM] = [];
+            }
+            FARM_DATA[SENSOR.FARM].push(SENSOR);
+        }
+        let HTML_Text = '<div class="col-12"><div class="row gtr-uniform">'
+            
+        for (const key in FARM_DATA) {
+            HTML_Text += `<div class="col-12"><details><summary class="row gtr-uniform">
+                    <div class="col-3 col-12-small">▣ farm IP: ${key}</div><div class="col-9 col-12-small">`;
+                    for (const SENSOR of FARM_DATA[key]){
+                        HTML_Text += ` ⊙${SENSOR.NAME} `;
+                    }
+            HTML_Text += `</div></summary><div class="col-12"><p><div class="row gtr-uniform">`;           
+            for (const SENSOR of FARM_DATA[key]) {
+                HTML_Text += `<div class="col-3 col-6-small"id="${SENSOR.MODULE}_NameView">▷ ${SENSOR.NAME}</div>
                         <div class="col-5 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
+                        <div class="col-2 col-12-small"><span class="button fit" onclick="downloadFile('${SENSOR.MODULE}')">저장하기</span></div>        
+                        <div class="col-2 col-6-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;display:none;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;display:none;"></div>
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;display:none;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;display:none;"></div>`;
-        }        
-        console.log(HTML_Text);
+            }
+            HTML_Text +=`</p></div></div></details></div>`;
+            console.log(key,FARM_DATA[key]);
+        }
         HTML_Text += '</div></div>'
+        console.log(FARM_DATA);
         document.getElementById("chartForm").innerHTML = HTML_Text;
     }
 
-    function graphDrawing(ARRAY) {        
+    function graphDrawing(ARRAY) {
         let chartData   = [["Time","Temp","Humi","Area"]];
         if(ARRAY.length){       
             GET_DATA[ARRAY[0].MODULE] = ARRAY;
             for (const iterator of ARRAY) {
                 const TSMT  = new Date(iterator.TMST);
                 const time  = ((((TSMT.getYear()-100)*100+(TSMT.getMonth()+1))*100+TSMT.getDate())+TSMT.getHours()/100+TSMT.getMinutes()/10000+TSMT.getSeconds()/1000000).toFixed(6);
-                chartData.push([time,iterator.TEMP1/100,iterator.HUMI1/100,"Sensor1"]);
-                chartData.push([time,iterator.TEMP2/100,iterator.HUMI2/100,"Sensor2"]);
-                chartData.push([time,iterator.TEMP3/100,iterator.HUMI3/100,"Sensor3"]);
-                chartData.push([time,iterator.TEMP4/100,iterator.HUMI4/100,"Sensor4"]);
-                chartData.push([time,iterator.TEMP5/100,iterator.HUMI5/100,"Sensor5"]);
-                chartData.push([time,iterator.TEMP6/100,iterator.HUMI6/100,"Sensor6"]);
-                chartData.push([time,iterator.TEMP7/100,iterator.HUMI7/100,"Sensor7"]);
-                chartData.push([time,iterator.TEMP8/100,iterator.HUMI8/100,"Sensor8"]);
+                if(iterator.TEMP1!=14040) chartData.push([time,iterator.TEMP1/100,iterator.HUMI1/100,"Sensor1"]);
+                if(iterator.TEMP2!=14040) chartData.push([time,iterator.TEMP2/100,iterator.HUMI2/100,"Sensor2"]);
+                if(iterator.TEMP3!=14040) chartData.push([time,iterator.TEMP3/100,iterator.HUMI3/100,"Sensor3"]);
+                if(iterator.TEMP4!=14040) chartData.push([time,iterator.TEMP4/100,iterator.HUMI4/100,"Sensor4"]);
+                if(iterator.TEMP5!=14040) chartData.push([time,iterator.TEMP5/100,iterator.HUMI5/100,"Sensor5"]);
+                if(iterator.TEMP6!=14040) chartData.push([time,iterator.TEMP6/100,iterator.HUMI6/100,"Sensor6"]);
+                if(iterator.TEMP7!=14040) chartData.push([time,iterator.TEMP7/100,iterator.HUMI7/100,"Sensor7"]);
+                if(iterator.TEMP8!=14040) chartData.push([time,iterator.TEMP8/100,iterator.HUMI8/100,"Sensor8"]);
             }        
             const MODULE = ARRAY[0].MODULE;
             drawChart(MODULE,"Temp",chartData);
@@ -195,63 +210,67 @@
     }
 
     function drawGauge(divID,TYPE,_rawData,Unit){
-        let myChart = echarts.init(document.getElementById(`${divID}_${TYPE}_ring`));
-
-        const gaugeData = [ 
-            {
+        const upperCaseStr = TYPE.toUpperCase();   
+        console.log(_rawData[0]);
+        let myChart   = echarts.init(document.getElementById(`${divID}_${TYPE}_ring`));
+        let sensorEA  = 0;
+        let gaugeData = [];
+        if(_rawData[0][upperCaseStr+"1"] != 14040) gaugeData.push({
+                value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['-25%', '-30%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"2"] != 14040) gaugeData.push({
+                value: 0,
                 detail: {
                 valueAnimation: true,       
                 offsetCenter: ['-25%', '-10%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"3"] != 14040) gaugeData.push({
                 value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['-25%', '10%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"4"] != 14040) gaugeData.push({
                 value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['-25%', '30%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"5"] != 14040) gaugeData.push({
+                value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['25%', '-30%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"6"] != 14040) gaugeData.push({
+                value: 0,   
                 detail: {
                 valueAnimation: true,       
                 offsetCenter: ['25%', '-10%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"7"] != 14040) gaugeData.push({
                 value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['25%', '10%']
                 }
-            }, 
-            {
+            });
+        if(_rawData[0][upperCaseStr+"8"] != 14040) gaugeData.push({
                 value: 0,
                 detail: {
                 valueAnimation: true,   
                 offsetCenter: ['25%', '30%']
                 }
-            }, 
-                
-        ];
+            });
 
         const option = {
             series: [
@@ -305,20 +324,17 @@
         };
 
         let dataIndex = 0;
-        const upperCaseStr = TYPE.toUpperCase();     
-        
         let interverTime = Math.round(60*1000/_rawData.length);
         if(interverTime>1000) interverTime = 1000;
-        
         let interval = setInterval(function () {
-            gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
-            gaugeData[1].value = +(_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
-            gaugeData[2].value = +(_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
-            gaugeData[3].value = +(_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2);
-            gaugeData[4].value = +(_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2);
-            gaugeData[5].value = +(_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2);
-            gaugeData[6].value = +(_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
-            gaugeData[7].value = +(_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"1"] != 14040) gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"2"] != 14040) gaugeData[1].value = +(_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"3"] != 14040) gaugeData[2].value = +(_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"4"] != 14040) gaugeData[3].value = +(_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"5"] != 14040) gaugeData[4].value = +(_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"6"] != 14040) gaugeData[5].value = +(_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"7"] != 14040) gaugeData[6].value = +(_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
+            if(_rawData[dataIndex][upperCaseStr+"8"] != 14040) gaugeData[7].value = +(_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
             dataIndex++;
             if(dataIndex >= _rawData.length)  clearInterval(interval);
             myChart.setOption({
@@ -337,7 +353,6 @@
 
     function drawChart (divID,TYPE,_rawData) {      
         let myChart = echarts.init(document.getElementById(`${divID}_${TYPE}`));
-
         const X_Axis = [
             'Sensor1',
             'Sensor2',
