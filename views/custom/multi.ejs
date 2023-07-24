@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-    let farmIP = "0.0.0.0"//"0.0.0.0";
+    let farmTYPE = "Null"
 
     const GET_DATA  = {};
     const API_DAY   = {
@@ -12,7 +12,7 @@
     };    
 
     window.onload = function() { // 페이지 로드 시 실행 
-        document.getElementById("farmIP").value = farmIP;
+        document.getElementById("farmTYPE").value = farmTYPE;
         API_DAY.START = new Date();
         API_DAY.END   = new Date();
         API_DAY.START.setDate(API_DAY.END.getDate()-7);
@@ -21,8 +21,8 @@
         document.getElementById("end").value    = API_DAY.END.toISOString().split("T")[0];
     }    
 
-    function changeIP(DATA) {
-        farmIP = DATA;        
+    function changeTYPE(DATA) {
+        farmTYPE = DATA;        
     }
 
     function periode(TYPE,DATA) {
@@ -41,7 +41,7 @@
         let sendData = null;
         if(API == "costom/device") {
             POST = true;
-            sendData = {IP:farmIP};
+            sendData = {TYPE:farmTYPE};
         }else if(API == "costom/read" && API_DAY.START && API_DAY.END){
             POST = true;
             sendData = API_DAY;
@@ -427,8 +427,8 @@
     <div class="inner">
         <section>
             <div class="row gtr-uniform">
-                <div class="col-1 col-1-small">IP:</div>
-                <div class="col-2 col-11-small"><input type="text" id="farmIP" onchange="changeIP(this.value)" value="0.0.0.0"></div>
+                <div class="col-1 col-1-small">TYPE:</div>
+                <div class="col-2 col-11-small"><input type="text" id="farmTYPE" onchange="changeTYPE(this.value)" value="Null"></div>
                 <div class="col-1 col-1-small">S:</div>
                 <div class="col-2 col-5-small"><input type="date" id="start" onchange="periode('START',this.value)"></div>
                 <div class="col-1 col-1-small">E:</div>

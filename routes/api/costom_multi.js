@@ -28,10 +28,12 @@ router.post('/device', async function(req, res) {
         data:   null
     }    
     try {
+        /*
         if(!req.body.IP){
             req.body.IP = requestIp.getClientIp(req);
         }
-        response.data = await multi.device(req.body.IP);
+        */
+        response.data = await multi.device(req.body.TYPE);
     } catch (error) {
         console.error(error);
         response.result = false;

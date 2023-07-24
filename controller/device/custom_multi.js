@@ -51,7 +51,7 @@ module.exports  = {
         try {
             const response = await multi_sensor.findAll({
                 where: {
-                    FARM: DATA,
+                    TYPE: DATA,
                 },
                 raw : true
             });
