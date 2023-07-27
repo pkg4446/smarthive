@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-    let farmTYPE = "Null"
+    let farmTYPE = "농진원"
     let FARM_DATA = {};
     let GET_DATA  = {};
     let API_DAY   = {
@@ -210,64 +210,87 @@
     }
 
     function drawGauge(divID,TYPE,_rawData,Unit){
-        const upperCaseStr = TYPE.toUpperCase();   
-        console.log(_rawData[0]);
-        let myChart   = echarts.init(document.getElementById(`${divID}_${TYPE}_ring`));
+        const upperCaseStr = TYPE.toUpperCase();
+        let myGauge  = echarts.init(document.getElementById(`${divID}_${TYPE}_ring`));
         let sensorEA  = 0;
         let gaugeData = [];
-        if(_rawData[0][upperCaseStr+"1"] != 14040) gaugeData.push({
-                value: 0,
+        let mount     = {
+            sensor1:false,
+            sensor2:false,
+            sensor3:false,
+            sensor4:false,
+            sensor5:false,
+            sensor6:false,
+            sensor7:false,
+            sensor8:false,
+        };
+        let dataIndex      = 0;
+        const max_data     = 1440
+        if(_rawData.length > max_data ){
+            dataIndex      = _rawData.length - max_data;
+        }
+        if(_rawData[dataIndex][upperCaseStr+"1"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"1"] != 14040) mount.sensor1 = true;
+        if(_rawData[dataIndex][upperCaseStr+"2"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"2"] != 14040) mount.sensor2 = true;
+        if(_rawData[dataIndex][upperCaseStr+"3"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"3"] != 14040) mount.sensor3 = true;
+        if(_rawData[dataIndex][upperCaseStr+"4"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"4"] != 14040) mount.sensor4 = true;
+        if(_rawData[dataIndex][upperCaseStr+"5"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"5"] != 14040) mount.sensor5 = true;
+        if(_rawData[dataIndex][upperCaseStr+"6"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"6"] != 14040) mount.sensor6 = true;
+        if(_rawData[dataIndex][upperCaseStr+"7"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"7"] != 14040) mount.sensor7 = true;
+        if(_rawData[dataIndex][upperCaseStr+"8"] != 14040 || _rawData[_rawData.length-1][upperCaseStr+"8"] != 14040) mount.sensor8 = true;
+
+        if(mount.sensor1) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['-25%', '-30%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"2"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor2) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,       
+                valueAnimation: false,
                 offsetCenter: ['-25%', '-10%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"3"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor3) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['-25%', '10%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"4"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor4) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['-25%', '30%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"5"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor5) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['25%', '-30%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"6"] != 14040) gaugeData.push({
-                value: 0,   
+        if(mount.sensor6) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2),   
                 detail: {
-                valueAnimation: true,       
+                valueAnimation: false,
                 offsetCenter: ['25%', '-10%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"7"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor7) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['25%', '10%']
                 }
             });
-        if(_rawData[0][upperCaseStr+"8"] != 14040) gaugeData.push({
-                value: 0,
+        if(mount.sensor8) gaugeData.push({
+                value: (_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2),
                 detail: {
-                valueAnimation: true,   
+                valueAnimation: false,
                 offsetCenter: ['25%', '30%']
                 }
             });
@@ -285,7 +308,7 @@
                         show: true,
                         overlap: false,
                         roundCap: true,
-                        clip: false,
+                        clip: true,
                         itemStyle: {
                         borderWidth: 1,
                         borderColor: '#464646'
@@ -322,22 +345,18 @@
                 }
             ]
         };
-
-        let dataIndex = 0;
-        let interverTime = Math.round(60*1000/_rawData.length);
-        if(interverTime>1000) interverTime = 1000;
         let interval = setInterval(function () {
-            if(_rawData[dataIndex][upperCaseStr+"1"] != 14040) gaugeData[0].value = +(_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"2"] != 14040) gaugeData[1].value = +(_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"3"] != 14040) gaugeData[2].value = +(_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"4"] != 14040) gaugeData[3].value = +(_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"5"] != 14040) gaugeData[4].value = +(_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"6"] != 14040) gaugeData[5].value = +(_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"7"] != 14040) gaugeData[6].value = +(_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
-            if(_rawData[dataIndex][upperCaseStr+"8"] != 14040) gaugeData[7].value = +(_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
-            dataIndex++;
+            if(mount.sensor1) gaugeData[0].value = (_rawData[dataIndex][upperCaseStr+"1"]/100).toFixed(2);
+            if(mount.sensor2) gaugeData[1].value = (_rawData[dataIndex][upperCaseStr+"2"]/100).toFixed(2);
+            if(mount.sensor3) gaugeData[2].value = (_rawData[dataIndex][upperCaseStr+"3"]/100).toFixed(2);
+            if(mount.sensor4) gaugeData[3].value = (_rawData[dataIndex][upperCaseStr+"4"]/100).toFixed(2);
+            if(mount.sensor5) gaugeData[4].value = (_rawData[dataIndex][upperCaseStr+"5"]/100).toFixed(2);
+            if(mount.sensor6) gaugeData[5].value = (_rawData[dataIndex][upperCaseStr+"6"]/100).toFixed(2);
+            if(mount.sensor7) gaugeData[6].value = (_rawData[dataIndex][upperCaseStr+"7"]/100).toFixed(2);
+            if(mount.sensor8) gaugeData[7].value = (_rawData[dataIndex][upperCaseStr+"8"]/100).toFixed(2);
+            dataIndex+=10;
             if(dataIndex >= _rawData.length)  clearInterval(interval);
-            myChart.setOption({
+            myGauge.setOption({
                 series: [
                 {
                     data: gaugeData,
@@ -347,8 +366,8 @@
                 }
                 ]
             });
-        }, interverTime);
-        option && myChart.setOption(option);
+        }, 500);
+        option && myGauge.setOption(option);
     }
 
     function drawChart (divID,TYPE,_rawData) {      
