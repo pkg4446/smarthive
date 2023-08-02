@@ -142,6 +142,7 @@
     }
 
     function deviceBTN(ARRAY) {
+        FARM_DATA = {};
         for (const SENSOR of ARRAY) {
             if(FARM_DATA[SENSOR.FARM] == undefined){
                 FARM_DATA[SENSOR.FARM] = [];
@@ -168,7 +169,6 @@
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;display:none;"></div>`;
             }
             HTML_Text +=`</p></div></div></details></div>`;
-            console.log(key,FARM_DATA[key]);
         }
         HTML_Text += '</div></div>'
         console.log(FARM_DATA);
