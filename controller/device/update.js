@@ -69,6 +69,21 @@ module.exports  = {
         }        
     },
 
+    sensor_echo_test :  async function(MODULE){
+        try {
+            await Sensor.findByPk(MODULE)
+            .then(function(response) {
+                response.update({
+                    TMST: new Date()
+                })
+            });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }        
+    },
+
     sensor_confirm :  async function(MODULE){
         try {
             await Sensor.findByPk(MODULE)

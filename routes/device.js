@@ -6,7 +6,7 @@ const update    = require('../controller/device/update');
 const log       = require('../controller/device/log');
 
 router.route('/hive')
-    .post(async (req, res, next)    => {
+    .post(async (req, res)    => {
         //Device
         if(req.body.FARM){
             const IP  = requestIp.getClientIp(req);
@@ -19,6 +19,8 @@ router.route('/hive')
                         await update.sensor_error(req.body.MODULE,req.body.VALUE2);
                     }else if(req.body.VALUE1 == "SET"){
                         await update.sensor_confirm(req.body.MODULE);
+                    }else if(req.body.VALUE1 == "CNT"){                        
+                        await log.sensor_echo_test(req.body.MODULE);
                     }else if(req.body.VALUE1 == "ON" || req.body.VALUE1 == "OFF"){                        
                         await log.log_sensor_ctrl(req.body);
                     }else{

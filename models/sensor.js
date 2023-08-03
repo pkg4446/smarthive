@@ -62,6 +62,12 @@ module.exports = class Sensor extends Sequelize.Model{
                 defaultValue: 50
             },
 
+            TMST:   {
+                type: Sequelize.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.NOW
+            }
+
         },{
             sequelize,
             timestamps : false,

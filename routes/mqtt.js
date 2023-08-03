@@ -24,10 +24,10 @@ client.on("message", async(topic, message) => {
         try {
             if(device[0] == "ID"){
                 await regist.init_farm(device[1]);
-            }        
+            }
         } catch (error) {
             console.error(error);
-        }    
+        }
     }else if(topic.toString() == "WAREHOSE"){
         try {
             if(device[0] == "ID"){

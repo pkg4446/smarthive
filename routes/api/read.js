@@ -60,6 +60,7 @@ router.post('/farm', async function(req, res) {
         data:   null
     }
     try {
+        await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=connecting=AT=1;`});
         response.data = await read.farm(req.body.FARM);
     } catch (error) {
         console.error(error);
