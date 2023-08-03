@@ -119,7 +119,9 @@ void receivedCallback( uint32_t from, String &msg ) {
       String command = strtok(NULL, "=");
       String value   = strtok(NULL, ";");
       command_Service(command, value);
-    }
+    } else if (device == "connecting"){
+      mesh.sendBroadcast("SENSOR=CNT=TRUE;");
+    }//echo
   }
 }
 
