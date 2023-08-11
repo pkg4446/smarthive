@@ -2,6 +2,7 @@ const express   = require('express');
 const router    = express.Router();
 const requestIp = require('request-ip');
 
+const mqtt      = require("../mqtt");
 const read      = require("../../controller/device/read");
 
 router.post('/apiary', async function(req, res) {    
@@ -60,8 +61,8 @@ router.post('/farm', async function(req, res) {
         data:   null
     }
     try {
-        await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=connecting=AT=1;`});
         response.data = await read.farm(req.body.FARM);
+        await mqtt.send({TARGET:response.data.farm.FARM, COMMEND:`;S=connecting=AT=1;`});
     } catch (error) {
         console.error(error);
         response.result = false;
