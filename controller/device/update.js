@@ -45,15 +45,15 @@ module.exports  = {
         try {
             let CODE;
             switch (ERR) {
-                case "SHT31":
-                    CODE = "센서오류";
-                    break;
-                case "WATER":
-                    CODE = "급수오류";
-                    break;
                 case "TEMP":
-                    CODE = "이상고온";
-                    break;            
+                    CODE = "온도센서오류";
+                    break;
+                case "LEVEL":
+                    CODE = "수위센서오류";
+                    break;
+                case "EMPTY":
+                    CODE = "공급오류";
+                    break;          
                 default:
                     CODE = "정상";
                     break;

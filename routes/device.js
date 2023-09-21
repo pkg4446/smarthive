@@ -14,16 +14,16 @@ router.route('/hive')
             switch (req.body.TYPE) {
                 case "SENSOR":                    
                     await regist.regist_sensor(req.body);
-                    if(req.body.VALUE1 == "ERR"){
+                    if(req.body.COMMEND == "ERR"){
                         await log.log_error(req.body);
-                        await update.sensor_error(req.body.MODULE,req.body.VALUE2);
-                    }else if(req.body.VALUE1 == "SET"){
+                        await update.sensor_error(req.body.MODULE,req.body.VALUE1);
+                    }else if(req.body.COMMEND == "SET"){
                         await update.sensor_confirm(req.body.MODULE);
-                    }else if(req.body.VALUE1 == "CNT"){                        
+                    }else if(req.body.COMMEND == "CNT"){
                         await log.sensor_echo_test(req.body.MODULE);
-                    }else if(req.body.VALUE1 == "ON" || req.body.VALUE1 == "OFF"){                        
+                    }else if(req.body.COMMEND == "RELAY"){                        
                         await log.log_sensor_ctrl(req.body);
-                    }else{
+                    }else if(req.body.COMMEND == "LOG"){
                         await log.log_sensor(req.body);
                     }
                     break;
