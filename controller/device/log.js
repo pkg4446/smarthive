@@ -24,7 +24,9 @@ module.exports  = {
             await log_sensor.create({
                 MODULE: data.MODULE,
                 TEMP:   data.VALUE1,
-                HUMI:   data.VALUE2
+                HUMI:   data.VALUE2,
+                WATER:  data.VALUE3,
+                HONEY:  data.VALUE4,
             });
         } catch (error) {
             console.log(error);

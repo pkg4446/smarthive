@@ -15,7 +15,7 @@ module.exports = class Log_error extends Sequelize.Model{
             },
 
             FARM:   {
-                type: Sequelize.STRING(16),
+                type: Sequelize.STRING(32),
                 allowNull: false
             },
 

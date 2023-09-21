@@ -69,49 +69,49 @@ module.exports = class custom_multi_log extends Sequelize.Model{
             },
 
             HUMI1:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI2:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI3:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI4:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI5:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI6:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI7:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },
 
             HUMI8:   {
-                type: Sequelize.SMALLINT.UNSIGNED,
+                type: Sequelize.SMALLINT,
                 allowNull: false,
                 defaultValue: 14040
             },            

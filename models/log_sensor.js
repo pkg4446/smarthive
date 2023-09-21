@@ -26,6 +26,18 @@ module.exports = class Log_sensor extends Sequelize.Model{
                 defaultValue: 0
             },
 
+            WATER:   {
+                type: Sequelize.TINYINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
+            },
+
+            HONEY:  {
+                type: Sequelize.TINYINT.UNSIGNED,
+                allowNull: false,
+                defaultValue: 0
+            },
+
             TMST:   {
                 type: Sequelize.DATE,
                 allowNull: false,
