@@ -12,7 +12,7 @@ module.exports  = {
                 MODULE: data.MODULE,
                 FARM:   data.FARM,
                 TYPE:   data.TYPE,
-                ERR:    data.VALUE2
+                ERR:    data.VALUE1
             });
         } catch (error) {
             console.log(error);
