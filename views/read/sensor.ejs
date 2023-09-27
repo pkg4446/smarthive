@@ -139,7 +139,7 @@
             HTML_Text += `<tr>
                             <td>${log.TEMP/100} ℃</td>
                             <td>${log.HUMI/100} %</td>
-                            <td>${log.TMST} </td>
+                            <td>${new Date(log.TMST)} </td>
                         </tr>`;
         }
         document.getElementById("log").innerHTML = HTML_Text;
