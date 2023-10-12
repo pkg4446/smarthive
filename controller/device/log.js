@@ -16,7 +16,7 @@ module.exports  = {
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     log_sensor :    async function(data){
@@ -30,24 +30,23 @@ module.exports  = {
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     log_sensor_ctrl :    async function(data){
         try {
+            let OPERATION = false;
             if(data.VALUE1 == "ON"){
-                data.VALUE1 == true;
-            }else if(data.VALUE1 == "OFF"){
-                data.VALUE1 == false;
+                OPERATION == true;
             }
             await log_sensor_ctrl.create({
                 MODULE:     data.MODULE,
-                OPERATION:  data.VALUE1,
+                OPERATION:  OPERATION,
                 TYPE:       data.VALUE2
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     log_wh_O3 :    async function(data){
@@ -58,7 +57,7 @@ module.exports  = {
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     log_wh_door :   async function(data){
@@ -71,7 +70,7 @@ module.exports  = {
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 
     log_wh_plz :   async function(data){
@@ -82,6 +81,6 @@ module.exports  = {
             });
         } catch (error) {
             console.log(error);
-        }        
+        }
     },
 }
