@@ -58,7 +58,6 @@ router.post('/hiveFind', async function(req, res) {
     try {
         response.data = await update.sensor_set(req.body);
         await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+SHOW=${req.body.LED};`}); 
-        console.log("mqtt1");
     } catch (error) {
         console.error(error);
         response.result = false;
