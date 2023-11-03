@@ -2,10 +2,11 @@
 <script type="text/javascript">
     let tableform_flage  = true;
     let HTML_Text_origin = null;
+    const FARM   = "<%= data.FARM %>";    
     const USE    = "<%= data.USE %>";    
     const MODULE = "<%= data.MODULE %>";
     let sendData = {
-        FARM:   "<%= data.FARM %>",
+        FARM:   FARM,
         MODULE: MODULE,
         USE:    USE,
         TEMP:   "<%= data.PRE_TEMP %>",
@@ -46,6 +47,9 @@
         if(API == "update/hiveSensor") {
             POST = true;
             DATA = sendData;            
+        }else if(API == "update/hiveFind"){
+            POST = true;
+            DATA = {FARM:FARM, MODULE:MODULE, LED:1}
         }else if(API == "update/hiveSensorName"){
             POST = true;
             DATA = {MODULE:MODULE, NAME: document.getElementById("hiveName").value}
@@ -68,18 +72,27 @@
                             document.getElementById("hive").innerText = DATA.NAME;
                             Swal.fire({              
                                 position: 'top',
-                                icon: 'success',
+                                icon:  'success',
                                 title: "이름 변경",
-                                text: "벌통 이름이 변경되었습니다.",
+                                text:  "벌통 이름이 변경되었습니다.",
+                                showConfirmButton: false,                                    
+                                timer: 1000
+                            })
+                        }else if(API == "update/hiveFind"){
+                            Swal.fire({              
+                                position: 'top',
+                                icon:  'success',
+                                title: "LED 깜빡임",
+                                text:  "LED를 확인해주세요.",
                                 showConfirmButton: false,                                    
                                 timer: 1000
                             })
                         }else if(API == "update/hiveSensor"){
                             Swal.fire({              
                                 position: 'top',
-                                icon: 'success',
+                                icon:  'success',
                                 title: "설정 중",
-                                text: "컨트롤러에 명령을 전달했습니다.",
+                                text:  "컨트롤러에 명령을 전달했습니다.",
                                 showConfirmButton: false,                                    
                                 timer: 1000
                             })
@@ -87,9 +100,9 @@
                             LOG_DATA = response.data.value;
                             Swal.fire({              
                                 position: 'top',
-                                icon: 'success',
+                                icon:  'success',
                                 title: "로그 데이터",
-                                text: "로그데이터를 받아왔습니다.",
+                                text:  "로그데이터를 받아왔습니다.",
                                 showConfirmButton: false,                                    
                                 timer: 500
                             })
@@ -218,7 +231,7 @@
                             <td id="cUse"> 사용</td>
                             <td id="cTemp">설정 온도</td>
                             <td id="cHumi">설정 습도</td>
-                            <td rowspan="2" onclick="tableform()"><span class="button primary fit" id="button1">설정</span></td>
+                            <td onclick="tableform()"><span class="button primary fit" id="button1">설정</span></td>
                         </tr>
                         <tr>
                             <td id="hive"><%= data.NAME %></td>
@@ -227,6 +240,7 @@
                                 if(data.PRE_USE) STATE = "가동"; %><%= STATE %></td>
                             <td><%= data.SET_TEMP %> ℃</td>
                             <td><%= data.SET_HUMI %> %</td>
+                            <td onclick="submitfn('update/hiveFind',null)"><span class="button primary fit">찾기</span></td>
                         </tr>                        
                     </tbody>
                 </table>
