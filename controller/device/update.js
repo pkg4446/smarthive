@@ -89,14 +89,17 @@ module.exports  = {
             FARM: "NULL",
             USE:  false,
             TEMP: false,
-            HUMI: false
+            HUMI: false,
+            SET_USE: false,
+            SET_TEMP: false,
+            SET_HUMI: false,
         }
         try {
             let ctrl_state = await Sensor.findByPk(MODULE);
             response.FARM = ctrl_state.FARM;
-            if(ctrl_state.USE      != ctrl_state.PRE_USE)  response.USE  = true;
-            if(ctrl_state.SET_TEMP != ctrl_state.PRE_TEMP) response.TEMP = true;
-            if(ctrl_state.SET_HUMI != ctrl_state.PRE_HUMI) response.HUMI = true;
+            if(ctrl_state.USE      != ctrl_state.PRE_USE){ response.USE  = true; response.SET_USE  = ctrl_state.PRE_USE;}
+            if(ctrl_state.SET_TEMP != ctrl_state.PRE_TEMP){response.TEMP = true; response.SET_TEMP = ctrl_state.PRE_TEMP;}
+            if(ctrl_state.SET_HUMI != ctrl_state.PRE_HUMI){response.HUMI = true; response.SET_HUMI = ctrl_state.PRE_HUMI;}
             return response;
         } catch (error) {
             console.log(error);

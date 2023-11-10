@@ -14,13 +14,7 @@ router.route('/hive')
             await regist.farm_ip(req.body.FARM,IP);
             switch (req.body.TYPE) {
                 case "SENSOR":                    
-                    await regist.regist_sensor(req.body);
-                    //sensor update mqtt
-                    let ctrl_update = await update.sensor_state(req.body.MODULE);
-                    if(ctrl_update.USE)  await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+USE=${req.body.USE};`});
-                    if(ctrl_update.TEMP) await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+TEMP=${req.body.TEMP};`});
-                    if(ctrl_update.HUMI) await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+HUMI=${req.body.HUMI};`});
-                    //sensor update mqtt
+                    await regist.regist_sensor(req.body);                    
                     if(req.body.COMMEND == "ERR"){
                         await log.log_error(req.body);
                         await update.sensor_error(req.body.MODULE,req.body.VALUE1);
@@ -33,6 +27,12 @@ router.route('/hive')
                     }else if(req.body.COMMEND == "LOG"){
                         await log.log_sensor(req.body);
                     }
+                    //sensor update mqtt
+                    let ctrl_update = await update.sensor_state(req.body.MODULE);
+                    if(ctrl_update.USE)  await mqtt.send({TARGET:ctrl_update.FARM, COMMEND:`;S=${req.body.MODULE}=AT+USE=${ctrl_update.SET_USE};`});
+                    if(ctrl_update.TEMP) await mqtt.send({TARGET:ctrl_update.FARM, COMMEND:`;S=${req.body.MODULE}=AT+TEMP=${ctrl_update.SET_TEMP};`});
+                    if(ctrl_update.HUMI) await mqtt.send({TARGET:ctrl_update.FARM, COMMEND:`;S=${req.body.MODULE}=AT+HUMI=${ctrl_update.SET_HUMI};`});
+                    //sensor update mqtt
                     break;
                 case "PUMP":  
                     await regist.regist_pump(req.body);
