@@ -4,6 +4,7 @@ const requestIp = require('request-ip');
 const regist    = require('../controller/device/regist');
 const update    = require('../controller/device/update');
 const log       = require('../controller/device/log');
+const mqtt      = require("./mqtt");
 
 router.route('/hive')
     .post(async (req, res)    => {
@@ -14,6 +15,12 @@ router.route('/hive')
             switch (req.body.TYPE) {
                 case "SENSOR":                    
                     await regist.regist_sensor(req.body);
+                    //sensor update mqtt
+                    let ctrl_update = await update.sensor_state(req.body.MODULE);
+                    if(ctrl_update.USE)  await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+USE=${req.body.USE};`});
+                    if(ctrl_update.TEMP) await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+TEMP=${req.body.TEMP};`});
+                    if(ctrl_update.HUMI) await mqtt.send({TARGET:response.data.FARM, COMMEND:`;S=${req.body.MODULE}=AT+HUMI=${req.body.HUMI};`});
+                    //sensor update mqtt
                     if(req.body.COMMEND == "ERR"){
                         await log.log_error(req.body);
                         await update.sensor_error(req.body.MODULE,req.body.VALUE1);

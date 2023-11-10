@@ -21,6 +21,7 @@ module.exports  = {
 
     log_sensor :    async function(data){
         try {
+            
             await log_sensor.create({
                 MODULE: data.MODULE,
                 TEMP:   data.VALUE1,

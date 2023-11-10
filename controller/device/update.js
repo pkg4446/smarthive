@@ -84,6 +84,26 @@ module.exports  = {
         }        
     },
 
+    sensor_state :  async function(MODULE){
+        const response = {
+            FARM: "NULL",
+            USE:  false,
+            TEMP: false,
+            HUMI: false
+        }
+        try {
+            let ctrl_state = await Sensor.findByPk(MODULE);
+            response.FARM = ctrl_state.FARM;
+            if(ctrl_state.USE      != ctrl_state.PRE_USE)  response.USE  = true;
+            if(ctrl_state.SET_TEMP != ctrl_state.PRE_TEMP) response.TEMP = true;
+            if(ctrl_state.SET_HUMI != ctrl_state.PRE_HUMI) response.HUMI = true;
+            return response;
+        } catch (error) {
+            console.log(error);
+            return response;
+        }        
+    },
+
     sensor_confirm :  async function(MODULE){
         try {
             await Sensor.findByPk(MODULE)
@@ -112,8 +132,7 @@ module.exports  = {
                     PRE_TEMP:   data.TEMP,
                     PRE_HUMI:   data.HUMI
                 })
-            });            
-            
+            });
             return sensor;
         } catch (error) {
             console.log(error);

@@ -148,6 +148,7 @@ function CANCLE() {
                                     <th>벌통 이름</th>
                                     <th>상태</th>
                                     <th>설정온도</th>
+                                    <th>ID</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -159,6 +160,7 @@ function CANCLE() {
                                     <td><%= object.NAME %></td>
                                     <td><%= object.STATE %><%= USED %></td>
                                     <td><%= object.SET_TEMP %></td>
+                                    <td><%= object.MODULE %></td>
                                     <form action='/page/hiveSensor' method="post" id="MODULE_<%= object.MODULE %>">                        
                                     <input type="hidden" name="MODULE" value="<%= object.MODULE %>"></form>
                                 </tr>
