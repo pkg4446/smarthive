@@ -5,7 +5,7 @@ module.exports = {
     username: process.env.Database_username,
     password: process.env.Database_password,
     database: "smarthive",
-    host: "127.0.0.1",
+    host: "192.168.1.20",
     dialect: "mysql",
     logging: false
   },

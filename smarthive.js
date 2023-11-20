@@ -13,6 +13,7 @@ const indexRouter     = require('./routes');
 const {sequelize}     = require('./models');
 const passportConfig  = require('./passport');
 const { application } = require('express');
+const routines        = require('./smartfarmkorea');
 
 const http  = require('http');
 const HTTP_PORT  = process.env.PORT || 3004;

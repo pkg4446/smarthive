@@ -3,14 +3,9 @@ const Sequelize = require('sequelize');
 module.exports = class smartfarmkorea extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
-            IDX:    {
-                type: Sequelize.INTEGER.UNSIGNED,
-                primaryKey: true,
-                autoIncrement: true
-            },
-
             USER_ID: {
                 type: Sequelize.STRING(32),
+                primaryKey: true,
                 allowNull: false
             },
 
