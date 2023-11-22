@@ -40,8 +40,13 @@ ITServerPost = setInterval(async function() {
                 for (const iterator_sensor of sensor_list) {
                     const values = await sensor_log.findAll({where:{MODULE:iterator_sensor.MODULE,TMST:{[Op.gt]:time_now}},order :[['IDX', 'DESC']],limit:1,raw : true});
                     if(values[0]){
-                        let log_tmst = new Date(values[0].TMST);
-                        log_tmst.setHours(log_tmst.getHours()+9)
+                        let log_tmst    = new Date(values[0].TMST);
+                        let send_time   = ["","",""];
+
+                        if(log_tmst.getHours()<10){send_time[0] = "0";}
+                        if(log_tmst.getMinutes()<10){send_time[1] = "0";}
+                        if(log_tmst.getSeconds()<10){send_time[2] = "0";}
+
                         txtM += `<smartItemList>
                                     <eqpmnCode>ES15</eqpmnCode><!--per hour-->
                                     <eqpmnEsntlSn></eqpmnEsntlSn>
@@ -49,7 +54,7 @@ ITServerPost = setInterval(async function() {
                                     <itemCode>B00</itemCode><!--fixed-->
                                     <lsindRegistNo>${iterator_farm.USER_ID}</lsindRegistNo><!--farmID-->
                                     <makrId>yes99423</makrId><!--fixed-->
-                                    <mesureDt>${iterator_farm.USER_ID}</mesureDt>
+                                    <mesureDt>${log_tmst.getFullYear()}-${log_tmst.getMonth()+1}-${log_tmst.getDate()} ${send_time[0]}${log_tmst.getHours()}:${send_time[1]}${log_tmst.getMinutes()}:${send_time[2]}${log_tmst.getSeconds()}</mesureDt>
                                     <mesureVal01>${values[0].TEMP/100}</mesureVal01>
                                     <mesureVal02>${values[0].HUMI/100}</mesureVal02>
                                     <mesureVal03>${values[0].TEMP/100}</mesureVal03>
@@ -73,6 +78,7 @@ ITServerPost = setInterval(async function() {
                     }
                 }
                 if(txtM  !=  ""){
+                    /*
                     const xmlBodyStr = txtH + txtM + txtE;
                     axios.post('https://smartfarmkorea.net/stockWs/webservices/SmartStockService', xmlBodyStr, config)
                     .then(res => {
@@ -81,6 +87,7 @@ ITServerPost = setInterval(async function() {
                     .catch(error => {
                         console.log(error);
                     });
+                    */
                 }                
             }
         } catch (error) {
@@ -96,4 +103,4 @@ ITServerPost = setInterval(async function() {
             }
         }
     } 
-}, 1000*60);
+}, 1000);
