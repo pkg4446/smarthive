@@ -41,11 +41,13 @@ ITServerPost = setInterval(async function() {
                     const values = await sensor_log.findAll({where:{MODULE:iterator_sensor.MODULE,TMST:{[Op.gt]:time_now}},order :[['IDX', 'DESC']],limit:1,raw : true});
                     if(values[0]){
                         let log_tmst    = new Date(values[0].TMST);
-                        let send_time   = ["","",""];
+                        let send_time   = ["","","","",""];
 
-                        if(log_tmst.getHours()<10){send_time[0] = "0";}
-                        if(log_tmst.getMinutes()<10){send_time[1] = "0";}
-                        if(log_tmst.getSeconds()<10){send_time[2] = "0";}
+                        if(log_tmst.getMonth()+1<10){send_time[0] = "0";}
+                        if(log_tmst.getDate()<10){send_time[1] = "0";}
+                        if(log_tmst.getHours()<10){send_time[2] = "0";}
+                        if(log_tmst.getMinutes()<10){send_time[3] = "0";}
+                        if(log_tmst.getSeconds()<10){send_time[4] = "0";}
 
                         txtM += `<smartItemList>
                                     <eqpmnCode>ES15</eqpmnCode><!--per hour-->
@@ -54,7 +56,7 @@ ITServerPost = setInterval(async function() {
                                     <itemCode>B00</itemCode><!--fixed-->
                                     <lsindRegistNo>${iterator_farm.USER_ID}</lsindRegistNo><!--farmID-->
                                     <makrId>yes99423</makrId><!--fixed-->
-                                    <mesureDt>${log_tmst.getFullYear()}-${log_tmst.getMonth()+1}-${log_tmst.getDate()} ${send_time[0]}${log_tmst.getHours()}:${send_time[1]}${log_tmst.getMinutes()}:${send_time[2]}${log_tmst.getSeconds()}</mesureDt>
+                                    <mesureDt>${log_tmst.getFullYear()}-${send_time[0]}${log_tmst.getMonth()+1}-${send_time[1]}${log_tmst.getDate()} ${send_time[2]}${log_tmst.getHours()}:${send_time[3]}${log_tmst.getMinutes()}:${send_time[4]}${log_tmst.getSeconds()}</mesureDt>
                                     <mesureVal01>${values[0].TEMP/100}</mesureVal01>
                                     <mesureVal02>${values[0].HUMI/100}</mesureVal02>
                                     <mesureVal03>${values[0].TEMP/100}</mesureVal03>
