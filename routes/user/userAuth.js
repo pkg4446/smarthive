@@ -134,6 +134,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
 });
 
 router.get('/logout', isLoggedIn, (req, res) => {
+  req.logout();
   req.session.destroy(function(err){
     if(err) throw err;
     res.redirect('/');
