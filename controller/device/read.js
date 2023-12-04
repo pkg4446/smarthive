@@ -129,7 +129,20 @@ module.exports  = {
 
     farm :   async function(FARM_ID){
         try {
+            const sensors = await Sensor.findAll({where: {FARM: FARM_ID},raw : true});
+            for (const iterator of sensors) {
+                const data_list = await Log_sensor.findAll({
+                    where: {
+                        MODULE: iterator.MODULE
+                    },
+                    limit: 1
+                });
+                if(data_list.length == 0){
+                    await Sensor.destroy({where: {MODULE: iterator.MODULE}});
+                }
+            }
             const response = {
+                ///////////////////////
                 farm:   await Farm.findByPk(FARM_ID,{raw : true}),
                 pump:   await Pump.findAll({where: {FARM: FARM_ID},raw : true}),
                 sensor: await Sensor.findAll({where: {FARM: FARM_ID},raw : true}),

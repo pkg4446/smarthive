@@ -78,7 +78,6 @@ ITServerPost = setInterval(async function() {
                     }
                 }
                 if(txtM  !=  ""){
-                    /*
                     const xmlBodyStr = txtH + txtM + txtE;
                     axios.post('https://smartfarmkorea.net/stockWs/webservices/SmartStockService', xmlBodyStr, config)
                     .then(res => {
@@ -87,7 +86,6 @@ ITServerPost = setInterval(async function() {
                     .catch(error => {
                         console.log(error);
                     });
-                    */
                 }                
             }
         } catch (error) {
