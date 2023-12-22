@@ -21,7 +21,7 @@ module.exports  = {
 
     log_sensor :    async function(data){
         try {
-            
+            if(data.VALUE2 != 0)
             await log_sensor.create({
                 MODULE: data.MODULE,
                 TEMP:   data.VALUE1,
@@ -36,13 +36,19 @@ module.exports  = {
 
     log_sensor_ctrl :    async function(data){
         try {
-            let OPERATION = false;
-            if(data.VALUE1 == "ON"){
-                OPERATION == true;
-            }
+            let onoff = false;
+            if(data.VALUE3 == "1"){
+                onoff == true;
+            }else if(data.VALUE4 == "1"){
+                onoff == true;
+            }if(data.VALUE3 == 1){
+                onoff == true;
+            }else if(data.VALUE4 == 1){
+                onoff == true;
+            }  
             await log_sensor_ctrl.create({
                 MODULE:     data.MODULE,
-                OPERATION:  OPERATION,
+                OPERATION:  onoff,
                 TYPE:       data.VALUE2
             });
         } catch (error) {
