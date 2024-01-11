@@ -7,7 +7,8 @@ const requestIp = require('request-ip');
 router.post('/log', async function(req, res) {   
     const response = {
         result: true,
-        data:   new Date()
+        data:   new Date(),
+        temp:   0
     }    
     try {
         if(req.body.MODULE){            
