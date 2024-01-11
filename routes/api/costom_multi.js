@@ -8,7 +8,8 @@ router.post('/log', async function(req, res) {
     const response = {
         result: true,
         data:   new Date(),
-        temp:   0
+        temp:   1,
+        sen:    1,
     }    
     try {
         if(req.body.MODULE){            
