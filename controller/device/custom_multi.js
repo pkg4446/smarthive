@@ -1,3 +1,4 @@
+const multi_ctr     = require('../../models/custom_multi_ctr');
 const multi_log     = require('../../models/custom_multi_log');
 const multi_sensor  = require('../../models/custom_multi_sensor');
 
@@ -25,6 +26,17 @@ module.exports  = {
                 HUMI6:   data.HUMI6,
                 HUMI7:   data.HUMI7,
                 HUMI8:   data.HUMI8
+            });
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    run :    async function(data){
+        try {
+            await multi_ctr.create({
+                MODULE:  data.MODULE,
+                RUNTIME: data.RUNTIME
             });
         } catch (error) {
             console.log(error);
@@ -69,13 +81,14 @@ module.exports  = {
                     MODULE: data.MODULE,
                     FARM:   data.FARM,
                 });
+                return true;
             }else if(device.FARM != data.FARM){
                 await multi_sensor.findByPk(data.MODULE)
                 .then(function(response) {
                     response.update({FARM: data.FARM})
                 });
             }
-            return true;
+            return device.TEMP;
         } catch (error) {
             console.log(error);
             return false;

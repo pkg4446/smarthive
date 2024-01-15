@@ -14,8 +14,23 @@ router.post('/log', async function(req, res) {
     try {
         if(req.body.MODULE){            
             req.body.FARM = requestIp.getClientIp(req);
-            await multi.regist(req.body);
+            response.sen  = await multi.regist(req.body);
             await multi.log(req.body);
+        }else{response.result = false; response.data = "dataNull";}
+    } catch (error) {
+        console.error(error);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
+router.post('/run', async function(req, res) {   
+    const response = {
+        result: true,
+    }    
+    try {
+        if(req.body.MODULE){
+            await multi.run(req.body);
         }else{response.result = false; response.data = "dataNull";}
     } catch (error) {
         console.error(error);

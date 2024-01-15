@@ -21,6 +21,12 @@ module.exports = class custom_multi_sensor extends Sequelize.Model{
                 defaultValue: "미정"
             },
 
+            TEMP:   {
+                type: Sequelize.TINYINT,
+                allowNull: false,
+                defaultValue: 1
+            },
+
             FARM:   {
                 type: Sequelize.STRING(32),
                 allowNull: false
