@@ -24,6 +24,25 @@ router.post('/log', async function(req, res) {
     return res.json(response);
 });
 
+router.post('/set', async function(req, res) {   
+    const response = {
+        result: true,
+        data:   true,
+    }    
+    try {
+        if(req.body.FARM){
+            //body, TEMP,FARM(IP)
+            multi.set_temp(req.body);
+        }else{
+            response.result = false;
+        }
+    } catch (error) {
+        console.error(error);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/run', async function(req, res) {   
     const response = {
         result: true,

@@ -107,4 +107,16 @@ module.exports  = {
             return false;
         }
     },
+
+    set_temp :  async function(data){
+        try {
+            await multi_sensor.update({ TEMP: data.TEMP }, {
+                where: {
+                    FARM: data.FARM
+                },
+            });
+        } catch (error) {
+            console.log(error);
+        }        
+    },
 }

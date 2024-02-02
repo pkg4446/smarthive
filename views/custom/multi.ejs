@@ -53,6 +53,9 @@
         }else if(API == "costom/rename" && DATA.MODULE && DATA.NAME){
             POST = true;
             sendData = DATA;
+        }else if(API == "costom/set" && DATA.FARM && DATA.TEMP){
+            POST = true;
+            sendData = DATA;
         }
 
         if(POST){
@@ -125,6 +128,34 @@
         }
     }
 
+    function TempChange(farm_ip){
+        alert(farm_ip);
+        let change_temp = (document.getElementById("farm_"+farm_ip).value);
+        if(isNaN(change_temp)){
+            Swal.fire({              
+                position: 'top',
+                icon: 'error',
+                title: "입력실수!",
+                text: "숫자를 입력해야 합니다.",
+                showConfirmButton: false,                                    
+                timer: 1500
+            })
+        }else{
+            if(change_temp>=40){
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    title: "!!!",
+                    text: "설정 온도가 너무 높습니다.",
+                    showConfirmButton: false,                                    
+                    timer: 1500
+                })
+            }else{
+                submitfn("costom/set",{FARM:farm_ip,TEMP:change_temp});
+            }
+        }
+    }
+
     function NameChange(TYPE,MODULE){
         let HTML_View   = '';
         let HTML_BTN    = '';
@@ -157,18 +188,21 @@
                     for (const SENSOR of FARM_DATA[key]){
                         HTML_Text += ` ⊙${SENSOR.NAME} `;
                     }
-            HTML_Text += `</div></summary><div class="col-12"><p><div class="row gtr-uniform">`;           
+            HTML_Text += `</div></summary><div class="col-12"><p><div class="row gtr-uniform">`;
+            HTML_Text += `<div class="col-3 col-12-small">봉구 목표 온도(°C)</div>
+            <div class="col-3 col-6-small"><input type="text" id="farm_${key}" value="${FARM_DATA[key][0].TEMP}"></div>
+            <div class="col-6"><span class="button fit" onclick="TempChange('${key}')">변 경</span></div>`;
             for (const SENSOR of FARM_DATA[key]) {
-                HTML_Text += `<div class="col-3 col-6-small"id="${SENSOR.MODULE}_NameView">▷ ${SENSOR.NAME}</div>
+                HTML_Text += `<div class="col-3 col-12-small"id="${SENSOR.MODULE}_NameView">▷ ${SENSOR.NAME}</div>
                         <div class="col-5 col-12-small"><span class="button primary fit" onclick="submitfn('costom/read','${SENSOR.MODULE}')">그래프</span></div>
                         <div class="col-2 col-12-small"><span class="button fit" onclick="downloadFile('${SENSOR.MODULE}')">저장하기</span></div>        
-                        <div class="col-2 col-6-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
+                        <div class="col-2 col-12-small"  id="${SENSOR.MODULE}_NameBTN"><span class="button fit" onclick="NameChange(false,'${SENSOR.MODULE}')">이름변경</span></div>                        
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Temp_ring" style="height:400px;display:none;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Temp" style="height:400px;display:none;"></div>
                         <div class="col-4 col-12-small" id="${SENSOR.MODULE}_Humi_ring" style="height:400px;display:none;"></div>
                         <div class="col-8 col-12-small" id="${SENSOR.MODULE}_Humi" style="height:400px;display:none;"></div>`;
             }
-            HTML_Text +=`</p></div></div></details></div>`;
+            HTML_Text +=`</div></div></details></div>`;
         }
         HTML_Text += '</div></div>'
         console.log(FARM_DATA);
