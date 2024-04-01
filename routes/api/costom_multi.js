@@ -67,10 +67,12 @@ router.post('/act', async function(req, res) {
     }    
     try {
         if(req.body.serial_number){
-            data.MODULE = req.body.serial_number
-            data.FARM   = requestIp.getClientIp(req);
+            const data ={
+                MODULE : req.body.serial_number,
+                FARM   : requestIp.getClientIp(req)
+            }
             await multi.regist(data);
-            await multi.log(req.body);
+            await multi.activity(req.body);
         }else{response.result = false; response.data = "dataNull";}
     } catch (error) {
         console.error(error);
