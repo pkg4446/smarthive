@@ -1,4 +1,5 @@
 const multi_ctr     = require('../../models/custom_multi_ctr');
+const multi_act     = require('../../models/custom_multi_act_sensor');
 const multi_log     = require('../../models/custom_multi_log');
 const multi_sensor  = require('../../models/custom_multi_sensor');
 
@@ -26,6 +27,19 @@ module.exports  = {
                 HUMI6:   data.HUMI6,
                 HUMI7:   data.HUMI7,
                 HUMI8:   data.HUMI8
+            });
+        } catch (error) {
+            console.log(error);
+        }        
+    },
+
+    activity :  async function(body){
+        try {
+            await multi_act.create({
+                MODULE: body.serial_number,
+                IN:     body.data[5].value,
+                OUT:    body.data[6].value,
+                TOTAL:  body.data[7].value,
             });
         } catch (error) {
             console.log(error);

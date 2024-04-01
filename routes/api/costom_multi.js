@@ -43,6 +43,42 @@ router.post('/set', async function(req, res) {
     return res.json(response);
 });
 
+
+router.post('/act', async function(req, res) {   
+/*
+    {'serial_number': 'AA000115', 'timestamp': '2024-04-01T14:12:00', 'id': '1234', 
+    'data': 
+        [
+            {'port': 0, 'value': 999.0}, 
+            {'port': 1, 'value': 999.0}, 
+            {'port': 2, 'value': 9999}, 
+            {'port': 3, 'value': 9999}, 
+            {'port': 5, 'value': 2}, 
+            {'port': 6, 'value': 7}, 
+            {'port': 7, 'value': 9}, 
+            {'port': 10, 'value': 999.0}, 
+            {'port': 11, 'value': 0}
+        ]
+    }
+*/
+    const response = {
+        result: true,
+        data:   "ok"
+    }    
+    try {
+        if(req.body.serial_number){
+            data.MODULE = req.body.serial_number
+            data.FARM   = requestIp.getClientIp(req);
+            await multi.regist(data);
+            await multi.log(req.body);
+        }else{response.result = false; response.data = "dataNull";}
+    } catch (error) {
+        console.error(error);
+        response.result = false;
+    }
+    return res.json(response);
+});
+
 router.post('/run', async function(req, res) {   
     const response = {
         result: true,
