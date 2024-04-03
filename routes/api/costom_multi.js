@@ -66,14 +66,13 @@ router.post('/act', async function(req, res) {
         data:   "ok"
     }    
     try {
-        const request_data = JSON.stringify(req.body);
-        if(request_data.serial_number){
+        if(req.body.serial_number){
             const data ={
-                MODULE : request_data.serial_number,
+                MODULE : req.body.serial_number,
                 FARM   : requestIp.getClientIp(req)
             }
             await multi.regist(data);
-            await multi.activity(request_data);
+            await multi.activity(req.body);
         }else{response.result = false; response.data = "dataNull";}
     } catch (error) {
         console.error(error);
