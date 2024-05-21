@@ -10,7 +10,7 @@ module.exports  = {
 
     pushMessege :  async function(DATA){
         try {
-
+            console.log(serviceAccount);
             const message = {
                 data:{
                     title: DATA.TITLE,
