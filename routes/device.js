@@ -25,6 +25,12 @@ router.route('/hive')
                     }else if(req.body.COMMEND == "RELAY"){                        
                         await log.log_sensor_ctrl(req.body);
                     }else if(req.body.COMMEND == "LOG"){
+                        req.body.VALUE1=req.body.VALUE1.replace(';','');
+                        req.body.VALUE2=req.body.VALUE2.replace(';','');;
+                        req.body.VALUE3=req.body.VALUE3.replace(';','');;
+                        req.body.VALUE4=req.body.VALUE4.replace(';','');;
+                        if(!req.body.VALUE3)req.body.VALUE3=0;
+                        if(!req.body.VALUE4)req.body.VALUE4=0;
                         await log.log_sensor(req.body);
                     }
                     //sensor update mqtt
