@@ -11,6 +11,15 @@ module.exports  = {
         } catch (error) {
             console.log(error);
         }        
+    },
+
+    sensor :   async function(MODULE){
+        try {
+            const sensor = await Sensor.destroy({where: {MODULE:MODULE}});
+            return sensor;
+        } catch (error) {
+            console.log(error);
+        }        
     }
 
 }

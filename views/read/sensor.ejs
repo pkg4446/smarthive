@@ -56,6 +56,9 @@
         }else if(API == "read/sensor_log" && LOG_API.START && LOG_API.END){
             POST = true;
             DATA = LOG_API;
+        }else if(API == "delete/sensor"){
+            POST = true;
+            DATA = sendData;
         }
 
         if(POST){
@@ -107,6 +110,17 @@
                                 timer: 500
                             })
                             log_view(LOG_DATA);
+                        }else if(API == "delete/sensor"){       
+                            LOG_DATA = response.data.value;
+                            Swal.fire({              
+                                position: 'top',
+                                icon:  'success',
+                                title: "센서 삭제",
+                                text:  "완료",
+                                showConfirmButton: false,                                    
+                                timer: 500
+                            })
+                            location.href = "/";
                         }
                     }
                 }, // success 
@@ -177,6 +191,7 @@
                             </tr>`;                            
             document.getElementById("TABLE").innerHTML = HTML_Text_origin + HTML_Text;            
             document.getElementById("button1").innerText = "취 소";
+            document.getElementById("button2").innerHTML = `<span class="button primary fit" onclick="submitfn('delete/sensor',null)">삭제</span>`;
             tableform_flage = false;
         }else{
             document.getElementById("TABLE").innerHTML = HTML_Text_origin;
@@ -240,7 +255,10 @@
                                 if(data.PRE_USE) STATE = "가동"; %><%= STATE %></td>
                             <td><%= data.SET_TEMP %> ℃</td>
                             <td><%= data.SET_HUMI %> %</td>
-                            <td onclick="submitfn('update/hiveFind',null)"><span class="button primary fit">찾기</span></td>
+                            <td>
+                                <span class="button primary fit" onclick="submitfn('update/hiveFind',null)">찾기</span>
+                                <span id="button2"></span>
+                            </td>
                         </tr>                        
                     </tbody>
                 </table>
