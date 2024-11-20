@@ -62,7 +62,7 @@ router.post('/farm', async function(req, res) {
     }
     try {
         response.data = await read.farm(req.body.FARM);
-        await mqtt.send({TARGET:response.data.farm.FARM, COMMEND:`;S=connecting=AT=1;`});
+        // await mqtt.send({TARGET:response.data.farm.FARM, COMMEND:`;S=connecting=AT=1;`});
     } catch (error) {
         console.error(error);
         response.result = false;

@@ -21,7 +21,7 @@ router.route('/hive')
                     }else if(req.body.COMMEND == "SET"){
                         await update.sensor_confirm(req.body.MODULE);
                     }else if(req.body.COMMEND == "CNT"){
-                        await log.sensor_echo_test(req.body.MODULE);
+                        // await log.sensor_echo_test(req.body.MODULE);
                     }else if(req.body.COMMEND == "RELAY"){                        
                         await log.log_sensor_ctrl(req.body);
                     }else if(req.body.COMMEND == "LOG"){
