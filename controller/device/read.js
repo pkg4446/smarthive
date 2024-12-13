@@ -18,7 +18,8 @@ module.exports  = {
     regist :   async function(USER_IP){
         try {
             const farm = await Farm.findAll({
-                where: {IP: USER_IP, APIARY:0},
+                // where: {IP: USER_IP, APIARY:0},
+                where: {IP: USER_IP},
                 raw : true
             });
             return farm;
